@@ -11,32 +11,32 @@ from tartiflette import Resolver
 from properties_server.data import INGREDIENTS, RECIPES
 
 
-# @Resolver("Query.jobs")
-# async def resolver_query_jobs(
-#     parent: Optional[Any],
-#     args: Dict[str, Any],
-#     ctx: Dict[str, Any],
-#     info: "ResolveInfo",
-# ) -> List[Dict[str, Any]]:
-#     """
-#     Resolver in charge of returning available jobs.
+@Resolver("Query.jobs")
+async def resolver_query_jobs(
+    parent: Optional[Any],
+    args: Dict[str, Any],
+    ctx: Dict[str, Any],
+    info: "ResolveInfo",
+) -> List[Dict[str, Any]]:
+    """
+    Resolver in charge of returning available jobs.
 
-#     Parameters
-#     ----------
-#     paren
-#         initial value filled in to the engine `execute` method
-#     args
-#         computed arguments related to the field
-#     ctx
-#         context filled in at engine initialization
-#     info
-#         information related to the execution and field resolution
+    Parameters
+    ----------
+    paren
+        initial value filled in to the engine `execute` method
+    args
+        computed arguments related to the field
+    ctx
+        context filled in at engine initialization
+    info
+        information related to the execution and field resolution
 
-#     Returns
-#     -------
-#     The list of all recipes.
-#     """
-#     pass
+    Returns
+    -------
+    The list of all recipes.
+    """
+    pass
 
 
 @Resolver("Query.recipes")
@@ -64,6 +64,7 @@ async def resolve_query_recipes(
     -------
     The list of all recipes.
     """
+    print(args)
     return RECIPES
 
 

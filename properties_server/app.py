@@ -23,8 +23,7 @@ def run() -> None:
             ],
             executor_http_endpoint="/graphql",
             executor_http_methods=["POST"],
-            graphiql_enabled=True,
-            subscription_ws_endpoint="/ws"
+            graphiql_enabled=True
         )
     )
 

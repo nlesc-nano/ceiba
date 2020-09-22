@@ -1,3 +1,44 @@
+"""Job possible status"""
+enum Status{
+  AVAILABLE
+  DONE
+  FAILED
+  RUNNING
+}
+
+"""Job computed by an user"""
+type Job {
+  """Unique identifier"""
+  id: Int!
+  """compute Properties"""
+  property: Property!
+  """Input to perform the computation"""
+  settings: String!
+  """Job status"""
+  status: Status!
+  """User who es executing the job."""
+  user: String
+  """Timestamp=datatime.timestamp() """
+  schedule_time: float
+  """Timestamp=datatime.timestamp()"""
+  completion_time: float
+  """platform where the job was run: platform.platform()"""
+  architecture: String
+}
+
+type Property {
+  """Unique identifier"""
+  id: Int!
+  """Name of the properties group"""
+  group: String!
+  """Smile representing the molecule"""
+  smile: String!
+  """Optimize geometry"""
+  geometry: String
+  """properties values as JSON"""
+  values: String
+}
+
 enum UnitMeasurement {
   GRAM
   LITER
@@ -20,4 +61,8 @@ type Recipe {
 type Query {
   recipes: [Recipe!]
   recipe(id: Int!): Recipe
+  jobs(status: String!) : [Job!]
+  job(status: Status!): Job
+  properties: [Paroperty!]
+  property(smile: String!, group: String!): Property
 }
