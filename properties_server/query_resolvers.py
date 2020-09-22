@@ -8,7 +8,7 @@ from typing import Any, Dict, List, Optional
 
 from tartiflette import Resolver
 
-from properties_server.data import INGREDIENTS, RECIPES
+from properties_server.data import INGREDIENTS, JOBS, PROPERTY0, RECIPES
 
 
 @Resolver("Query.jobs")
@@ -36,7 +36,7 @@ async def resolver_query_jobs(
     -------
     The list of all recipes.
     """
-    pass
+    return [x for x in JOBS if x["status"] == args["status"]]
 
 
 @Resolver("Query.recipes")

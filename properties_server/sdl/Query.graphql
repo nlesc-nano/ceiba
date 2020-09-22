@@ -19,18 +19,18 @@ type Job {
   """User who es executing the job."""
   user: String
   """Timestamp=datatime.timestamp() """
-  schedule_time: float
+  schedule_time: Float
   """Timestamp=datatime.timestamp()"""
-  completion_time: float
+  completion_time: Float
   """platform where the job was run: platform.platform()"""
-  architecture: String
+  platform: String
 }
 
 type Property {
   """Unique identifier"""
   id: Int!
-  """Name of the properties group"""
-  group: String!
+  """Theory level to compute the properties for example dftb or pbe/dzp"""
+  theory_level: String!
   """Smile representing the molecule"""
   smile: String!
   """Optimize geometry"""
@@ -61,8 +61,8 @@ type Recipe {
 type Query {
   recipes: [Recipe!]
   recipe(id: Int!): Recipe
-  jobs(status: String!) : [Job!]
+  jobs(status: Status!) : [Job!]
   job(status: Status!): Job
-  properties: [Paroperty!]
-  property(smile: String!, group: String!): Property
+  properties: [Property!]
+  property(smile: String!, theory_level: String!): Property
 }
