@@ -1,9 +1,34 @@
-input RecipeInput {
+
+input InputProperty {
+  """Unique identifier"""
   id: Int!
-  name: String
-  cookingTime: Int
+  """Theory level to compute the properties for example dftb or pbe/dzp"""
+  theory_level: String!
+  """Smile representing the molecule"""
+  smile: String!
+  """Optimize geometry"""
+  geometry: String
+  """properties values as JSON"""
+  values: String
+
+}
+input InputJob {
+  """Unique identifier"""
+  id: Int!
+  """compute Properties"""
+  property: InputProperty!
+  """Job status"""
+  status: Status!
+  """User who es executing the job."""
+  user: String
+  """Timestamp=datatime.timestamp() """
+  schedule_time: Float
+  """Timestamp=datatime.timestamp()"""
+  completion_time: Float
+  """platform where the job was run: platform.platform()"""
+  platform: String!
 }
 
 type Mutation {
-  updateRecipe(input: RecipeInput!): Recipe!
+  updateJob(input: InputJob!): Job! 
 }
