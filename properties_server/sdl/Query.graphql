@@ -1,0 +1,23 @@
+enum UnitMeasurement {
+  GRAM
+  LITER
+  UNIT
+}
+
+type Ingredient {
+  name: String!
+  quantity: Float!
+  unitMeasurement: UnitMeasurement!
+}
+
+type Recipe {
+  id: Int!
+  name: String!
+  ingredients: [Ingredient!]!
+  cookingTime: Int!
+}
+
+type Query {
+  recipes: [Recipe!]
+  recipe(id: Int!): Recipe
+}

@@ -6,7 +6,7 @@ from setuptools import setup
 HERE = os.path.abspath(os.path.dirname(__file__))
 
 version = {}
-with open(os.path.join(HERE, 'properties_database', '__version__.py')) as f:
+with open(os.path.join(HERE, 'properties_server', '__version__.py')) as f:
     exec(f.read(), version)
 
 
@@ -37,8 +37,10 @@ setup(
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
     ],
-    data_files=[('citation/properties_server', ['CITATION.cff'])]
-    install_requires=[],
+    entry_points={
+        'console_scripts': ['properties_server=properties_server.app:run']},
+    data_files=[('citation/properties_server', ['CITATION.cff'])],
+    install_requires=['tartiflette', 'tartiflette-aiohttp'],
     extras_require={
         'test': ['coverage', 'mypy', 'pycodestyle', 'pytest>=3.9', 'pytest-cov'
                  ],
