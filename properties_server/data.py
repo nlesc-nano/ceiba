@@ -4,7 +4,7 @@ PROPERTIES = [{
     "id": 0, "smile": "O=O",
     "collection_name": "pbedzp",
     "geometry": "2\n\nO 0.0 0.0 0.0\nO 0.0 0.0 1.208",
-    "data": "{'scscore': 1.5, 'bulkiness': 2.0}"
+    "data": '{"scscore": 1.5, "bulkiness": 2.0}'
 },
     {
     "id": 343, "smile": "CC(=O)O",
