@@ -12,6 +12,7 @@ input InputProperty {
   data: String
 
 }
+
 input InputJob {
   """Unique identifier"""
   id: Int!
@@ -26,9 +27,11 @@ input InputJob {
   """Timestamp=datatime.timestamp()"""
   completion_time: Float
   """platform where the job was run: platform.platform()"""
-  platform: String!
+  platform: String
 }
 
+
 type Mutation {
-  updateJob(input: InputJob!): Job! 
+  updateJob(input: InputJob!): Job!
+  createJob(input: InputJob!): Job!
 }
