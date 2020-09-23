@@ -2,14 +2,14 @@
 input InputProperty {
   """Unique identifier"""
   id: Int!
-  """Theory level to compute the properties for example dftb or pbe/dzp"""
-  theory_level: String!
+  """Name to which the property belongs. e.g. Theory level"""
+  collection_name: String!
   """Smile representing the molecule"""
   smile: String!
   """Optimize geometry"""
   geometry: String
   """properties values as JSON"""
-  values: String
+  data: String
 
 }
 input InputJob {

@@ -29,19 +29,20 @@ type Job {
 type Property {
   """Unique identifier"""
   id: Int!
-  """Theory level to compute the properties for example dftb or pbe/dzp"""
-  theory_level: String!
+  """Name to which the property belongs. e.g. Theory level"""
+  collection_name: String!
   """Smile representing the molecule"""
   smile: String!
   """Optimize geometry"""
   geometry: String
   """properties values as JSON"""
-  values: String
-}
+  data: String
+
+  }
 
 type Query {
   jobs(status: Status!) : [Job!]
   job(status: Status!): Job
-  properties: [Property!]
-  property(smile: String!, theory_level: String!): Property
+  properties(collection_name: String!): [Property!]
+  property(smile: String!, collection_name: String!): Property
 }

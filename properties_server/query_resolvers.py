@@ -8,7 +8,35 @@ from typing import Any, Dict, List, Optional
 
 from tartiflette import Resolver
 
-from properties_server.data import JOBS
+from properties_server.data import JOBS, PROPERTIES
+
+
+@Resolver("Query.properties")
+async def resolver_query_properties(
+    parent: Optional[Any],
+    args: Dict[str, Any],
+    ctx: Dict[str, Any],
+    info: "ResolveInfo",
+) -> List[Dict[str, Any]]:
+    """
+    Resolver in charge of returning Properties based on their `collection_name`.
+
+    Parameters
+    ----------
+    paren
+        initial value filled in to the engine `execute` method
+    args
+        computed arguments related to the field
+    ctx
+        context filled in at engine initialization
+    info
+        information related to the execution and field resolution
+
+    Returns
+    -------
+    The list of all jobs with the given status.
+    """
+    return [x for x in PROPERTIES if x["collection_name"] == args["collection_name"]]
 
 
 @Resolver("Query.jobs")
