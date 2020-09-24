@@ -5,7 +5,15 @@ from aiohttp import web
 from tartiflette_aiohttp import register_graphql_handlers
 import pkg_resources as pkg
 
+from properties_database import DatabaseConfig, connect_to_db
+
 PATH_LIB = Path(pkg.resource_filename('properties_server', ''))
+
+db_info = DatabaseConfig("properties")
+
+context = {
+    "mongodb": connect_to_db(db_info)
+}
 
 
 def run() -> None:
@@ -13,6 +21,7 @@ def run() -> None:
     web.run_app(
         register_graphql_handlers(
             app=web.Application(),
+            executor_context=context,
             engine_sdl=(PATH_LIB / "sdl").absolute().as_posix(),
             engine_modules=[
                 "properties_server.query_resolvers",

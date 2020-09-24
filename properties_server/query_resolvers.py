@@ -8,7 +8,9 @@ from typing import Any, Dict, List, Optional
 
 from tartiflette import Resolver
 
-from properties_server.data import JOBS, PROPERTIES
+from properties_database import fetch_properties_from_collection
+
+from .data import JOBS
 
 
 @Resolver("Query.properties")
@@ -36,7 +38,12 @@ async def resolver_query_properties(
     -------
     The list of all jobs with the given status.
     """
-    return [x for x in PROPERTIES if x["collection_name"] == args["collection_name"]]
+    data = fetch_properties_from_collection(ctx["mongodb"], args["collection_name"])
+    data = list(data)
+    for entry in data:
+        entry["id"] = entry.pop("_id")
+        entry["collection_name"] = args["collection_name"]
+    return data
 
 
 @Resolver("Query.jobs")
