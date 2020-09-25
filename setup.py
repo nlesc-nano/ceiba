@@ -6,7 +6,7 @@ from setuptools import setup
 HERE = os.path.abspath(os.path.dirname(__file__))
 
 version = {}
-with open(os.path.join(HERE, 'insilico-server', '__version__.py')) as f:
+with open(os.path.join(HERE, 'insilicoserver', '__version__.py')) as f:
     exec(f.read(), version)
 
 
@@ -22,7 +22,7 @@ setup(
     author_email='f.zapata@esciencecenter.nl',
     url='https://github.com/nlesc-nano/insilico-server',
     packages=[
-        'insilico-server',
+        'insilicoserver',
     ],
     include_package_data=True,
     license="Apache Software License 2.0",
@@ -38,8 +38,8 @@ setup(
         'Programming Language :: Python :: 3.8',
     ],
     entry_points={
-        'console_scripts': ['insilico-server=insilico-server.app:run']},
-    data_files=[('citation/insilico-server', ['CITATION.cff'])],
+        'console_scripts': ['insilico-server=insilicoserver.app:run']},
+    data_files=[('citation/insilicoserver', ['CITATION.cff'])],
     install_requires=['tartiflette', 'tartiflette-aiohttp',
                       'insilico-database@git+https://github.com/nlesc-nano/insilico-database@master'
                       ],
