@@ -8,7 +8,7 @@ from typing import Any, Dict, List, Optional
 
 from tartiflette import Resolver
 
-from insilico-database import fetch_properties_from_collection
+from insilicodatabase import fetch_properties_from_collection
 
 from .data import JOBS
 

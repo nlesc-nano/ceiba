@@ -7,7 +7,7 @@ from typing import Any, Dict, Optional
 
 from tartiflette import Resolver
 
-from properties_server.data import JOBS
+from .data import JOBS
 
 
 @Resolver("Mutation.createJob")

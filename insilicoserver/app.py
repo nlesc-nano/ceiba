@@ -5,9 +5,9 @@ from aiohttp import web
 from tartiflette_aiohttp import register_graphql_handlers
 import pkg_resources as pkg
 
-from insilico-database import DatabaseConfig, connect_to_db
+from insilicodatabase import DatabaseConfig, connect_to_db
 
-PATH_LIB = Path(pkg.resource_filename('properties_server', ''))
+PATH_LIB = Path(pkg.resource_filename('insilicoserver', ''))
 
 db_info = DatabaseConfig("properties")
 
@@ -24,11 +24,11 @@ def run() -> None:
             executor_context=context,
             engine_sdl=(PATH_LIB / "sdl").absolute().as_posix(),
             engine_modules=[
-                "properties_server.query_resolvers",
-                "properties_server.mutation_resolvers",
-                "properties_server.subscription_resolvers",
-                "properties_server.directives.rate_limiting",
-                "properties_server.directives.auth",
+                "insilicoserver.query_resolvers",
+                "insilicoserver.mutation_resolvers",
+                "insilicoserver.subscription_resolvers",
+                "insilicoserver.directives.rate_limiting",
+                "insilicoserver.directives.auth",
             ],
             executor_http_endpoint="/graphql",
             executor_http_methods=["POST"],
