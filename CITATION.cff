@@ -1,7 +1,7 @@
 # YAML 1.2
 ---
 cff-version: "1.1.0"
-title: "properties_server"
+title: "insilico-server"
 authors:
   -
     family-names: "Felipe Zapata"
@@ -10,7 +10,7 @@ authors:
 date-released: 20??-MM-DD
 doi: <insert your DOI here>
 version: "0.1.0"
-repository-code: "https://github.com/nlesc-nano/properties_server"
+repository-code: "https://github.com/nlesc-nano/insilico-server"
 identifiers:
 keywords:
 message: "If you use this software, please cite it using these metadata."

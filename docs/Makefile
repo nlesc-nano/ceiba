@@ -4,7 +4,7 @@
 # You can set these variables from the command line.
 SPHINXOPTS    =
 SPHINXBUILD   = sphinx-build
-SPHINXPROJ    = properties_server
+SPHINXPROJ    = insilico-server
 SOURCEDIR     = .
 BUILDDIR      = _build
 

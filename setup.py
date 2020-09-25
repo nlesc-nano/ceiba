@@ -6,7 +6,7 @@ from setuptools import setup
 HERE = os.path.abspath(os.path.dirname(__file__))
 
 version = {}
-with open(os.path.join(HERE, 'properties_server', '__version__.py')) as f:
+with open(os.path.join(HERE, 'insilico-server', '__version__.py')) as f:
     exec(f.read(), version)
 
 
@@ -14,20 +14,20 @@ with open('README.rst') as readme_file:
     readme = readme_file.read()
 
 setup(
-    name='properties_server',
+    name='insilico-server',
     version=version,
     description="Server to handle the molecular properties",
     long_description=readme + '\n\n',
     author="Felipe Zapata",
     author_email='f.zapata@esciencecenter.nl',
-    url='https://github.com/nlesc-nano/properties_server',
+    url='https://github.com/nlesc-nano/insilico-server',
     packages=[
-        'properties_server',
+        'insilico-server',
     ],
     include_package_data=True,
     license="Apache Software License 2.0",
     zip_safe=False,
-    keywords='properties_server',
+    keywords='insilico-server',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',
@@ -38,10 +38,10 @@ setup(
         'Programming Language :: Python :: 3.8',
     ],
     entry_points={
-        'console_scripts': ['properties_server=properties_server.app:run']},
-    data_files=[('citation/properties_server', ['CITATION.cff'])],
+        'console_scripts': ['insilico-server=insilico-server.app:run']},
+    data_files=[('citation/insilico-server', ['CITATION.cff'])],
     install_requires=['tartiflette', 'tartiflette-aiohttp',
-                      'properties_database@git+https://github.com/nlesc-nano/properties_server@master#egg=properties_database'
+                      'properties_database@git+https://github.com/nlesc-nano/insilico-server@master#egg=properties_database'
                       ],
     extras_require={
         'test': ['coverage', 'mypy', 'pycodestyle', 'pytest>=3.9', 'pytest-cov'

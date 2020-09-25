@@ -1,8 +1,8 @@
-.. image:: https://github.com/nlesc-nano/properties_server/workflows/build/badge.svg
-   :target: https://github.com/nlesc-nano/properties_server/actions
+.. image:: https://github.com/nlesc-nano/insilico-server/workflows/build/badge.svg
+   :target: https://github.com/nlesc-nano/insilico-server/actions
 
 ################################################################################
-properties_server
+insilico-server
 ################################################################################
 
 Server to handle the molecular properties
@@ -12,17 +12,17 @@ Server to handle the molecular properties
 Installation
 ------------
 
-To install properties_server, do:
+To install insilico-server, do:
 
 .. code-block:: console
 
-  pip install git+https://github.com/nlesc-nano/properties_server.git@master
+  pip install git+https://github.com/nlesc-nano/insilico-server.git@master
 
 
 Contributing
 ************
 
-If you want to contribute to the development of properties_server,
+If you want to contribute to the development of insilico-server,
 have a look at the `contribution guidelines <CONTRIBUTING.rst>`_.
 
 License
