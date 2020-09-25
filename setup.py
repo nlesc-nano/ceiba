@@ -41,7 +41,7 @@ setup(
         'console_scripts': ['insilico-server=insilico-server.app:run']},
     data_files=[('citation/insilico-server', ['CITATION.cff'])],
     install_requires=['tartiflette', 'tartiflette-aiohttp',
-                      'properties_database@git+https://github.com/nlesc-nano/insilico-server@master#egg=properties_database'
+                      'insilico-database@git+https://github.com/nlesc-nano/insilico-database@master'
                       ],
     extras_require={
         'test': ['coverage', 'mypy', 'pycodestyle', 'pytest>=3.9', 'pytest-cov'
