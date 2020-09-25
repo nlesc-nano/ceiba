@@ -5,7 +5,7 @@ from aiohttp import web
 from tartiflette_aiohttp import register_graphql_handlers
 import pkg_resources as pkg
 
-from properties_database import DatabaseConfig, connect_to_db
+from insilico-database import DatabaseConfig, connect_to_db
 
 PATH_LIB = Path(pkg.resource_filename('properties_server', ''))
 
