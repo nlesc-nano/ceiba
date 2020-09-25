@@ -40,7 +40,9 @@ setup(
     entry_points={
         'console_scripts': ['properties_server=properties_server.app:run']},
     data_files=[('citation/properties_server', ['CITATION.cff'])],
-    install_requires=['tartiflette', 'tartiflette-aiohttp'],
+    install_requires=['tartiflette', 'tartiflette-aiohttp',
+                      'properties_server@git+https://github.com/properties_server/data-CAT@master'
+                      ],
     extras_require={
         'test': ['coverage', 'mypy', 'pycodestyle', 'pytest>=3.9', 'pytest-cov'
                  ],
