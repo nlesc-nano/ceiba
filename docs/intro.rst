@@ -1,9 +1,9 @@
 
 The Insilico Web Service
-########################
+#OA#######################
 This repo contains a library to create a web service to interact with a database
 containing a set of molecular properties.
-All the interactions with the database are defined by a `GraphQL API <https://graphql.org/>`_ and the service is developed using `tartiflette<https://tartiflette.io/>`_
+All the interactions with the database are defined by a `GraphQL API <https://graphql.org/>`_ and the service is developed using `tartiflette <https://tartiflette.io/>`_
 
 
 Interactions with the database
