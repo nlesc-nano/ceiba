@@ -2,6 +2,9 @@
 
 API
 ---
+.. autofunction:: resolve_mutation_add_job
+.. autofunction:: resolve_mutation_update_job
+
 """
 from typing import Any, Dict, Optional
 

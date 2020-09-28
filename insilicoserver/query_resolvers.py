@@ -3,6 +3,10 @@
 API
 ---
 
+.. autofunction:: resolver_query_properties
+.. autofunction:: resolver_query_job
+.. autofunction:: resolver_query_jobs
+
 """
 from typing import Any, Dict, List, Optional
 

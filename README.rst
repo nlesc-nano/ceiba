@@ -5,10 +5,13 @@
 insilico-server
 ################################################################################
 
-This repo contains a library to create a web service to interact with a database
-containing a set of molecular properties.
-All the interactions with the database are defined by a `GraphQL API <https://graphql.org/>`_.
+Most of the scientific simulations are usually performed in supercomputer
+or high tech facilities. Usually the data is kept on those facilities
+stored in a raw format, in contraction with the
+`scientific FAIR principles for data <https://www.go-fair.org/fair-principles/>`_.
 
+This web service provides an interface to store and retrieve data from a 
+database, without the manual intervention of the researcher.
 
 Installation
 ------------

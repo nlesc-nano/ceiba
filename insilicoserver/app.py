@@ -1,4 +1,8 @@
-"""Main loop event."""
+"""Main loop event.
+
+.. autofunction:: run
+
+"""
 
 from pathlib import Path
 from aiohttp import web
