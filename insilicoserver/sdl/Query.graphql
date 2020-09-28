@@ -4,6 +4,7 @@ enum Status{
   DONE
   FAILED
   RUNNING
+  SCHEDULE
 }
 
 """Job computed by an user"""
@@ -35,9 +36,10 @@ type Property {
   smile: String!
   """Optimize geometry"""
   geometry: String
-  """properties values as JSON"""
+  """Properties values as JSON"""
   data: String
-
+  """Input with which the property was computed encoded as JSON"""
+  input: String
   }
 
 type Query {

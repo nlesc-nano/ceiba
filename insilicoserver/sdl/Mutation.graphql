@@ -10,7 +10,8 @@ input InputProperty {
   geometry: String
   """properties values as JSON"""
   data: String
-
+  """Input with which the property was computed encoded as JSON"""
+  input: String
 }
 
 input InputJob {
