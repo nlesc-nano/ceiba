@@ -11,6 +11,9 @@ Welcome to insilico-server's documentation!
    :caption: Contents:
 
    includereadme
+   intro
+   queries
+   mutations
 
 
 Indices and tables

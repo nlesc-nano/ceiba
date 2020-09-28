@@ -5,8 +5,9 @@
 insilico-server
 ################################################################################
 
-Server to handle the molecular properties
-
+This repo contains a library to create a web service to interact with a database
+containing a set of molecular properties.
+All the interactions with the database are defined by a `GraphQL API <https://graphql.org/>`_.
 
 
 Installation
