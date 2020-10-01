@@ -4,6 +4,7 @@ API
 ---
 .. autofunction:: resolve_mutation_add_job
 .. autofunction:: resolve_mutation_update_job
+.. autofunction:: resolve_mutation_update_job_status
 
 """
 from typing import Any, Dict, Optional
@@ -49,6 +50,34 @@ async def resolve_mutation_update_job(
     ctx: Dict[str, Any],
     info: "ResolveInfo",
 ) -> Dict[str, Any]:
+    """
+    Resolver in charge of updating a given job
+
+    Parameters
+    ----------
+    paren
+        initial value filled in to the engine `execute` method
+    args
+        computed arguments related to the field
+    ctx
+        context filled in at engine initialization
+    info
+        information related to the execution and field resolution
+
+    Returns
+    -------
+    Update job
+    """
+    job = next(x for x in JOBS if x["id"] == args["input"]["id"])
+    return job
+
+
+@Resolver("Mutation.updateJobStatus")
+async def resolve_mutation_update_job_status(
+        parent: Optional[Any],
+        args: Dict[str, Any],
+        ctx: Dict[str, Any],
+        info: "ResolveInfo") -> Dict[str, Any]:
     """
     Resolver in charge of updating a given job
 

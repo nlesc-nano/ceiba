@@ -33,8 +33,19 @@ input InputJob {
   platform: String
 }
 
+input InputJobStatus {
+  """Unique identifier"""
+  id: Int!
+  """Job status"""
+  status: Status!
+  """Timestamp=datatime.timestamp() """
+  schedule_time: Float
+  """Timestamp=datatime.timestamp()"""
+  completion_time: Float
+}
 
 type Mutation {
   updateJob(input: InputJob!): Job!
+  updateJobStatus(input: InputJobStatus): Job!
   createJob(input: InputJob!): Job!
 }
