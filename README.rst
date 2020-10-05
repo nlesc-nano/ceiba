@@ -1,5 +1,7 @@
 .. image:: https://github.com/nlesc-nano/insilico-server/workflows/build/badge.svg
    :target: https://github.com/nlesc-nano/insilico-server/actions
+.. image:: https://readthedocs.org/projects/insilico-server/badge/?version=latest
+   :target: https://insilico-server.readthedocs.io/en/latest/?badge=latest
 
 ###############
 insilico-server
@@ -12,6 +14,7 @@ stored in a raw format, in contraction with the
 
 This web service provides an interface to store and retrieve data from a 
 database, without the manual intervention of the researcher.
+ See `documentation <https://insilico-server.readthedocs.io/en/latest/>`_.
 
 Installation
 ------------
