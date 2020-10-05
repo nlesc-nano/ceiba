@@ -1,9 +1,9 @@
 .. image:: https://github.com/nlesc-nano/insilico-server/workflows/build/badge.svg
    :target: https://github.com/nlesc-nano/insilico-server/actions
 
-################################################################################
+###############
 insilico-server
-################################################################################
+###############
 
 Most of the scientific simulations are usually performed in supercomputer
 or high tech facilities. Usually the data is kept on those facilities
