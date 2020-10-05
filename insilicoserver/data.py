@@ -2,19 +2,19 @@
 
 PROPERTIES = [{
     "_id": 0, "smile": "O=O",
-    "collection_name": "pbedzp",
+    "collection_name": "jobs_pbedzp",
     "geometry": "2\n\nO 0.0 0.0 0.0\nO 0.0 0.0 1.208",
     "data": '{"scscore": 1.5, "bulkiness": 2.0}'
 },
     {
     "_id": 343, "smile": "CC(=O)O",
-    "collection_name": "pbedzp",
+    "collection_name": "jobs_pbedzp",
     "geometry": None,
     "data": None
 },
     {
     "_id": 10245, "smile": "CCCCCCCCC=CCCCCCCCC(=O)O",
-    "collection_name": "pbedzp",
+    "collection_name": "jobs_pbedzp",
     "geometry": None,
     "data": None
 }

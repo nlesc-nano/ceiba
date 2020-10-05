@@ -9,6 +9,7 @@ API
 """
 from typing import Any, Dict, Optional
 
+from insilicodatabase import store_data_in_collection
 from tartiflette import Resolver
 
 from .data import JOBS
@@ -39,8 +40,24 @@ async def resolve_mutation_add_job(
     -------
     Update job
     """
-    job = args["input"]
-    return job
+    database = ctx["mongodb"]
+    # Extract property data
+    property_data = args['input'].pop('property')
+    property_collection = property_data["collection_name"]
+    property_data["_id"] = property_data.pop("id")
+    property_id = store_data_in_collection(database, property_collection, property_data)
+
+    # Extract job metadata
+    job_data = args['input']
+    # Add mongo identifier
+    job_data["_id"] = job_data["id"]
+
+    # Add reference to property
+    job_data["property"] = {"$ref": property_collection, "$db": database.name, "$id": property_id}
+    job_data = args["input"]
+    print(job_data)
+    return job_data
+
 
 
 @Resolver("Mutation.updateJob")
