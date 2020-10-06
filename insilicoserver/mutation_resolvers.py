@@ -24,7 +24,7 @@ async def resolve_mutation_add_job(
     parent: Optional[Any],
     args: Dict[str, Any],
     ctx: Dict[str, Any],
-    info: "ResolveInfo",
+    info: Dict[str, Any],
 ) -> Dict[str, Any]:
     """
     Resolver in charge of Creating a new job.
@@ -48,21 +48,19 @@ async def resolve_mutation_add_job(
     # Extract property data
     property_data = args['input'].pop('property')
     property_collection = property_data["collection_name"]
-    property_data["_id"] = property_data["id"]
+
     property_id = store_data_in_collection(database, property_collection, property_data)
     logger.info(f"Stored property with id {property_data['_id']} into collection {property_collection}")
 
     # Extract job metadata
     job_data = args['input']
-    # Add mongo identifier
-    job_data["_id"] = job_data["id"]
 
     # Add reference to property
     jobs_collection = f"jobs_{property_collection}"
     job_data["property"] = DBRef(collection=property_collection, id=property_id)
     # Store job data
     job_data = args["input"]
-    job_data["property"] = {key: property_data[key] for key in ("id", "smile", "collection_name")}
+    job_data["property"] = {key: property_data[key] for key in ("_id", "smile", "collection_name")}
 
     job_id = store_data_in_collection(database, jobs_collection, job_data)
     logger.info(f"Stored job with id {job_id} into collection {jobs_collection}")
@@ -75,7 +73,7 @@ async def resolve_mutation_update_job(
     parent: Optional[Any],
     args: Dict[str, Any],
     ctx: Dict[str, Any],
-    info: "ResolveInfo",
+    info: Dict[str, Any],
 ) -> Dict[str, Any]:
     """
     Resolver in charge of updating a given job
@@ -104,9 +102,8 @@ async def resolve_mutation_update_job_status(
         parent: Optional[Any],
         args: Dict[str, Any],
         ctx: Dict[str, Any],
-        info: "ResolveInfo") -> Dict[str, Any]:
-    """
-    Resolver in charge of updating a given job
+        info: Dict[str, Any]) -> Dict[str, Any]:
+    """Resolver in charge of updating a given job.
 
     Parameters
     ----------

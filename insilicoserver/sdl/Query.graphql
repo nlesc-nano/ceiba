@@ -10,7 +10,7 @@ enum Status{
 """Job computed by an user"""
 type Job {
   """Unique identifier"""
-  id: Int!
+  _id: Int
   """compute Properties"""
   property: Property!
   """Input to perform the computation"""
@@ -29,7 +29,7 @@ type Job {
 
 type Property {
   """Unique identifier"""
-  id: Int!
+  _id: Int
   """Name to which the property belongs. e.g. Theory level"""
   collection_name: String!
   """Smile representing the molecule"""
@@ -46,5 +46,5 @@ type Query {
   """Query jobs by status and maximum number of jobs to retrieve"""
   jobs(status: Status!, collection_name: String!, max_jobs: Int!) : [Job!]
   properties(collection_name: String!): [Property!]
-  property(smile: String!, collection_name: String!): Property
+   property(smile: String!, collection_name: String!): Property
 }

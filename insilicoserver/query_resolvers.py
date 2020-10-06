@@ -20,7 +20,7 @@ async def resolver_query_properties(
     parent: Optional[Any],
     args: Dict[str, Any],
     ctx: Dict[str, Any],
-    info: "ResolveInfo",
+    info: Dict[str, Any],
 ) -> List[Dict[str, Any]]:
     """
     Resolver in charge of returning Properties based on their `collection_name`.
@@ -41,10 +41,7 @@ async def resolver_query_properties(
     The list of all jobs with the given status.
     """
     data = fetch_data_from_collection(ctx["mongodb"], args["collection_name"])
-    data = list(data)
-    for entry in data:
-        entry["id"] = entry.pop("_id")
-    return data
+    return list(data)
 
 
 @Resolver("Query.jobs")
@@ -52,7 +49,7 @@ async def resolver_query_jobs(
     parent: Optional[Any],
     args: Dict[str, Any],
     ctx: Dict[str, Any],
-    info: "ResolveInfo",
+    info: Dict[str, Any],
 ) -> List[Dict[str, Any]]:
     """
     Resolver in charge of returning jobs based on their status.
@@ -86,6 +83,5 @@ async def resolver_query_jobs(
         ref = j.pop("property")
         query = {"_id": ref.id}
         j["property"] = fetch_one_from_collection(ctx["mongodb"], ref.collection, query=query)
-        j["property"]["id"] = j["property"]["_id"]
 
     return jobs

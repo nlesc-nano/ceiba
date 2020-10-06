@@ -1,7 +1,7 @@
 
 input InputProperty {
   """Unique identifier"""
-  id: Int!
+  _id: Int!
   """Name to which the property belongs. e.g. Theory level"""
   collection_name: String!
   """Smile representing the molecule"""
@@ -16,7 +16,7 @@ input InputProperty {
 
 input InputJob {
   """Unique identifier"""
-  id: Int!
+  _id: Int!
   """compute Properties"""
   property: InputProperty!
   """Job status"""
@@ -35,7 +35,7 @@ input InputJob {
 
 input InputJobStatus {
   """Unique identifier"""
-  id: Int!
+  _id: Int!
   """Job status"""
   status: Status!
   """Timestamp=datatime.timestamp() """
