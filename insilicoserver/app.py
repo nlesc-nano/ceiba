@@ -4,12 +4,15 @@
 
 """
 
+import logging
 from pathlib import Path
+
+import pkg_resources as pkg
 from aiohttp import web
 from tartiflette_aiohttp import register_graphql_handlers
-import pkg_resources as pkg
-
 from insilicodatabase import DatabaseConfig, connect_to_db
+
+from .__version__ import __version__
 
 PATH_LIB = Path(pkg.resource_filename('insilicoserver', ''))
 
@@ -20,8 +23,29 @@ context = {
 }
 
 
+logger = logging.getLogger(__name__)
+
+
+def configure_logger(workdir: Path, package_name: str) -> None:
+    """Set the logging infrasctucture."""
+    file_log = workdir / 'server.log'
+    logging.basicConfig(filename=file_log, level=logging.INFO,
+                        format='%(asctime)s  %(message)s',
+                        datefmt='[%I:%M:%S]')
+    handler = logging.StreamHandler()
+    handler.terminator = ""
+
+    path = pkg.resource_filename(package_name, '')
+
+    logger.setLevel(logging.INFO)
+    logger.info(f"Using {package_name} version: {__version__}\n")
+    logger.info(f"{package_name} path is: {path}\n")
+    logger.info(f"Working directory is: {workdir}")
+
+
 def run() -> None:
     """Entry point of the application."""
+    configure_logger(Path("."), "insilicoserver")
     web.run_app(
         register_graphql_handlers(
             app=web.Application(),
@@ -39,33 +63,3 @@ def run() -> None:
             graphiql_enabled=True
         )
     )
-
-
-# import asyncio
-
-# from tartiflette import Resolver, create_engine
-
-
-# @Resolver("Query.hello")
-# async def resolver_hello(parent, args, ctx, info):
-#     return "hello " + args["name"]
-
-
-# async def main():
-#     engine = await create_engine(
-#         """
-#         type Query {
-#             hello(name: String): String
-#         }
-#         """
-#     )
-
-#     result = await engine.execute(
-#         query='query { hello(name: "Chuck") }'
-#     )
-
-#     print(result)
-#     # {'data': {'hello': 'hello Chuck'}}
-
-# if __name__ == "__main__":
-#     asyncio.run(main())
