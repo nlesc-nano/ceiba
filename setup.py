@@ -40,7 +40,7 @@ setup(
     entry_points={
         'console_scripts': ['insilico-server=insilicoserver.app:run']},
     data_files=[('citation/insilicoserver', ['CITATION.cff'])],
-    install_requires=['tartiflette', 'tartiflette-aiohttp',
+    install_requires=['more-itertools', 'tartiflette', 'tartiflette-aiohttp',
                       'insilico-database@git+https://github.com/nlesc-nano/insilico-database@master'
                       ],
     extras_require={

@@ -62,9 +62,10 @@ async def resolve_mutation_add_job(
     job_data["property"] = DBRef(collection=property_collection, id=property_id)
     # Store job data
     job_data = args["input"]
+    job_data["property"] = {key: property_data[key] for key in ("id", "smile", "collection_name")}
+
     job_id = store_data_in_collection(database, jobs_collection, job_data)
     logger.info(f"Stored job with id {job_id} into collection {jobs_collection}")
-    job_data["property"] = {key: property_data[key] for key in ("id", "smile", "collection_name")}
     return job_data
 
 

@@ -11,10 +11,8 @@ API
 from typing import Any, Dict, List, Optional
 
 from tartiflette import Resolver
-
-from insilicodatabase import fetch_properties_from_collection
-
-from .data import JOBS
+from more_itertools import take
+from insilicodatabase import fetch_data_from_collection, fetch_one_from_collection
 
 
 @Resolver("Query.properties")
@@ -42,11 +40,10 @@ async def resolver_query_properties(
     -------
     The list of all jobs with the given status.
     """
-    data = fetch_properties_from_collection(ctx["mongodb"], args["collection_name"])
+    data = fetch_data_from_collection(ctx["mongodb"], args["collection_name"])
     data = list(data)
     for entry in data:
         entry["id"] = entry.pop("_id")
-        entry["collection_name"] = args["collection_name"]
     return data
 
 
@@ -75,32 +72,20 @@ async def resolver_query_jobs(
     -------
     The list of all jobs with the given status.
     """
-    return [x for x in JOBS if x["status"] == args["status"]]
+    # metadata to query the jobs
+    query = {"status": args["status"]}
+    property_collection = args["collection_name"]
+    jobs_collection = f"jobs_{property_collection}"
 
+    # return an iterator to the jobs
+    data = fetch_data_from_collection(ctx["mongodb"], jobs_collection, query=query)
+    jobs = take(args["max_jobs"], data)
 
-@Resolver("Query.job")
-async def resolver_query_job(
-    parent: Optional[Any],
-    args: Dict[str, Any],
-    ctx: Dict[str, Any],
-    info: "ResolveInfo",
-) -> List[Dict[str, Any]]:
-    """
-    Resolver in charge of returning a single job based on its status.
+    # Get fetch the properties to compute
+    for j in jobs:
+        ref = j.pop("property")
+        query = {"_id": ref.id}
+        j["property"] = fetch_one_from_collection(ctx["mongodb"], ref.collection, query=query)
+        j["property"]["id"] = j["property"]["_id"]
 
-    Parameters
-    ----------
-    paren
-        initial value filled in to the engine `execute` method
-    args
-        computed arguments related to the field
-    ctx
-        context filled in at engine initialization
-    info
-        information related to the execution and field resolution
-
-    Returns
-    -------
-    A single job with the given status
-    """
-    return next(x for x in JOBS if x["status"] == args["status"])
+    return jobs
