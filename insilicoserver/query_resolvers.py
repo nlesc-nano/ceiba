@@ -84,4 +84,7 @@ async def resolver_query_jobs(
         query = {"_id": ref.id}
         j["property"] = fetch_one_from_collection(ctx["mongodb"], ref.collection, query=query)
 
+    #TODO Mark jobs as reserved
+
+
     return jobs

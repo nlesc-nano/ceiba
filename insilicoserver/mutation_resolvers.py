@@ -11,8 +11,10 @@ import logging
 from typing import Any, Dict, Optional
 
 from bson.dbref import DBRef
+from insilicodatabase import (fetch_one_from_collection,
+                              store_data_in_collection,
+                              update_one_in_collection)
 from tartiflette import Resolver
-from insilicodatabase import store_data_in_collection
 
 from .data import JOBS
 
@@ -48,24 +50,36 @@ async def resolve_mutation_add_job(
     # Extract property data
     property_data = args['input'].pop('property')
     property_collection = property_data["collection_name"]
-
-    property_id = store_data_in_collection(database, property_collection, property_data)
-    logger.info(f"Stored property with id {property_data['_id']} into collection {property_collection}")
-
-    # Extract job metadata
-    job_data = args['input']
-
-    # Add reference to property
     jobs_collection = f"jobs_{property_collection}"
-    job_data["property"] = DBRef(collection=property_collection, id=property_id)
-    # Store job data
-    job_data = args["input"]
-    job_data["property"] = {key: property_data[key] for key in ("_id", "smile", "collection_name")}
 
-    job_id = store_data_in_collection(database, jobs_collection, job_data)
-    logger.info(f"Stored job with id {job_id} into collection {jobs_collection}")
+    # Try to store property. If a property with the same identifier exists
+    # then return it without modifying the existing property
+    query = {"_id": property_data["_id"]}
+    prop = fetch_one_from_collection(database, property_collection, query)
+    if prop is None:
+        store_data_in_collection(database, property_collection, property_data)
+        logger.info(f"Stored property with id {property_data['_id']} into collection {property_collection}")
+
+    # Search if the job already exists. If the job already exists return its identifier
+    query = {"property._id": property_data["_id"]}
+    job_data = fetch_one_from_collection(database, jobs_collection, query)
+    if job_data is None:
+        # Extract job metadataa
+        job_data = args['input']
+        # Add reference to property
+        job_data["property"] = DBRef(collection=property_collection, id=property_data["_id"])
+        # Store job data
+        job_data = args["input"]
+        job_data["property"] = {key: property_data[key] for key in ("_id", "smile", "collection_name")}
+        # Save jobs into the database
+        job_id = store_data_in_collection(database, jobs_collection, job_data)
+        logger.info(f"Stored job with id {job_id} into collection {jobs_collection}")
+
+    query = {"_id": job_data["_id"]}
+    update = {"$set": {"status": "RESERVED"}}
+    update_one_in_collection(database, jobs_collection, query, update)
+
     return job_data
-
 
 
 @Resolver("Mutation.updateJob")
