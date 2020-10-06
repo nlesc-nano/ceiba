@@ -75,10 +75,6 @@ async def resolve_mutation_add_job(
         job_id = store_data_in_collection(database, jobs_collection, job_data)
         logger.info(f"Stored job with id {job_id} into collection {jobs_collection}")
 
-    query = {"_id": job_data["_id"]}
-    update = {"$set": {"status": "RESERVED"}}
-    update_one_in_collection(database, jobs_collection, query, update)
-
     return job_data
 
 

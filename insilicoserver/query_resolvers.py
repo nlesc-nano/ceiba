@@ -10,9 +10,11 @@ API
 """
 from typing import Any, Dict, List, Optional
 
-from tartiflette import Resolver
+from insilicodatabase import (fetch_data_from_collection,
+                              fetch_one_from_collection,
+                              update_many_in_collection)
 from more_itertools import take
-from insilicodatabase import fetch_data_from_collection, fetch_one_from_collection
+from tartiflette import Resolver
 
 
 @Resolver("Query.properties")
@@ -78,13 +80,10 @@ async def resolver_query_jobs(
     data = fetch_data_from_collection(ctx["mongodb"], jobs_collection, query=query)
     jobs = take(args["max_jobs"], data)
 
-    # Get fetch the properties to compute
-    for j in jobs:
-        ref = j.pop("property")
-        query = {"_id": ref.id}
-        j["property"] = fetch_one_from_collection(ctx["mongodb"], ref.collection, query=query)
-
-    #TODO Mark jobs as reserved
-
+    # Mark the jobs as RESERVED
+    prop_ids = [j["_id"] for j in jobs]
+    query = {"_id": {"$in": prop_ids}}
+    update = {"$set": {"status": "RESERVED"}}
+    update_many_in_collection(ctx["mongodb"], jobs_collection, query, update)
 
     return jobs
