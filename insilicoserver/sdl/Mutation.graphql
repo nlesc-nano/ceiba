@@ -38,6 +38,8 @@ input InputJobStatus {
   _id: Int!
   """Job status"""
   status: Status!
+  """collection name of the properties"""
+  collection_name: String!
   """Timestamp=datatime.timestamp() """
   schedule_time: Float
   """Timestamp=datatime.timestamp()"""
@@ -45,7 +47,8 @@ input InputJobStatus {
 }
 
 type Mutation {
-  updateJob(input: InputJob!): Job!
-  updateJobStatus(input: InputJobStatus): Job!
+  updateJob(input: InputJob!): Job
+  updateJobStatus(input: InputJobStatus): Job
   createJob(input: InputJob!): Job!
+  completion_time: Float
 }

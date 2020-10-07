@@ -11,10 +11,10 @@ import logging
 from typing import Any, Dict, Optional
 
 from bson.dbref import DBRef
+from tartiflette import Resolver
 from insilicodatabase import (fetch_one_from_collection,
                               store_data_in_collection,
                               update_one_in_collection)
-from tartiflette import Resolver
 
 from .data import JOBS
 
@@ -112,7 +112,7 @@ async def resolve_mutation_update_job_status(
         parent: Optional[Any],
         args: Dict[str, Any],
         ctx: Dict[str, Any],
-        info: Dict[str, Any]) -> Dict[str, Any]:
+        info: Dict[str, Any]) -> Optional[Dict[str, Any]]:
     """Resolver in charge of updating a given job.
 
     Parameters
@@ -130,5 +130,18 @@ async def resolve_mutation_update_job_status(
     -------
     Update job
     """
-    job = next(x for x in JOBS if x["id"] == args["input"]["id"])
-    return job
+    database = ctx["mongodb"]
+    # Extract property data
+    job_data = args['input']
+    jobs_collection = f"jobs_{job_data['collection_name']}"
+
+    # Retrieve the job
+    query = {"_id": job_data["_id"]}
+    prop = fetch_one_from_collection(database, jobs_collection, query)
+    if prop is None:
+        raise RuntimeError(f"There is not job with id: {job_data['_id']} in the database!")
+
+    update = {"$set": {"status": job_data['status']}}
+    update_one_in_collection(database, jobs_collection, query, update)
+
+    return None
