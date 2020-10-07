@@ -22,7 +22,7 @@ type Job {
   """Timestamp=datatime.timestamp() """
   schedule_time: Float
   """Timestamp=datatime.timestamp()"""
-  completion_time: Float
+  report_time: Float
   """platform where the job was run: platform.platform()"""
   platform: String
 }
