@@ -117,8 +117,9 @@ async def resolve_mutation_update_job(
     update_entry(database, jobs_collection, job_data, job_mutable_keywords)
 
     # Update property state
-    prop_mutable_keywords = {"data", "input", "geometry"}
-    update_entry(database, prop_data["collection_name"], prop_data, prop_mutable_keywords)
+    if job_data['status'] == "DONE":
+        prop_mutable_keywords = {"data", "input", "geometry"}
+        update_entry(database, prop_data["collection_name"], prop_data, prop_mutable_keywords)
 
     return args["input"]
 
