@@ -8,7 +8,7 @@ API
 
 """
 import logging
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Set
 
 from bson.dbref import DBRef
 from tartiflette import Resolver
@@ -16,7 +16,6 @@ from insilicodatabase import (fetch_one_from_collection,
                               store_data_in_collection,
                               update_one_in_collection)
 
-from .data import JOBS
 
 logger = logging.getLogger(__name__)
 
@@ -103,8 +102,25 @@ async def resolve_mutation_update_job(
     -------
     Update job
     """
-    job = next(x for x in JOBS if x["id"] == args["input"]["id"])
-    return job
+    database = ctx["mongodb"]
+    # Extract property data and Filter non-null data
+    job_data = {key: val for key, val in args["input"].items() if val is not None}
+    prop_data = {key: val for key, val in job_data.pop("property").items() if val is not None}
+    jobs_collection = f"jobs_{prop_data['collection_name']}"
+
+    # Check that the job exists
+    check_entry_existence(database, jobs_collection, job_data["_id"])
+
+    # Check that the property exists
+    check_entry_existence(database, prop_data["collection_name"], prop_data["_id"])
+    job_mutable_keywords = {"status", "user", "platform", "report_time"}
+    update_entry(database, jobs_collection, job_data, job_mutable_keywords)
+
+    # Update property state
+    prop_mutable_keywords = {"data", "input", "geometry"}
+    update_entry(database, prop_data["collection_name"], prop_data, prop_mutable_keywords)
+
+    return args["input"]
 
 
 @Resolver("Mutation.updateJobStatus")
@@ -136,12 +152,29 @@ async def resolve_mutation_update_job_status(
     jobs_collection = f"jobs_{job_data['collection_name']}"
 
     # Retrieve the job
-    query = {"_id": job_data["_id"]}
-    prop = fetch_one_from_collection(database, jobs_collection, query)
-    if prop is None:
-        raise RuntimeError(f"There is not job with id: {job_data['_id']} in the database!")
+    check_entry_existence(database, jobs_collection, job_data["_id"])
 
+    # Update job status
+    query = {"_id": job_data["_id"]}
     update = {"$set": {"status": job_data['status']}}
     update_one_in_collection(database, jobs_collection, query, update)
 
     return None
+
+
+def check_entry_existence(database: Any, collection_name: str, identifier: int) -> None:
+    """Search for a jobs in the ``database`` raise error if no job is found."""
+    query = {"_id": identifier}
+    job = fetch_one_from_collection(database, collection_name, query)
+    if job is None:
+        raise RuntimeError(f"There is not job with id: {identifier} in the database!")
+
+
+def update_entry(
+        database: Any, collection_name: str, entry: Dict[str, Any],
+        mutable_keywords: Set[str]) -> None:
+    """Update an entry in the collection changing only the allow keywords."""
+    entry_updates = {key: entry[key] for key in entry.keys() if key in mutable_keywords}
+    query = {"_id": entry["_id"]}
+    update = {"$set": entry_updates}
+    update_one_in_collection(database, collection_name, query, update)
