@@ -10,11 +10,10 @@ API
 """
 from typing import Any, Dict, List, Optional
 
-from insilicodatabase import (fetch_data_from_collection,
-                              fetch_one_from_collection,
-                              update_many_in_collection)
-from more_itertools import take
 from tartiflette import Resolver
+from more_itertools import take
+from insilicodatabase import (fetch_many_from_collection,
+                              update_many_in_collection)
 
 
 @Resolver("Query.properties")
@@ -42,7 +41,7 @@ async def resolver_query_properties(
     -------
     The list of all jobs with the given status.
     """
-    data = fetch_data_from_collection(ctx["mongodb"], args["collection_name"])
+    data = fetch_many_from_collection(ctx["mongodb"], args["collection_name"])
     return list(data)
 
 
@@ -77,7 +76,7 @@ async def resolver_query_jobs(
     jobs_collection = f"jobs_{property_collection}"
 
     # return an iterator to the jobs
-    data = fetch_data_from_collection(ctx["mongodb"], jobs_collection, query=query)
+    data = fetch_many_from_collection(ctx["mongodb"], jobs_collection, query=query)
     jobs = take(args["max_jobs"], data)
 
     # Mark the jobs as RESERVED
