@@ -18,6 +18,8 @@ from insilicodatabase import (fetch_one_from_collection,
                               update_one_in_collection)
 
 
+__all__ = ["resolve_mutation_add_job", "resolve_mutation_update_job", "resolve_mutation_update_job_status"]
+
 logger = logging.getLogger(__name__)
 
 

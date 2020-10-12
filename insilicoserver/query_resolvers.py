@@ -14,6 +14,8 @@ from more_itertools import take
 from insilicodatabase import (fetch_many_from_collection,
                               update_many_in_collection)
 
+__all__ = ["resolver_query_jobs", "resolver_query_properties"]
+
 
 @Resolver("Query.properties")
 async def resolver_query_properties(
