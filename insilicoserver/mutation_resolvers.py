@@ -14,6 +14,7 @@ from bson.dbref import DBRef
 from tartiflette import Resolver
 from insilicodatabase import (fetch_one_from_collection,
                               store_many_in_collection,
+                              store_one_in_collection,
                               update_one_in_collection)
 
 
@@ -71,7 +72,7 @@ async def resolve_mutation_add_job(
         job_data = args["input"]
         job_data["property"] = {key: property_data[key] for key in ("_id", "smile", "collection_name")}
         # Save jobs into the database
-        job_id = store_many_in_collection(database, jobs_collection, job_data)
+        job_id = store_one_in_collection(database, jobs_collection, job_data)
         logger.info(f"Stored job with id {job_id} into collection {jobs_collection}")
 
     return job_data
