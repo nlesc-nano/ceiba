@@ -4,7 +4,6 @@ API
 ---
 
 .. autofunction:: resolver_query_properties
-.. autofunction:: resolver_query_job
 .. autofunction:: resolver_query_jobs
 
 """

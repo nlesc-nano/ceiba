@@ -12,6 +12,8 @@ Welcome to insilico-server's documentation!
 
    includereadme
    intro
+   sdl_queries
+   sdl_mutations
    queries
    mutations
 
