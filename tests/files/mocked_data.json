@@ -1,0 +1,37 @@
+{
+    "PROPERTIES": [
+        {
+            "_id": 0,
+            "smile": "O=O",
+            "collection_name": "awesome_data",
+            "geometry": "2\n\nO 0.0 0.0 0.0\nO 0.0 0.0 1.208",
+            "data": "\"{\"scscore\": 1.5, \"bulkiness\": 2.0}"
+        },
+        {
+            "_id": 343,
+            "smile": "CC(=O)O",
+            "collection_name": "awesome_data"
+        },
+        {
+            "_id": 10245,
+            "smile": "CCCCCCCCC=CCCCCCCCC(=O)O",
+            "collection_name": "awsome_data"
+        }
+    ],
+    "JOBS": [
+        {
+            "_id": 33444,
+            "settings": "{}",
+            "status": "DONE",
+            "user": "felipez",
+            "schedule_time": 1600776842.278506,
+            "completion_time": 1600781352.866547,
+            "platform": "Linux-5.4.0-47-generic-x86_64-with-glibc2.10"
+        },
+        {
+            "_id": 135037,
+            "settings": "{}",
+            "status": "AVAILABLE"
+        }
+    ]
+}

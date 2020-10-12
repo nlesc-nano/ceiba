@@ -13,7 +13,6 @@ from typing import Any, Dict, Optional, Set
 from bson.dbref import DBRef
 from tartiflette import Resolver
 from insilicodatabase import (fetch_one_from_collection,
-                              store_many_in_collection,
                               store_one_in_collection,
                               update_one_in_collection)
 
@@ -59,7 +58,7 @@ async def resolve_mutation_add_job(
     query = {"_id": property_data["_id"]}
     prop = fetch_one_from_collection(database, property_collection, query)
     if prop is None:
-        store_many_in_collection(database, property_collection, property_data)
+        store_one_in_collection(database, property_collection, property_data)
         logger.info(f"Stored property with id {property_data['_id']} into collection {property_collection}")
 
     # Search if the job already exists. If the job already exists return its identifier
