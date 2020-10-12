@@ -1,0 +1,60 @@
+Schema Mutations
+################
+The following mutations are available:
+::
+   
+   input InputProperty {
+     """Unique identifier"""
+     _id: Int!
+     """Name to which the property belongs. e.g. Theory level"""
+     collection_name: String!
+     """Smile representing the molecule"""
+     smile: String!
+     """Optimize geometry"""
+     geometry: String
+     """properties values as JSON"""
+     data: String
+     """Input with which the property was computed encoded as JSON"""
+     input: String
+   }
+
+   input InputJob {
+     """Unique identifier"""
+     _id: Int!
+     """compute Properties"""
+     property: InputProperty!
+     """Job status"""
+     status: Status!
+     """Settings to run the job."""
+     settings: String
+     """User who es executing the job."""
+     user: String
+     """Timestamp=datatime.timestamp() """
+     schedule_time: Float
+     """Timestamp=datatime.timestamp()"""
+     report_time: Float
+     """platform where the job was run: platform.platform()"""
+     platform: String
+   }
+
+   input InputJobStatus {
+     """Unique identifier"""
+     _id: Int!
+     """Job status"""
+     status: Status!
+     """collection name of the properties"""
+     collection_name: String!
+     """Timestamp=datatime.timestamp() """
+     schedule_time: Float
+     """Timestamp=datatime.timestamp()"""
+     report_time: Float
+   }
+
+   type Mutation {
+     updateJob(input: InputJob!): Job
+     updateJobStatus(input: InputJobStatus): Job
+     createJob(input: InputJob!): Job!
+     completion_time: Float
+   }
+
+
