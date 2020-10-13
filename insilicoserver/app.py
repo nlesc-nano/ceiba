@@ -17,9 +17,9 @@ from insilicodatabase import DatabaseConfig, connect_to_db
 
 from .__version__ import __version__
 
+__all__ = ["run"]
+
 PATH_LIB = Path(pkg.resource_filename('insilicoserver', ''))
-
-
 logger = logging.getLogger(__name__)
 
 
