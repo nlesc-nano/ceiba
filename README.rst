@@ -8,9 +8,8 @@
 ###############
 insilico-server
 ###############
-
-This web service provides an interface to store and retrieve data from a 
-database, without the manual intervention of the researcher. See `documentation <https://insilico-server.readthedocs.io/en/latest/>`_.
+This web service provides an interface to retrieve and store simulation data,
+without the user's manual intervention. See `documentation <https://insilico-server.readthedocs.io/en/latest/>`_.
 
 Installation
 ------------
