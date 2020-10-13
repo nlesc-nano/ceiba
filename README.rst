@@ -2,6 +2,8 @@
    :target: https://github.com/nlesc-nano/insilico-server/actions
 .. image:: https://readthedocs.org/projects/insilico-server/badge/?version=latest
    :target: https://insilico-server.readthedocs.io/en/latest/?badge=latest
+.. image:: https://codecov.io/gh/nlesc-nano/insilico-server/branch/master/graph/badge.svg
+  :target: https://codecov.io/gh/nlesc-nano/insilico-server
 
 ###############
 insilico-server

@@ -44,8 +44,8 @@ setup(
                       'insilico-database@git+https://github.com/nlesc-nano/insilico-database@master'
                       ],
     extras_require={
-        'test': ['coverage', 'mypy', 'pycodestyle', 'pytest>=3.9','pytest-asyncio', 'pytest-cov',
-                 'pytest-mock'],
+        'test': ['coverage', 'mypy', 'pycodestyle', 'pytest>=3.9',
+                 'pytest-asyncio', 'pytest-cov', 'pytest-mock'],
         'doc': ['sphinx', 'sphinx-autodoc-typehints', 'sphinx_rtd_theme',
                 'nbsphinx']
     }

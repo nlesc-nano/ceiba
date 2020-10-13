@@ -4,26 +4,32 @@
 
 """
 
+import argparse
 import logging
 from pathlib import Path
+from typing import Any, Dict
 
 import pkg_resources as pkg
 from aiohttp import web
 from tartiflette_aiohttp import register_graphql_handlers
 from insilicodatabase import DatabaseConfig, connect_to_db
 
+
 from .__version__ import __version__
 
 PATH_LIB = Path(pkg.resource_filename('insilicoserver', ''))
 
-db_info = DatabaseConfig("properties")
-
-context = {
-    "mongodb": connect_to_db(db_info)
-}
-
 
 logger = logging.getLogger(__name__)
+
+
+def create_context(args: argparse.Namespace) -> Dict[str, Any]:
+    """Create context to run the app."""
+    db_info = DatabaseConfig("properties", username=args.username, password=args.password)
+    context = {
+        "mongodb": connect_to_db(db_info)
+    }
+    return context
 
 
 def configure_logger(workdir: Path, package_name: str) -> None:
@@ -43,13 +49,22 @@ def configure_logger(workdir: Path, package_name: str) -> None:
     logger.info(f"Working directory is: {workdir}")
 
 
+def read_cli_args() -> argparse.Namespace:
+    """Read the command line arguments."""
+    parser = argparse.ArgumentParser("insilico-server")
+    parser.add_argument('-u', '--username', default=None)
+    parser.add_argument('-p', '--password', default=None)
+    return parser.parse_args()
+
+
 def run() -> None:
     """Entry point of the application."""
     configure_logger(Path("."), "insilicoserver")
+    args = read_cli_args()
     web.run_app(
         register_graphql_handlers(
             app=web.Application(),
-            executor_context=context,
+            executor_context=create_context(args),
             engine_sdl=(PATH_LIB / "sdl").absolute().as_posix(),
             engine_modules=[
                 "insilicoserver.query_resolvers",
