@@ -7,11 +7,6 @@
 insilico-server
 ###############
 
-🧬🧪  Most of the scientific simulations are usually performed in supercomputer
-or high tech facilities. Usually the data is kept on those facilities
-stored in a raw format, 🗝  in contraction with the
-`scientific FAIR principles for data <https://www.go-fair.org/fair-principles/>`_.
-
 This web service provides an interface to store and retrieve data from a 
 database, without the manual intervention of the researcher. See `documentation <https://insilico-server.readthedocs.io/en/latest/>`_.
 
