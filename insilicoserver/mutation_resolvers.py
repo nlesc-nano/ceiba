@@ -17,9 +17,37 @@ from insilicodatabase import (fetch_one_from_collection,
                               update_one_in_collection)
 
 
-__all__ = ["resolve_mutation_add_job", "resolve_mutation_update_job", "resolve_mutation_update_job_status"]
+__all__ = ["resolve_mutation_add_job", "resolve_mutation_update_job",
+           "resolve_mutation_update_job_status", "resolve_mutation_update_property"]
 
 logger = logging.getLogger(__name__)
+
+@Resolver("Mutation.updateProperty")
+async def resolve_mutation_update_property(
+    parent: Optional[Any],
+    args: Dict[str, Any],
+    ctx: Dict[str, Any],
+    info: Dict[str, Any],
+) -> Dict[str, Any]:
+    """
+    Resolver in charge of Updating or creating a property in the database.
+
+    Parameters
+    ----------
+    paren
+        initial value filled in to the engine `execute` method
+    args
+        computed arguments related to the field
+    ctx
+        context filled in at engine initialization
+    info
+        information related to the execution and field resolution
+
+    Returns
+    -------
+    Update
+    """
+    pass
 
 
 @Resolver("Mutation.createJob")
@@ -45,7 +73,7 @@ async def resolve_mutation_add_job(
 
     Returns
     -------
-    Update job
+    Updated Property
     """
     database = ctx["mongodb"]
     # Extract property data
@@ -102,7 +130,7 @@ async def resolve_mutation_update_job(
 
     Returns
     -------
-    Update job
+    Updated job
     """
     database = ctx["mongodb"]
     # Extract property data and Filter non-null data
@@ -147,7 +175,7 @@ async def resolve_mutation_update_job_status(
 
     Returns
     -------
-    Update job
+    Updated job
     """
     database = ctx["mongodb"]
     # Extract property data

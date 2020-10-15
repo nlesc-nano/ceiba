@@ -50,5 +50,5 @@ type Mutation {
   updateJob(input: InputJob!): Job
   updateJobStatus(input: InputJobStatus): Job
   createJob(input: InputJob!): Job!
-  completion_time: Float
+  updateProperty(input: InputProperty!): Property
 }
