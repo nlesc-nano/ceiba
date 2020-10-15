@@ -13,6 +13,12 @@ The following schema defines the available queries:
       RESERVED
     }
 
+    """Larger jobs are computationally more expensive."""
+    enum JobSize {
+      SMALL
+      LARGE
+    }
+
     """Job computed by an user"""
     type Job {
       """Unique identifier"""
@@ -50,7 +56,7 @@ The following schema defines the available queries:
 
     type Query {
       """Query jobs by status and maximum number of jobs to retrieve"""
-      jobs(status: Status!, collection_name: String!, max_jobs: Int!) : [Job!]
+      jobs(status: Status!, collection_name: String!, max_jobs: Int!, job_size: JobSize!) : [Job!]
       properties(collection_name: String!): [Property!]
-       property(smile: String!, collection_name: String!): Property
+      property(smile: String!, collection_name: String!): Property
     }
