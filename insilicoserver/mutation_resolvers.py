@@ -5,6 +5,7 @@ API
 .. autofunction:: resolve_mutation_add_job
 .. autofunction:: resolve_mutation_update_job
 .. autofunction:: resolve_mutation_update_job_status
+.. autofunction:: resolve_mutation_update_property
 
 """
 import logging
@@ -47,7 +48,13 @@ async def resolve_mutation_update_property(
     -------
     Update
     """
-    pass
+    database = ctx["mongodb"]
+    # Extract property data
+    property_data = args['input']
+
+    # Update the following keywords
+    prop_mutable_keywords = {"data", "input", "geometry"}
+    update_entry(database, property_data["collection_name"], property_data, prop_mutable_keywords)
 
 
 @Resolver("Mutation.createJob")
@@ -81,13 +88,8 @@ async def resolve_mutation_add_job(
     property_collection = property_data["collection_name"]
     jobs_collection = f"jobs_{property_collection}"
 
-    # Try to store property. If a property with the same identifier exists
-    # then return it without modifying the existing property
-    query = {"_id": property_data["_id"]}
-    prop = fetch_one_from_collection(database, property_collection, query)
-    if prop is None:
-        store_one_in_collection(database, property_collection, property_data)
-        logger.info(f"Stored property with id {property_data['_id']} into collection {property_collection}")
+    # Try to store property.
+    store_property(database, property_data)
 
     # Search if the job already exists. If the job already exists return its identifier
     query = {"property._id": property_data["_id"]}
@@ -209,3 +211,16 @@ def update_entry(
     query = {"_id": entry["_id"]}
     update = {"$set": entry_updates}
     update_one_in_collection(database, collection_name, query, update)
+
+
+def store_property(database: Any, property_data: Dict[str, Any]) -> None:
+    """Store property if not already available in the database."""
+    # If a property with the same identifier exists
+    # then return it without modifying the existing property
+    property_collection = property_data["collection_name"]
+    index = property_data["_id"]
+    query = {"_id": index}
+    prop = fetch_one_from_collection(database, property_collection, query)
+    if prop is None:
+        store_one_in_collection(database, property_collection, property_data)
+        logger.info(f"Stored property with id {index} into collection {property_collection}")
