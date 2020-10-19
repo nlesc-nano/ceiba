@@ -3,12 +3,11 @@
 
 from typing import List
 
-
 from pymongo import MongoClient
 from pymongo.database import Database
-from insilicodatabase.interface import (DatabaseConfig, connect_to_db,
-                                        store_dataframe_in_mongo)
 
+from insilicoserver.mongo_interface import (DatabaseConfig, connect_to_db,
+                                            store_dataframe_in_mongo)
 
 from .utils_test import PATH_TEST
 
@@ -21,7 +20,7 @@ def add_candidates(mongodb: MongoClient) -> List[int]:
     # read data from file
     path_data = PATH_TEST / "candidates.csv"
 
-    return store_dataframe_in_mongo(mongodb, COLLECTION_NAME, path_data)
+    return store_dataframe_in_mongo(mongodb[COLLECTION_NAME], path_data)
 
 
 def get_database() -> Database:

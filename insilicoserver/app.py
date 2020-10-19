@@ -12,7 +12,7 @@ from typing import Any, Dict
 import pkg_resources as pkg
 from aiohttp import web
 from tartiflette_aiohttp import register_graphql_handlers
-from insilicodatabase import DatabaseConfig, connect_to_db
+from .mongo_interface import DatabaseConfig, connect_to_db
 
 
 from .__version__ import __version__
