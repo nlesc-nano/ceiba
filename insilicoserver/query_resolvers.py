@@ -9,10 +9,8 @@ API
 """
 from typing import Any, Dict, List, Optional
 
-from tartiflette import Resolver
 from more_itertools import take
-from insilicodatabase import (fetch_many_from_collection,
-                              update_many_in_collection)
+from tartiflette import Resolver
 
 __all__ = ["resolver_query_jobs", "resolver_query_properties"]
 
@@ -42,7 +40,8 @@ async def resolver_query_properties(
     -------
     The list of all jobs with the given status.
     """
-    data = fetch_many_from_collection(ctx["mongodb"], args["collection_name"])
+    collection = ctx["mongodb"][args["collection_name"]]
+    data = collection.find()
     return list(data)
 
 
@@ -73,11 +72,31 @@ async def resolver_query_jobs(
     """
     # metadata to query the jobs
     query = {"status": args["status"]}
+
     property_collection = args["collection_name"]
     jobs_collection = f"jobs_{property_collection}"
 
-    # return an iterator to the jobs
-    data = fetch_many_from_collection(ctx["mongodb"], jobs_collection, query=query)
+    # Return the first available jobs
+    if args["job_size"] is None:
+        collection = ctx["mongodb"][jobs_collection]
+        data = collection.find(query)
+    # Return a small or large job if the user requested so
+    else:
+        pass
+
     jobs = take(args["max_jobs"], data)
 
     return jobs
+
+
+def size_pipeline(job_size: str, collection):
+    """Retrieve jobs by size"""
+    it = collection.aggregate([{
+    "$addFields": {
+         "lensmile": {"$strLenCP": "$property.smile"}
+    }},
+    {"$sort": {"lensmile": -1}}
+    ])
+
+    return it
+

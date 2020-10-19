@@ -13,10 +13,8 @@ from typing import Any, Dict, Optional, Set
 
 from bson.dbref import DBRef
 from tartiflette import Resolver
-from insilicodatabase import (fetch_one_from_collection,
-                              store_one_in_collection,
-                              update_one_in_collection)
-
+from pymongo.database import Database
+from pymongo.collection import Collection
 
 __all__ = ["resolve_mutation_add_job", "resolve_mutation_update_job",
            "resolve_mutation_update_job_status", "resolve_mutation_update_property"]
@@ -54,7 +52,8 @@ async def resolve_mutation_update_property(
 
     # Update the following keywords
     prop_mutable_keywords = {"data", "input", "geometry"}
-    update_entry(database, property_data["collection_name"], property_data, prop_mutable_keywords)
+    collection = database[property_data["collection_name"]]
+    update_entry(collection, property_data, prop_mutable_keywords)
 
 
 @Resolver("Mutation.createJob")
@@ -86,14 +85,15 @@ async def resolve_mutation_add_job(
     # Extract property data
     property_data = args['input'].pop('property')
     property_collection = property_data["collection_name"]
-    jobs_collection = f"jobs_{property_collection}"
+    jobs_collection = database[f"jobs_{property_collection}"]
 
     # Try to store property.
     store_property(database, property_data)
 
     # Search if the job already exists. If the job already exists return its identifier
     query = {"property._id": property_data["_id"]}
-    job_data = fetch_one_from_collection(database, jobs_collection, query)
+
+    job_data = jobs_collection.find_one(query)
     if job_data is None:
         # Extract job metadataa
         job_data = args['input']
@@ -103,7 +103,7 @@ async def resolve_mutation_add_job(
         job_data = args["input"]
         job_data["property"] = {key: property_data[key] for key in ("_id", "smile", "collection_name")}
         # Save jobs into the database
-        job_id = store_one_in_collection(database, jobs_collection, job_data)
+        job_id = jobs_collection.insert_one(job_data).inserted_id
         logger.info(f"Stored job with id {job_id} into collection {jobs_collection}")
 
     return job_data
@@ -135,23 +135,28 @@ async def resolve_mutation_update_job(
     Updated job
     """
     database = ctx["mongodb"]
+
     # Extract property data and Filter non-null data
     job_data = {key: val for key, val in args["input"].items() if val is not None}
     prop_data = {key: val for key, val in job_data.pop("property").items() if val is not None}
-    jobs_collection = f"jobs_{prop_data['collection_name']}"
+
+    # Extract collections
+    jobs_collection = database[f"jobs_{prop_data['collection_name']}"]
+    prop_collection = database[prop_data["collection_name"]]
 
     # Check that the job exists
-    check_entry_existence(database, jobs_collection, job_data["_id"])
+    check_entry_existence(jobs_collection, job_data["_id"])
 
     # Check that the property exists
-    check_entry_existence(database, prop_data["collection_name"], prop_data["_id"])
+    print("WWWWWWWWWW")
+    check_entry_existence(prop_collection, prop_data["_id"])
     job_mutable_keywords = {"status", "user", "platform", "report_time"}
-    update_entry(database, jobs_collection, job_data, job_mutable_keywords)
+    update_entry(jobs_collection, job_data, job_mutable_keywords)
 
     # Update property state
     if job_data['status'] == "DONE":
         prop_mutable_keywords = {"data", "input", "geometry"}
-        update_entry(database, prop_data["collection_name"], prop_data, prop_mutable_keywords)
+        update_entry(prop_collection, prop_data, prop_mutable_keywords)
 
     return args["input"]
 
@@ -182,45 +187,43 @@ async def resolve_mutation_update_job_status(
     database = ctx["mongodb"]
     # Extract property data
     job_data = args['input']
-    jobs_collection = f"jobs_{job_data['collection_name']}"
+    jobs_collection = database[f"jobs_{job_data['collection_name']}"]
 
     # Retrieve the job
-    check_entry_existence(database, jobs_collection, job_data["_id"])
+    check_entry_existence(jobs_collection, job_data["_id"])
 
     # Update job status
     query = {"_id": job_data["_id"]}
     update = {"$set": {"status": job_data['status']}}
-    update_one_in_collection(database, jobs_collection, query, update)
-
-    return None
+    jobs_collection.update_one(query, update)
 
 
-def check_entry_existence(database: Any, collection_name: str, identifier: int) -> None:
+def check_entry_existence(collection: Collection, identifier: int) -> None:
     """Search for a jobs in the ``database`` raise error if no job is found."""
     query = {"_id": identifier}
-    job = fetch_one_from_collection(database, collection_name, query)
+    job = collection.find_one(query)
     if job is None:
-        raise RuntimeError(f"There is not job with id: {identifier} in the database!")
+        raise RuntimeError(f"There is not element with id: {identifier} in the database!")
 
 
 def update_entry(
-        database: Any, collection_name: str, entry: Dict[str, Any],
+        collection: Collection, entry: Dict[str, Any],
         mutable_keywords: Set[str]) -> None:
     """Update an entry in the collection changing only the allow keywords."""
     entry_updates = {key: entry[key] for key in entry.keys() if key in mutable_keywords}
     query = {"_id": entry["_id"]}
     update = {"$set": entry_updates}
-    update_one_in_collection(database, collection_name, query, update)
+    collection.update_one(query, update)
 
 
-def store_property(database: Any, property_data: Dict[str, Any]) -> None:
+def store_property(database: Database, property_data: Dict[str, Any]) -> None:
     """Store property if not already available in the database."""
     # If a property with the same identifier exists
     # then return it without modifying the existing property
-    property_collection = property_data["collection_name"]
+    property_collection = database[property_data["collection_name"]]
     index = property_data["_id"]
     query = {"_id": index}
-    prop = fetch_one_from_collection(database, property_collection, query)
+    prop = property_collection.find_one(query)
     if prop is None:
-        store_one_in_collection(database, property_collection, property_data)
+        property_collection.insert_one(property_data)
         logger.info(f"Stored property with id {index} into collection {property_collection}")

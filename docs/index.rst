@@ -16,6 +16,7 @@ Welcome to insilico-server's documentation!
    sdl_mutations
    queries
    mutations
+   datalayout
 
 
 Indices and tables

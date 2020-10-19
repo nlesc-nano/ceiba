@@ -11,12 +11,18 @@ insilico-server
 This web service provides an interface to retrieve and store simulation data,
 without the user's manual intervention. See `documentation <https://insilico-server.readthedocs.io/en/latest/>`_.
 
+
 Installation
-------------
+************
 
-🛠  To install insilico-server, do:
+1.🐳 Install `Docker <https://www.docker.com/>`_
 
-.. code-block:: console
+2. 🚀 Start the mongodb image (Use a strong password)
+::
+
+   docker run -d   -e "MONGO_INITDB_ROOT_USERNAME=admin" -e "MONGO_INITDB_ROOT_PASSWORD=strongPasswd" -p 27017-27019:27017-27019 --name mongodbauth mongo:latest
+
+3. 🛠  install the library
 
   pip install git+https://github.com/nlesc-nano/insilico-server.git@master
 

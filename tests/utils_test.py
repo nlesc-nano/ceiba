@@ -2,7 +2,7 @@
 
 import json
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 import pkg_resources as pkg
 
@@ -33,3 +33,22 @@ def read_jobs() -> Dict[str, Any]:
         job["property"] = prop
 
     return jobs
+
+
+class MockedCollection:
+    """Mock a Mongodb collection."""
+
+    def __init__(self, data: Any) -> None:
+        self.data = data
+
+    def find_one(self, query: Any = None) -> Any:
+        return self.data
+
+    def find(self, query: Any = None) -> Any:
+        return self.data
+
+    def update_one(self, query: Dict[str, Any], update: Dict[str, Any]) -> None:
+        return None
+
+    def insert_one(self, query: Dict[str, Any]) -> None:
+        return None
