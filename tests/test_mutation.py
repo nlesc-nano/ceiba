@@ -5,7 +5,7 @@ from pytest_mock import MockFixture
 
 from insilicoserver.mutation_resolvers import (
     resolve_mutation_add_job, resolve_mutation_update_job,
-    resolve_mutation_update_job_status)
+    resolve_mutation_update_job_status, resolve_mutation_update_property)
 
 from .utils_test import read_jobs
 
@@ -69,4 +69,21 @@ async def test_mutation_update_job_status(mocker: MockFixture):
         "insilicoserver.mutation_resolvers.update_one_in_collection", return_value=None)
 
     state = await resolve_mutation_update_job_status(PARENT, args, CONTEXT, INFO)
+    assert state is None
+
+
+@pytest.mark.asyncio
+async def test_mutation_update_job_status(mocker: MockFixture):
+    """Check the job status updater."""
+    args = {"input": {
+        "_id": 101010,
+        "collection_name": "awesome_results",
+        "data": '{"pi": "3.14159265358979323846"}'
+    }}
+
+    # Mock the interaction with the database
+    mocker.patch(
+        "insilicoserver.mutation_resolvers.update_one_in_collection", return_value=None)
+
+    state = await resolve_mutation_update_property(PARENT, args, CONTEXT, INFO)
     assert state is None
