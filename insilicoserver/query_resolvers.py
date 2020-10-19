@@ -80,10 +80,4 @@ async def resolver_query_jobs(
     data = fetch_many_from_collection(ctx["mongodb"], jobs_collection, query=query)
     jobs = take(args["max_jobs"], data)
 
-    # Mark the jobs as RESERVED
-    prop_ids = [j["_id"] for j in jobs]
-    query = {"_id": {"$in": prop_ids}}
-    update = {"$set": {"status": "RESERVED"}}
-    update_many_in_collection(ctx["mongodb"], jobs_collection, query, update)
-
     return jobs
