@@ -143,6 +143,7 @@ async def resolve_mutation_update_job(
     Updated job
     """
     database = ctx["mongodb"]
+    msg = ""
 
     # Extract property data and Filter non-null data
     job_data = {key: val for key, val in args["input"].items() if val is not None}

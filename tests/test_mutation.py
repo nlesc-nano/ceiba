@@ -1,5 +1,6 @@
 """Test the mutation resolvers."""
 
+import itertools
 from typing import Any, Dict
 
 import pytest
@@ -35,15 +36,16 @@ async def test_mutation_add_job():
     check_reply(reply)
 
 
-async def run_mutation_update_job(policy: str) -> Dict[str, Any]:
+async def run_mutation_update_job(
+        policy: str, new: Dict[str, Any], old: Dict[str, Any]) -> Dict[str, Any]:
     """Test the resolver for updating jobs."""
     args = {
-        "input": MOCKED_JOBS[0],
+        "input": new,
         "duplication_policy": policy
     }
     # Mock database
     ctx = {"mongodb": {
-        "jobs_awesome_data": MockedCollection(MOCKED_JOBS[0]),
+        "jobs_awesome_data": MockedCollection(old),
         "awesome_data": MockedCollection({'data': '{"prop": 42}'})}}
 
     reply = await resolve_mutation_update_job(PARENT, args, ctx, INFO)
@@ -53,17 +55,22 @@ async def run_mutation_update_job(policy: str) -> Dict[str, Any]:
 @pytest.mark.asyncio
 async def test_mutation_update_job():
     """Test the resolver for updating jobs."""
+    # The first job is done the second available
+    done_available = read_jobs()
     # Test keep policy
-    reply = await run_mutation_update_job("KEEP")
-    check_reply(reply)
+    for job1, job2 in itertools.product(done_available, done_available):
+        reply = await run_mutation_update_job("KEEP", job1, job2)
+        check_reply(reply)
 
     # Test overwrite policy
-    reply = await run_mutation_update_job("OVERWRITE")
-    check_reply(reply)
+    for job1, job2 in itertools.product(done_available, done_available):
+        reply = await run_mutation_update_job("OVERWRITE", job1, job2)
+        check_reply(reply)
 
     # Test merge policy
-    reply = await run_mutation_update_job("MERGE")
-    check_reply(reply)
+    for job1, job2 in itertools.product(done_available, done_available):
+        reply = await run_mutation_update_job("MERGE", job1, job2)
+        check_reply(reply)
 
 
 @pytest.mark.asyncio

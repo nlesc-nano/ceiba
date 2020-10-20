@@ -2,7 +2,7 @@
 
 import json
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Dict
 
 import pkg_resources as pkg
 
@@ -29,10 +29,11 @@ def read_jobs() -> Dict[str, Any]:
     properties = data["PROPERTIES"]
 
     # Add property attribute to the jobs
+    new_jobs = []
     for job, prop in zip(jobs, properties):
         job["property"] = prop
-
-    return jobs
+        new_jobs.append(job)
+    return new_jobs
 
 
 class MockedCollection:
