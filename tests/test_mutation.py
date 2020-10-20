@@ -35,11 +35,12 @@ async def test_mutation_add_job():
 async def test_mutation_update_job():
     """Test the resolver for updating jobs."""
     args = {
-        "input": MOCKED_JOBS[0]
+        "input": MOCKED_JOBS[0],
+        "duplication_policy": "KEEP"
     }
     # Mock database
     ctx = {"mongodb": {
-        "jobs_awesome_data": MockedCollection(MOCKED_JOBS),
+        "jobs_awesome_data": MockedCollection(MOCKED_JOBS[0]),
         "awesome_data": MockedCollection({'data': 42})}}
 
     job = await resolve_mutation_update_job(PARENT, args, ctx, INFO)
