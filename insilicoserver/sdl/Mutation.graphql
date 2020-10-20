@@ -1,3 +1,14 @@
+"""
+Keep the old data
+Merge the old and the new data
+Overwrite the old data with the new one
+Make the data a list and append the new data to it"""
+enum DuplicationPolicy{
+  KEEP
+  MERGE
+  OVERWRITE
+  APPEND
+}
 
 input InputProperty {
   """Unique identifier"""
@@ -47,7 +58,7 @@ input InputJobStatus {
 }
 
 type Mutation {
-  updateJob(input: InputJob!): Job
+  updateJob(input: InputJob!, duplication_policy: DuplicationPolicy): Job
   updateJobStatus(input: InputJobStatus): Job
   createJob(input: InputJob!): Job!
   updateProperty(input: InputProperty!): Property

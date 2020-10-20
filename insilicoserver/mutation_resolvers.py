@@ -8,6 +8,7 @@ API
 .. autofunction:: resolve_mutation_update_property
 
 """
+import json
 import logging
 from typing import Any, Dict, Optional, Set
 
@@ -20,6 +21,8 @@ __all__ = ["resolve_mutation_add_job", "resolve_mutation_update_job",
            "resolve_mutation_update_job_status", "resolve_mutation_update_property"]
 
 logger = logging.getLogger(__name__)
+
+PROPERTY_MUTABLE_KEYWORDS = {"data", "input", "geometry"}
 
 
 @Resolver("Mutation.updateProperty")
@@ -52,9 +55,8 @@ async def resolve_mutation_update_property(
     property_data = args['input']
 
     # Update the following keywords
-    prop_mutable_keywords = {"data", "input", "geometry"}
     collection = database[property_data["collection_name"]]
-    update_entry(collection, property_data, prop_mutable_keywords)
+    update_entry(collection, property_data, PROPERTY_MUTABLE_KEYWORDS)
 
 
 @Resolver("Mutation.createJob")
@@ -147,18 +149,21 @@ async def resolve_mutation_update_job(
     prop_collection = database[prop_data["collection_name"]]
 
     # Check that the job exists
-    check_entry_existence(jobs_collection, job_data["_id"])
+    old_job = check_entry_existence(jobs_collection, job_data["_id"])
+    job_mutable_keywords = {"status", "user", "platform", "report_time"}
+    # Report new data
+    if old_job["status"] != "DONE" and job_data['status'] == "DONE":
+        update_entry(jobs_collection, job_data, job_mutable_keywords)
 
     # Check that the property exists
-    check_entry_existence(prop_collection, prop_data["_id"])
-    job_mutable_keywords = {"status", "user", "platform", "report_time"}
-    update_entry(jobs_collection, job_data, job_mutable_keywords)
+    old_prop = check_entry_existence(prop_collection, prop_data["_id"])
 
     # Update property state
-    if job_data['status'] == "DONE":
-        prop_mutable_keywords = {"data", "input", "geometry"}
-        update_entry(prop_collection, prop_data, prop_mutable_keywords)
-
+    if old_job['status'] != "DONE" and job_data['status'] == "DONE":
+        update_entry(prop_collection, prop_data, PROPERTY_MUTABLE_KEYWORDS)
+    # There is a new job
+    elif old_job['status'] == "DONE" and job_data['status'] == "DONE":
+        handle_duplication(prop_collection, prop_data, old_prop, args["duplication_policy"])
     return args["input"]
 
 
@@ -199,12 +204,27 @@ async def resolve_mutation_update_job_status(
     jobs_collection.update_one(query, update)
 
 
-def check_entry_existence(collection: Collection, identifier: int) -> None:
+def handle_duplication(
+        collection: Collection, prop_data: Dict[str, Any], old_prop: Dict[str, Any],
+        duplication_policy: str) -> None:
+    """Take care of the duplicated data following the user policy."""
+    if duplication_policy == "OVERWRITE":
+        update_entry(collection, prop_data, PROPERTY_MUTABLE_KEYWORDS)
+    elif duplication_policy == "MERGE":
+        prop_data['data'] = merge_json_data(prop_data['data'], old_prop['data'])
+        update_entry(collection, prop_data, PROPERTY_MUTABLE_KEYWORDS)
+    elif duplication_policy == "APPEND":
+        raise NotImplementedError("Append policy has not been implemented")
+
+
+def check_entry_existence(collection: Collection, identifier: int) -> Dict[str, Any]:
     """Search for a jobs in the ``database`` raise error if no job is found."""
     query = {"_id": identifier}
     job = collection.find_one(query)
     if job is None:
         raise RuntimeError(f"There is not element with id: {identifier} in the database!")
+
+    return job
 
 
 def update_entry(
@@ -228,3 +248,10 @@ def store_property(database: Database, property_data: Dict[str, Any]) -> None:
     if prop is None:
         property_collection.insert_one(property_data)
         logger.info(f"Stored property with id {index} into collection {property_collection}")
+
+
+def merge_json_data(old_data: str, new_data: str) -> str:
+    """Merge to dictionaries encoded as JSON."""
+    data = json.loads(old_data)
+    data.update(json.loads(new_data))
+    return json.dumps(data)
