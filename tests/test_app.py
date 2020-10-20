@@ -1,8 +1,6 @@
 """Test the app instantiation."""
 
 import argparse
-import logging
-import sys
 from pathlib import Path
 
 from pytest_mock import MockFixture
