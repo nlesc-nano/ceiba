@@ -8,8 +8,9 @@ from pymongo.database import Database
 
 from insilicoserver.mongo_interface import (DatabaseConfig, connect_to_db,
                                             store_dataframe_in_mongo)
+from insilicoserver.query_resolvers import get_jobs_by_size
 
-from .utils_test import PATH_TEST
+from .utils_test import PATH_TEST, read_jobs
 
 DB_NAME = "test_mutations"
 COLLECTION_NAME = "candidates"
@@ -42,3 +43,16 @@ def test_many_insertions():
     finally:
         collection = mongodb[COLLECTION_NAME]
         collection.drop()
+
+
+def test_aggregation():
+    """Test an aggregation pipeline."""
+    mongodb = get_database()
+    col = mongodb["jobs_test"]
+    jobs = read_jobs()
+    col.insert_many(jobs)
+    try:
+        large = next(get_jobs_by_size("LARGE", col))
+        assert large["_id"] == 135037
+    finally:
+        col.drop()
