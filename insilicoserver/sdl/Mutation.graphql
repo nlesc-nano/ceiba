@@ -10,6 +10,18 @@ enum DuplicationPolicy{
   APPEND
 }
 
+"""Whether or not the request succeeded"""
+enum RequestStatus {
+  FAILED
+  DONE
+}
+
+"""Message to report back"""
+type Message {
+  status: RequestStatus!
+  text: String
+}
+
 input InputProperty {
   """Unique identifier"""
   _id: Int!
@@ -58,8 +70,8 @@ input InputJobStatus {
 }
 
 type Mutation {
-  updateJob(input: InputJob!, duplication_policy: DuplicationPolicy): Job
-  updateJobStatus(input: InputJobStatus): Job
-  createJob(input: InputJob!): Job!
-  updateProperty(input: InputProperty!): Property
+  updateJob(input: InputJob!, duplication_policy: DuplicationPolicy): Message!
+  updateJobStatus(input: InputJobStatus): Message!
+  createJob(input: InputJob!): Message!
+  updateProperty(input: InputProperty!): Message!
 }

@@ -58,6 +58,8 @@ async def resolve_mutation_update_property(
     collection = database[property_data["collection_name"]]
     update_entry(collection, property_data, PROPERTY_MUTABLE_KEYWORDS)
 
+    return {"status": "DONE"}
+
 
 @Resolver("Mutation.createJob")
 async def resolve_mutation_add_job(
@@ -108,9 +110,11 @@ async def resolve_mutation_add_job(
             key: property_data[key] for key in ("_id", "smile", "collection_name")}
         # Save jobs into the database
         job_id = jobs_collection.insert_one(job_data).inserted_id
-        logger.info(f"Stored job with id {job_id} into collection {jobs_collection}")
+        msg = f"Stored job with id {job_id} into collection jobs_{property_data['collection_name']}"
+    else:
+        msg = f"Job with id {job_data['_id']} is already in collection jobs_{property_data['collection_name']}"
 
-    return job_data
+    return {"status": "DONE", "text": msg}
 
 
 @Resolver("Mutation.updateJob")
@@ -161,10 +165,18 @@ async def resolve_mutation_update_job(
     # Update property state
     if old_job['status'] != "DONE" and job_data['status'] == "DONE":
         update_entry(prop_collection, prop_data, PROPERTY_MUTABLE_KEYWORDS)
+        msg = f"""The properties with id {prop_data['_id']},
+have been added to collection {prop_data['collection_name']}"""
     # There is a new job
     elif old_job['status'] == "DONE" and job_data['status'] == "DONE":
         handle_duplication(prop_collection, prop_data, old_prop, args["duplication_policy"])
-    return args["input"]
+        msg = f"""Properties with id: {prop_data['_id']} have been previously reported.
+The new properties are handled using the {args['duplication_policy']} duplication policy"""
+
+    elif old_job['status'] != "DONE" and job_data['status'] != "DONE":
+        msg = """Neither the old or the new job have succeeded, nothing new to report!"""
+
+    return {"status": "DONE", "text": msg}
 
 
 @Resolver("Mutation.updateJobStatus")
@@ -202,6 +214,8 @@ async def resolve_mutation_update_job_status(
     query = {"_id": job_data["_id"]}
     update = {"$set": {"status": job_data['status']}}
     jobs_collection.update_one(query, update)
+
+    return {"status": "DONE"}
 
 
 def handle_duplication(
