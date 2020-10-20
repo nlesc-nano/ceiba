@@ -21,6 +21,7 @@ __all__ = ["resolve_mutation_add_job", "resolve_mutation_update_job",
 
 logger = logging.getLogger(__name__)
 
+
 @Resolver("Mutation.updateProperty")
 async def resolve_mutation_update_property(
     parent: Optional[Any],
@@ -101,7 +102,8 @@ async def resolve_mutation_add_job(
         job_data["property"] = DBRef(collection=property_collection, id=property_data["_id"])
         # Store job data
         job_data = args["input"]
-        job_data["property"] = {key: property_data[key] for key in ("_id", "smile", "collection_name")}
+        job_data["property"] = {
+            key: property_data[key] for key in ("_id", "smile", "collection_name")}
         # Save jobs into the database
         job_id = jobs_collection.insert_one(job_data).inserted_id
         logger.info(f"Stored job with id {job_id} into collection {jobs_collection}")
@@ -148,7 +150,6 @@ async def resolve_mutation_update_job(
     check_entry_existence(jobs_collection, job_data["_id"])
 
     # Check that the property exists
-    print("WWWWWWWWWW")
     check_entry_existence(prop_collection, prop_data["_id"])
     job_mutable_keywords = {"status", "user", "platform", "report_time"}
     update_entry(jobs_collection, job_data, job_mutable_keywords)

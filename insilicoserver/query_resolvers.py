@@ -7,10 +7,12 @@ API
 .. autofunction:: resolver_query_jobs
 
 """
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Iterable, List, Optional
 
 from more_itertools import take
+from pymongo.collection import Collection
 from tartiflette import Resolver
+
 
 __all__ = ["resolver_query_jobs", "resolver_query_properties"]
 
@@ -75,28 +77,27 @@ async def resolver_query_jobs(
 
     property_collection = args["collection_name"]
     jobs_collection = f"jobs_{property_collection}"
+    collection = ctx["mongodb"][jobs_collection]
 
     # Return the first available jobs
     if args["job_size"] is None:
-        collection = ctx["mongodb"][jobs_collection]
         data = collection.find(query)
     # Return a small or large job if the user requested so
     else:
-        pass
+        data = get_jobs_by_size(args["job_size"], collection)
 
     jobs = take(args["max_jobs"], data)
 
     return jobs
 
 
-def size_pipeline(job_size: str, collection):
-    """Retrieve jobs by size"""
-    it = collection.aggregate([{
-    "$addFields": {
-         "lensmile": {"$strLenCP": "$property.smile"}
-    }},
-    {"$sort": {"lensmile": -1}}
+def get_jobs_by_size(job_size: str, collection: Collection) -> Iterable[Dict[str, Any]]:
+    """Retrieve jobs by size."""
+    order = 1 if job_size == "SMALL" else -1
+    cursor = collection.aggregate([
+        {"$addFields": {
+            "lensmile": {"$strLenCP": "$property.smile"}}},
+        {"$sort": {"lensmile": order}}
     ])
 
-    return it
-
+    return cursor
