@@ -1,7 +1,8 @@
 """Test the mutation resolvers."""
 
+from typing import Any, Dict
+
 import pytest
-from pytest_mock import MockFixture
 
 from insilicoserver.mutation_resolvers import (
     resolve_mutation_add_job, resolve_mutation_update_job,
@@ -27,25 +28,37 @@ async def test_mutation_add_job():
         "awesome_data": MockedCollection(None)}}
 
     job = await resolve_mutation_add_job(PARENT, args, ctx, INFO)
-    print(job)
     assert all(job[key] == val for key, val in [("status", job["status"]), ("_id", job_id)])
+
+
+async def run_mutation_update_job(policy: str) -> Dict[str, Any]:
+    """Test the resolver for updating jobs."""
+    args = {
+        "input": MOCKED_JOBS[0],
+        "duplication_policy": policy
+    }
+    # Mock database
+    ctx = {"mongodb": {
+        "jobs_awesome_data": MockedCollection(MOCKED_JOBS[0]),
+        "awesome_data": MockedCollection({'data': '{"prop": 42}'})}}
+
+    job = await resolve_mutation_update_job(PARENT, args, ctx, INFO)
+    return job
 
 
 @pytest.mark.asyncio
 async def test_mutation_update_job():
     """Test the resolver for updating jobs."""
-    args = {
-        "input": MOCKED_JOBS[0],
-        "duplication_policy": "KEEP"
-    }
-    # Mock database
-    ctx = {"mongodb": {
-        "jobs_awesome_data": MockedCollection(MOCKED_JOBS[0]),
-        "awesome_data": MockedCollection({'data': 42})}}
+    # Test keep policy
+    job = await run_mutation_update_job("KEEP")
+    assert all(job[key] == val for key, val in [("status", "DONE"), ("_id", 33444)])
 
-    job = await resolve_mutation_update_job(PARENT, args, ctx, INFO)
-    print(job)
+    # Test overwrite policy
+    job = await run_mutation_update_job("OVERWRITE")
+    assert all(job[key] == val for key, val in [("status", "DONE"), ("_id", 33444)])
 
+    # Test merge policy
+    job = await run_mutation_update_job("MERGE")
     assert all(job[key] == val for key, val in [("status", "DONE"), ("_id", 33444)])
 
 
