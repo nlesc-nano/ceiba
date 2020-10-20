@@ -15,11 +15,15 @@ INFO = None
 MOCKED_JOBS = read_jobs()
 
 
+def check_reply(reply: Dict[str, str]) -> None:
+    """Check that the reply has a valid form."""
+    assert all(x in reply.keys() for x in {"status", "text"})
+
+
 @pytest.mark.asyncio
 async def test_mutation_add_job():
     """Test the resolver for adding jobs."""
     job = MOCKED_JOBS[1]
-    job_id = job["_id"]
 
     args = {"input": job}
     # Mock database
@@ -27,8 +31,8 @@ async def test_mutation_add_job():
         "jobs_awesome_data": MockedCollection(MOCKED_JOBS[1]),
         "awesome_data": MockedCollection(None)}}
 
-    job = await resolve_mutation_add_job(PARENT, args, ctx, INFO)
-    assert all(job[key] == val for key, val in [("status", job["status"]), ("_id", job_id)])
+    reply = await resolve_mutation_add_job(PARENT, args, ctx, INFO)
+    check_reply(reply)
 
 
 async def run_mutation_update_job(policy: str) -> Dict[str, Any]:
@@ -42,24 +46,24 @@ async def run_mutation_update_job(policy: str) -> Dict[str, Any]:
         "jobs_awesome_data": MockedCollection(MOCKED_JOBS[0]),
         "awesome_data": MockedCollection({'data': '{"prop": 42}'})}}
 
-    job = await resolve_mutation_update_job(PARENT, args, ctx, INFO)
-    return job
+    reply = await resolve_mutation_update_job(PARENT, args, ctx, INFO)
+    return reply
 
 
 @pytest.mark.asyncio
 async def test_mutation_update_job():
     """Test the resolver for updating jobs."""
     # Test keep policy
-    job = await run_mutation_update_job("KEEP")
-    assert all(job[key] == val for key, val in [("status", "DONE"), ("_id", 33444)])
+    reply = await run_mutation_update_job("KEEP")
+    check_reply(reply)
 
     # Test overwrite policy
-    job = await run_mutation_update_job("OVERWRITE")
-    assert all(job[key] == val for key, val in [("status", "DONE"), ("_id", 33444)])
+    reply = await run_mutation_update_job("OVERWRITE")
+    check_reply(reply)
 
     # Test merge policy
-    job = await run_mutation_update_job("MERGE")
-    assert all(job[key] == val for key, val in [("status", "DONE"), ("_id", 33444)])
+    reply = await run_mutation_update_job("MERGE")
+    check_reply(reply)
 
 
 @pytest.mark.asyncio
@@ -75,7 +79,7 @@ async def test_mutation_update_job_status():
         "jobs_awesome_data": MockedCollection(MOCKED_JOBS)}}
 
     reply = await resolve_mutation_update_job_status(PARENT, args, ctx, INFO)
-    assert reply is None
+    assert reply['status'] == 'DONE'
 
 
 @pytest.mark.asyncio
@@ -91,4 +95,4 @@ async def test_mutation_update_property():
         "awesome_data": MockedCollection(None)}}
 
     reply = await resolve_mutation_update_property(PARENT, args, ctx, INFO)
-    assert reply is None
+    assert reply['status'] == 'DONE'
