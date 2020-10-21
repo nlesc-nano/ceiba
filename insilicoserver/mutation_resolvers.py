@@ -22,7 +22,7 @@ __all__ = ["resolve_mutation_add_job", "resolve_mutation_update_job",
 
 logger = logging.getLogger(__name__)
 
-PROPERTY_MUTABLE_KEYWORDS = {"data", "input", "geometry"}
+PROPERTY_MUTABLE_KEYWORDS = {"data", "input", "geometry", "large_objects"}
 
 
 @Resolver("Mutation.updateProperty")
@@ -253,9 +253,11 @@ def update_entry(
 
 
 def store_property(database: Database, property_data: Dict[str, Any]) -> None:
-    """Store property if not already available in the database."""
-    # If a property with the same identifier exists
-    # then return it without modifying the existing property
+    """Store property if not already available in the database.
+
+    If a property with the same identifier exists
+    then return it without modifying the existing property.
+    """
     property_collection = database[property_data["collection_name"]]
     index = property_data["_id"]
     query = {"_id": index}

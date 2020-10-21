@@ -46,6 +46,8 @@ type Property {
   data: String
   """Input with which the property was computed encoded as JSON"""
   input: String
+  """Metadata in JSON of the large output files stored somewhere else"""
+  large_objects: String
   }
 
 type Query {
