@@ -166,8 +166,7 @@ async def resolve_mutation_update_job(
     # Update property state
     if old_job['status'] != "DONE" and job_data['status'] == "DONE":
         update_entry(prop_collection, prop_data, PROPERTY_MUTABLE_KEYWORDS)
-        msg = f"""The properties with id {prop_data['_id']},
-have been added to collection {prop_data['collection_name']}"""
+        msg = f"""The property with id {prop_data['_id']}, has been added to collection {prop_data['collection_name']}"""
     # There is a new job
     elif old_job['status'] == "DONE" and job_data['status'] == "DONE":
         handle_duplication(prop_collection, prop_data, old_prop, args["duplication_policy"])
