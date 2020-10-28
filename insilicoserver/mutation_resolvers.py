@@ -268,6 +268,9 @@ def store_property(database: Database, property_data: Dict[str, Any]) -> None:
 
 def merge_json_data(old_data: str, new_data: str) -> str:
     """Merge to dictionaries encoded as JSON."""
+    if not old_data:
+        return new_data
+
     data = json.loads(old_data)
     data.update(json.loads(new_data))
     return json.dumps(data)
