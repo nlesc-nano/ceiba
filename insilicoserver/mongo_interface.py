@@ -10,6 +10,7 @@ API
 __all__ = ["DatabaseConfig", "connect_to_db"]
 
 
+from pathlib import Path
 from typing import List, NamedTuple, Optional
 
 import pandas as pd
@@ -47,7 +48,7 @@ def connect_to_db(db_config: DatabaseConfig) -> MongoClient:
 
 
 def store_dataframe_in_mongo(
-        collection: Collection, path_csv: str) -> List[int]:
+        collection: Collection, path_csv: Path) -> List[int]:
     """Store a pandas dataframe in the database specified in `db_config`.
 
     Parameters

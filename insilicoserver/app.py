@@ -25,7 +25,8 @@ logger = logging.getLogger(__name__)
 
 def create_context(args: argparse.Namespace) -> Dict[str, Any]:
     """Create context to run the app."""
-    db_info = DatabaseConfig("properties", username=args.username, password=args.password)
+    db_info = DatabaseConfig(
+        "properties", host=args.mongo_url, username=args.username, password=args.password)
     context = {
         "mongodb": connect_to_db(db_info)
     }
@@ -52,6 +53,7 @@ def configure_logger(workdir: Path, package_name: str) -> None:
 def read_cli_args() -> argparse.Namespace:
     """Read the command line arguments."""
     parser = argparse.ArgumentParser("insilico-server")
+    parser.add_argument('-m', '--mongo_url', default="localhost")
     parser.add_argument('-u', '--username', default=None)
     parser.add_argument('-p', '--password', default=None)
     return parser.parse_args()
