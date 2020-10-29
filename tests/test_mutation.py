@@ -13,7 +13,6 @@ from .utils_test import MockedCollection, read_jobs
 
 PARENT = None
 INFO = None
-MOCKED_JOBS = read_jobs()
 
 
 def check_reply(reply: Dict[str, str]) -> None:
@@ -24,17 +23,31 @@ def check_reply(reply: Dict[str, str]) -> None:
 @pytest.mark.asyncio
 async def test_mutation_add_job():
     """Test the resolver for adding jobs."""
-    job = MOCKED_JOBS[1]
+    job = read_jobs()[1]
 
     args = {"input": job}
     # Mock database
     ctx = {"mongodb": {
-        "jobs_awesome_data": MockedCollection(MOCKED_JOBS[1]),
+        "jobs_awesome_data": MockedCollection(job),
         "awesome_data": MockedCollection(None)}}
 
     reply = await resolve_mutation_add_job(PARENT, args, ctx, INFO)
     check_reply(reply)
 
+
+@pytest.mark.asyncio
+async def test_mutation_add_nonexisting_job():
+    """Test the resolver for adding jobs."""
+    job = read_jobs()[1]
+
+    args = {"input": job}
+    # Mock database
+    ctx = {"mongodb": {
+        "jobs_awesome_data": MockedCollection(None),
+        "awesome_data": MockedCollection(None)}}
+
+    reply = await resolve_mutation_add_job(PARENT, args, ctx, INFO)
+    check_reply(reply)
 
 async def run_mutation_update_job(
         policy: str, new: Dict[str, Any], old: Dict[str, Any]) -> Dict[str, Any]:
@@ -83,7 +96,7 @@ async def test_mutation_update_job_status():
     }
     # Mock database
     ctx = {"mongodb": {
-        "jobs_awesome_data": MockedCollection(MOCKED_JOBS)}}
+        "jobs_awesome_data": MockedCollection(read_jobs())}}
 
     reply = await resolve_mutation_update_job_status(PARENT, args, ctx, INFO)
     assert reply['status'] == 'DONE'

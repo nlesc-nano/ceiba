@@ -36,6 +36,13 @@ def read_jobs() -> Dict[str, Any]:
     return new_jobs
 
 
+class MockInsertion:
+    """Mock the result of inserting some data in a collection."""
+
+    def inserted_id(self) -> int:
+        return 42
+
+
 class MockedCollection:
     """Mock a Mongodb collection."""
 
@@ -51,5 +58,5 @@ class MockedCollection:
     def update_one(self, query: Dict[str, Any], update: Dict[str, Any]) -> None:
         return None
 
-    def insert_one(self, query: Dict[str, Any]) -> None:
-        return None
+    def insert_one(self, query: Dict[str, Any]) -> MockInsertion:
+        return MockInsertion()

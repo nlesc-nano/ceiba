@@ -102,10 +102,6 @@ async def resolve_mutation_add_job(
     if job_data is None:
         # Extract job metadataa
         job_data = args['input']
-        # Add reference to property
-        job_data["property"] = DBRef(collection=property_collection, id=property_data["_id"])
-        # Store job data
-        job_data = args["input"]
         job_data["property"] = {
             key: property_data[key] for key in ("_id", "smile", "collection_name")}
         # Save jobs into the database
