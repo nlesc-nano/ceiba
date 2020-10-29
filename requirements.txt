@@ -1,2 +1,0 @@
-setuptools
-insilico-database@git+https://github.com/nlesc-nano/insilico-database@master
