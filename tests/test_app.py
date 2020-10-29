@@ -7,7 +7,7 @@ from pytest_mock import MockFixture
 
 from insilicoserver.app import configure_logger, create_context, read_cli_args
 
-CLI_ARGS = argparse.Namespace(username="juan", password="42")
+CLI_ARGS = argparse.Namespace(mongo_url="localhost", username="juan", password="42")
 
 
 def test_cli_parser(mocker: MockFixture):
