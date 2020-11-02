@@ -30,13 +30,8 @@
         name: "{{ ansible_user }}"
         groups:
           - docker
-
-    - name: start_app
-      get_url:
-        url: https://github.com/nlesc-nano/insilico-server/blob/master/provisioning/start_app.sh
-        dest: $HOME/start_app.sh
     
     - name: Start the app
-      script: start_app.sh
+      script: ./start_app.sh
       environment:
         MONGO_PASSWORD: '{{ mongodb_password }}'
