@@ -1,0 +1,40 @@
+---
+- hosts: all
+  vars_prompt:
+    - name: "mongodb_password"
+      prompt: "Mongodb Password: "
+  remote_user: ubuntu
+  become: yes
+  tasks:
+    - apt:
+        update_cache: yes
+        name: "{{ item }}"
+      loop:
+        - wget
+
+    - name: Docker ppa key
+      apt_key: 
+        url: https://download.docker.com/linux/{{ansible_distribution | lower}}/gpg
+        state: present
+
+    - name: Add Docker APT repository
+      apt_repository:
+        repo: deb [arch=amd64] https://download.docker.com/linux/{{ansible_distribution | lower}} {{ansible_distribution_release}} stable
+
+    - name: Docker
+      apt:
+        name: docker-ce
+
+    - name: Posix users which can use docker
+      user:
+        name: "{{ ansible_user }}"
+        groups:
+          - docker
+
+    - name: start_app
+      get_url:
+        url: https://github.com/nlesc-nano/insilico-server/blob/master/start_app.sh
+        dest: ~/
+    
+    # - name: Start the app
+    #   script: start_app.sh '{{ mongodb_password }}'
