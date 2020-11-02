@@ -33,7 +33,7 @@
 
     - name: start_app
       get_url:
-        url: https://github.com/nlesc-nano/insilico-server/blob/master/start_app.sh
+        url: https://github.com/nlesc-nano/insilico-server/blob/master/provisioning/start_app.sh
         dest: ~/
     
     # - name: Start the app
