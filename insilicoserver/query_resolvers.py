@@ -91,10 +91,13 @@ async def resolver_query_jobs(
     return jobs
 
 
-def get_jobs_by_size(job_size: str, collection: Collection) -> Iterable[Dict[str, Any]]:
+def get_jobs_by_size(
+        job_size: str, collection: Collection,
+        status: str = "AVAILABLE") -> Iterable[Dict[str, Any]]:
     """Retrieve jobs by size."""
     order = 1 if job_size == "SMALL" else -1
     cursor = collection.aggregate([
+        {"$match": {"status": status}},
         {"$addFields": {
             "lensmile": {"$strLenCP": "$property.smile"}}},
         {"$sort": {"lensmile": order}}
