@@ -19,9 +19,10 @@ Installation
 
 1.🐳 Install `Docker <https://www.docker.com/>`_
 
-2. 🚀 Define a environment variable `MONGO_PASSWORD` with the database password.  Now you need to run the following
-   command to start both the server and the  mongodb
+2. 🚀 Define a environment variable `MONGO_PASSWORD` with the database password. Now you can run the following
+   command to start both the server and the mongodb services:
 ::
+
    provisioning/start_app.sh
 
 
