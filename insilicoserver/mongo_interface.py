@@ -53,8 +53,6 @@ def store_dataframe_in_mongo(
 
     Parameters
     ----------
-    db_config
-        Database configuration
     collection_name
         Collection name
     path_df
