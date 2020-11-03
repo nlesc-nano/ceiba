@@ -17,14 +17,10 @@ Installation
 
 1.🐳 Install `Docker <https://www.docker.com/>`_
 
-2. 🚀 Start the mongodb image (Use a strong password)
+2. 🚀 Define a environment variable `MONGO_PASSWORD` with the database password.  Now you need to run the following
+   command to start both the server and the  mongodb
 ::
-
-   docker run -d   -e "MONGO_INITDB_ROOT_USERNAME=admin" -e "MONGO_INITDB_ROOT_PASSWORD=strongPasswd" -p 27017-27019:27017-27019 --name mongodbauth mongo:latest
-
-3. 🛠  install the library
-
-  pip install git+https://github.com/nlesc-nano/insilico-server.git@master
+   provisioning/start_app.sh
 
 
 Contributing
