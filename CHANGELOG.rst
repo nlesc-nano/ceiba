@@ -2,8 +2,9 @@
 Change Log
 ##########
 
+0.1.1 [Unreleased]
 
-0.1.0 [Unreleased]
+0.1.0 [03/11/2020]
 ******************
 
 Added
