@@ -35,7 +35,8 @@ def test_many_insertions():
     # Connect to the database
     mongodb = get_database()
 
-    expected_ids = {76950, 43380, 26717, 70, 47561, 32800, 37021, 2449, 63555, 72987}
+    expected_ids = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 76950,
+                    43380, 26717, 70, 47561, 32800, 37021, 2449, 63555, 72987}
     try:
         ids = add_candidates(mongodb)
         print("received ids: ", ids)
