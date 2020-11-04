@@ -11,6 +11,8 @@
         name: "{{ item }}"
       loop:
         - wget
+        - git
+        - cmake
 
     - name: Docker ppa key
       apt_key: 
@@ -31,6 +33,11 @@
         groups:
           - docker
     
+    - name: Allow http port
+      ufw:
+        rule: allow
+        port: "8080"
+
     - name: Start the app
       script: ./start_app.sh
       environment:

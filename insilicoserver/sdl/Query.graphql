@@ -54,5 +54,5 @@ type Query {
   """Query jobs by status and maximum number of jobs to retrieve"""
   jobs(status: Status!, collection_name: String!, max_jobs: Int!, job_size: JobSize) : [Job!]
   properties(collection_name: String!): [Property!]
-   property(smile: String!, collection_name: String!): Property
+  property(smile: String!, collection_name: String!): Property
 }
