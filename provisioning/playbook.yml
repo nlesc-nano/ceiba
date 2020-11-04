@@ -12,7 +12,6 @@
       loop:
         - wget
         - git
-        - cmake
 
     - name: Docker ppa key
       apt_key: 
