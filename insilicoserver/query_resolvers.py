@@ -86,7 +86,10 @@ async def resolver_query_jobs(
     else:
         data = get_jobs_by_size(args["job_size"], collection)
 
-    jobs = take(args["max_jobs"], data)
+    if args["max_jobs"] is not None:
+        jobs = take(args["max_jobs"], data)
+    else:
+        jobs = list(data)
 
     return jobs
 

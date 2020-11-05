@@ -12,7 +12,6 @@ import json
 import logging
 from typing import Any, Dict, Optional, Set
 
-from bson.dbref import DBRef
 from tartiflette import Resolver
 from pymongo.database import Database
 from pymongo.collection import Collection
@@ -23,6 +22,7 @@ __all__ = ["resolve_mutation_add_job", "resolve_mutation_update_job",
 logger = logging.getLogger(__name__)
 
 PROPERTY_MUTABLE_KEYWORDS = {"data", "input", "geometry", "large_objects"}
+JOB_MUTABLE_KEYWORDS = {"status", "user", "platform", "report_time", "schedule_time"}
 
 
 @Resolver("Mutation.updateProperty")
@@ -151,10 +151,9 @@ async def resolve_mutation_update_job(
 
     # Check that the job exists
     old_job = check_entry_existence(jobs_collection, job_data["_id"])
-    job_mutable_keywords = {"status", "user", "platform", "report_time"}
     # Report new data
     if old_job["status"] != "DONE" and job_data['status'] == "DONE":
-        update_entry(jobs_collection, job_data, job_mutable_keywords)
+        update_entry(jobs_collection, job_data, JOB_MUTABLE_KEYWORDS)
 
     # Check that the property exists
     old_prop = check_entry_existence(prop_collection, prop_data["_id"])
@@ -207,9 +206,7 @@ async def resolve_mutation_update_job_status(
     check_entry_existence(jobs_collection, job_data["_id"])
 
     # Update job status
-    query = {"_id": job_data["_id"]}
-    update = {"$set": {"status": job_data['status']}}
-    jobs_collection.update_one(query, update)
+    update_entry(jobs_collection, job_data, JOB_MUTABLE_KEYWORDS)
 
     return {"status": "DONE"}
 

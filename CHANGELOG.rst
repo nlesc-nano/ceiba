@@ -3,6 +3,12 @@ Change Log
 ##########
 
 0.1.1 [Unreleased]
+******************
+
+CHANGED
+-------
+
+* Allow to mutate the jobs timestamps in the jobstatus resolver
 
 0.1.0 [03/11/2020]
 ******************
