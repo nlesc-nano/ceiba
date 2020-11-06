@@ -2,7 +2,7 @@
 - hosts: all
   vars_prompt:
     - name: "mongodb_password"
-      prompt: "Mongodb Password: "
+      prompt: "Mongodb Password"
   remote_user: ubuntu
   become: yes
   tasks:
