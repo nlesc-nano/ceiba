@@ -8,7 +8,7 @@ Change Log
 CHANGED
 -------
 
-* Allow to mutate the jobs timestamps in the jobstatus resolver
+* Allow to mutate the jobs timestamps and user in the jobstatus resolver
 
 0.1.0 [03/11/2020]
 ******************

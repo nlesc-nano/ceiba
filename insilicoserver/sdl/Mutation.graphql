@@ -65,6 +65,8 @@ input InputJobStatus {
   status: Status!
   """collection name of the properties"""
   collection_name: String!
+  """User who es executing the job."""
+  user: String
   """Timestamp=datatime.timestamp() """
   schedule_time: Float
   """Timestamp=datatime.timestamp()"""
