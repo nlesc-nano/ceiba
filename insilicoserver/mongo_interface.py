@@ -15,6 +15,7 @@ from typing import List, NamedTuple, Optional
 
 import pandas as pd
 from pymongo import MongoClient
+from pymongo.database import Database
 from pymongo.collection import Collection
 
 
@@ -27,7 +28,7 @@ class DatabaseConfig(NamedTuple):
     password: Optional[str] = None
 
 
-def connect_to_db(db_config: DatabaseConfig) -> MongoClient:
+def connect_to_db(db_config: DatabaseConfig) -> Database:
     """Connect to a mongodb using `db_config`.
 
     Parameters
@@ -37,7 +38,7 @@ def connect_to_db(db_config: DatabaseConfig) -> MongoClient:
 
     Returns
     -------
-        MongoClient
+        Database
 
     """
     client = MongoClient(
