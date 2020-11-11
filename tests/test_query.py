@@ -2,10 +2,12 @@
 
 import pytest
 
-from insilicoserver.query_resolvers import (resolver_query_jobs,
+from insilicoserver.query_resolvers import (resolver_query_collections,
+                                            resolver_query_jobs,
                                             resolver_query_properties)
 
-from .utils_test import MockedCollection, read_properperties_and_jobs
+from .utils_test import (MockedCollection, MockedDatabase,
+                         read_properperties_and_jobs)
 
 PARENT = None
 INFO = None
@@ -35,3 +37,13 @@ async def test_query_jobs():
     jobs = await resolver_query_jobs(PARENT, args, ctx, INFO)
     first = jobs[0]
     assert first["_id"] == 33444
+
+
+@pytest.mark.asyncio
+async def test_query_collections():
+    """Test the job query resolver."""
+    data = MockedDatabase({"collection_foo": 3, "collection_bar": 2})
+    ctx = {"mongodb": data}
+    cols = await resolver_query_collections(PARENT, None, ctx, INFO)
+    assert len(cols) == 2
+    assert cols[0]['name'] == "collection_foo"
