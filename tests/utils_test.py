@@ -2,7 +2,7 @@
 
 import json
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 import pkg_resources as pkg
 
@@ -60,3 +60,18 @@ class MockedCollection:
 
     def insert_one(self, query: Dict[str, Any]) -> MockInsertion:
         return MockInsertion()
+
+    def estimated_document_count(self) -> int:
+        return 42
+
+
+class MockedDatabase:
+    """Mock a Mongodb database."""
+    def __init__(self, data: Dict[str, Any]) -> None:
+        self.data = data
+
+    def list_collection_names(self) -> List[str]:
+        return list(self.data.keys())
+
+    def __getitem__(self, item: str) -> MockedCollection:
+        return MockedCollection({})

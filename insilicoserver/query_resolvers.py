@@ -14,7 +14,7 @@ from pymongo.collection import Collection
 from tartiflette import Resolver
 
 
-__all__ = ["resolver_query_jobs", "resolver_query_properties"]
+__all__ = ["resolver_query_jobs", "resolver_query_properties", "resolver_query_collections"]
 
 
 @Resolver("Query.properties")
@@ -107,3 +107,34 @@ def get_jobs_by_size(
     ])
 
     return cursor
+
+
+@Resolver("Query.collections")
+async def resolver_query_collections(
+    parent: Optional[Any],
+    args: Dict[str, Any],
+    ctx: Dict[str, Any],
+    info: Dict[str, Any]
+) -> List[Dict[str, Any]]:
+    """
+    Resolver in charge of returning the available collections.
+
+    Parameters
+    ----------
+    paren
+        initial value filled in to the engine `execute` method
+    args
+        computed arguments related to the field
+    ctx
+        context filled in at engine initialization
+    info
+        information related to the execution and field resolution
+
+    Returns
+    -------
+    The list of all available collection and their size
+
+"""
+    db = ctx["mongodb"]
+    names = db.list_collection_names()
+    return [{"name": name, "size": db[name].estimated_document_count()} for name in names]

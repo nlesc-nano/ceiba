@@ -5,6 +5,10 @@ Change Log
 0.1.1 [Unreleased]
 ******************
 
+New
+---
+* Add query resolver to retrieve the available collections
+
 CHANGED
 -------
 
