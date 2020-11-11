@@ -11,7 +11,28 @@ This recipe installs and configures the **insilico-server** app using [ansible](
    ``ansible-playbook -i inventory playbook.yml``
 
 ## Note:
-*The script will ask you for the `Mongodb_password` for the app.
+The script will ask you for the `Mongodb_password` for the app.
+
+## Backup
+To backup the data in the VM a [CEPH datablock](https://doc.hpccloud.surfsara.nl/create-datablocks)
+must be created and then a [crontab job](https://crontab.guru/) must be run periodically to backup
+the data into the disk. First,
+add a new `cron` task:
+```bash
+sudo crontab -e  # sudo is required to copy the mongo_data folder
+```
+
+Then add the time and the task to execute the job
+
+```bash
+00 9 * * * rsync -a /home/ubuntu/mongo_data /data
+```
+
+The previous command will copy the `mongo_data` folder every day at 9AM to the `/data` folder.
+
+Here we assume that `/home/ubuntu/mongo_data` is the docker volumen where the Mongodb containers stores
+the database and `/data` is the directory where the external backup disk has been mounted.
+
 
 ### Supported OS
 Currently the recipe only works for **Ubuntu** and **Debian**
