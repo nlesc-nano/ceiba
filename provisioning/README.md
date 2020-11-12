@@ -25,7 +25,7 @@ sudo crontab -e  # sudo is required to copy the mongo_data folder
 Then add the time and the task to execute the job
 
 ```bash
-00 9 * * * rsync -a /home/ubuntu/mongo_data /data
+00 9 * * * rsync -a /root/mongo_data /data
 ```
 
 The previous command will copy the `mongo_data` folder every day at 9AM to the `/data` folder.
