@@ -22,7 +22,7 @@ def read_properperties_and_jobs() -> Dict[str, Any]:
         return json.load(handler)
 
 
-def read_jobs() -> Dict[str, Any]:
+def read_jobs() -> List[Dict[str, Any]]:
     """Get the mock data for the jobs."""
     data = read_properperties_and_jobs()
     jobs = data["JOBS"]

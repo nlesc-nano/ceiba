@@ -136,5 +136,8 @@ async def resolver_query_collections(
 
 """
     db = ctx["mongodb"]
-    names = db.list_collection_names()
+    # Filter the names that are not in the reserved keywords
+    reserved = {"jobs", "users"}
+    names = filter(lambda name: all(r not in name for r in reserved), db.list_collection_names())
+
     return [{"name": name, "size": db[name].estimated_document_count()} for name in names]

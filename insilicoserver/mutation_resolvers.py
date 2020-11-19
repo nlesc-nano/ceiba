@@ -10,11 +10,16 @@ API
 """
 import json
 import logging
+import secrets
+from datetime import datetime
 from typing import Any, Dict, Optional, Set
 
 from tartiflette import Resolver
 from pymongo.database import Database
 from pymongo.collection import Collection
+
+from .user_authentication import USERS_COLLECTION, authenticate_username
+
 
 __all__ = ["resolve_mutation_add_job", "resolve_mutation_update_job",
            "resolve_mutation_update_job_status", "resolve_mutation_update_property"]
@@ -23,6 +28,60 @@ logger = logging.getLogger(__name__)
 
 PROPERTY_MUTABLE_KEYWORDS = {"data", "input", "geometry", "large_objects"}
 JOB_MUTABLE_KEYWORDS = {"status", "user", "platform", "report_time", "schedule_time"}
+
+
+@Resolver("Mutation.authenticateUser")
+async def resolve_mutation_authentication(
+    parent: Optional[Any],
+    args: Dict[str, Any],
+    ctx: Dict[str, Any],
+    info: Dict[str, Any],
+) -> Dict[str, Any]:
+    """
+    Resolver to authenticate a user.
+
+    Parameters
+    ----------
+    paren
+        initial value filled in to the engine `execute` method
+    args
+        computed arguments related to the field
+    ctx
+        context filled in at engine initialization
+    info
+        information related to the execution and field resolution
+
+    Returns
+    -------
+    Temporal token to authenticate the user or failure message
+
+"""
+    database = ctx["mongodb"]
+    # Extract property data
+    token = args['input']
+    known_user = authenticate_username(token)
+    if known_user is None:
+        return {"status": "FAILED", "text": "Invalid Token!"}
+
+    # Check if the user is allowed to interact with the service
+    collection = database[USERS_COLLECTION]
+    user_data = collection.find_one({"username": known_user})
+    if user_data is None:
+        msg = f"User:{known_user} doesn't have permissions to access the service"
+        return {"status": "FAILED",
+                "text": msg}
+
+    # Update the token used to authenticate the client
+    reply_token = secrets.token_hex(16)
+
+    filter_name = {"username": known_user}
+    entry = {"token": reply_token, "username": known_user,
+             "time": datetime.now()}
+
+    # Insert new entry if not previously find
+    collection.replace_one(filter_name, entry)
+
+    return {"status": "DONE", "text": reply_token}
 
 
 @Resolver("Mutation.updateProperty")
@@ -48,7 +107,8 @@ async def resolve_mutation_update_property(
 
     Returns
     -------
-    Update
+    Message with the status of the update
+
     """
     database = ctx["mongodb"]
     # Extract property data

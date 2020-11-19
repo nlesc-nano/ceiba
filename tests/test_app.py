@@ -6,8 +6,12 @@ from pathlib import Path
 from pytest_mock import MockFixture
 
 from insilicoserver.app import configure_logger, create_context, read_cli_args
+from .utils_test import PATH_TEST
 
-CLI_ARGS = argparse.Namespace(mongo_url="localhost", username="juan", password="42")
+PATH_USERS = PATH_TEST / "users.txt"
+
+CLI_ARGS = argparse.Namespace(
+    file=PATH_USERS, mongo_url="localhost", username="juan", password="42")
 
 
 def test_cli_parser(mocker: MockFixture):
