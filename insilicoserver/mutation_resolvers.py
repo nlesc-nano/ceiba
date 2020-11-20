@@ -18,7 +18,8 @@ from tartiflette import Resolver
 from pymongo.database import Database
 from pymongo.collection import Collection
 
-from .user_authentication import USERS_COLLECTION, authenticate_username
+from .user_authentication import authenticate_username
+from .mongo_interface import USERS_COLLECTION
 
 
 __all__ = ["resolve_mutation_add_job", "resolve_mutation_update_job",

@@ -12,8 +12,7 @@ from typing import Any, Dict
 import pkg_resources as pkg
 from aiohttp import web
 from tartiflette_aiohttp import register_graphql_handlers
-from .mongo_interface import DatabaseConfig, connect_to_db
-from .user_authentication import add_users_to_db
+from .mongo_interface import DatabaseConfig, add_users_to_db, connect_to_db
 
 from .__version__ import __version__
 

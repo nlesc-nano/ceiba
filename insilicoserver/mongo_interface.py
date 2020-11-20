@@ -7,16 +7,21 @@ API
 
 """
 
-__all__ = ["DatabaseConfig", "connect_to_db"]
+__all__ = ["USERS_COLLECTION", "DatabaseConfig", "connect_to_db"]
 
 
+import logging
 from pathlib import Path
-from typing import List, NamedTuple, Optional
+from typing import Dict, List, NamedTuple, Optional
 
 import pandas as pd
 from pymongo import MongoClient
-from pymongo.database import Database
 from pymongo.collection import Collection
+from pymongo.database import Database
+
+USERS_COLLECTION = "authenticated_users"
+
+logger = logging.getLogger(__name__)
 
 
 class DatabaseConfig(NamedTuple):
@@ -69,3 +74,23 @@ def store_dataframe_in_mongo(
     data.rename(columns={"index": "_id"}, inplace=True)
 
     return collection.insert_many(data.to_dict("records")).inserted_ids
+
+
+def read_users(users_file: Path) -> List[Dict[str, str]]:
+    """Read the users in the file."""
+    with open(users_file, 'r') as handler:
+        xs = handler.read()
+
+    # Generate username dictionary
+    users = xs.split()
+    logger.info(f"Adding users to database:\n{users}")
+    return [{"username": u} for u in users]
+
+
+def add_users_to_db(database: Database, users_file: Path) -> None:
+    """Add the allow users to the database."""
+    col = database[USERS_COLLECTION]
+    all_users = read_users(users_file)
+    for user in all_users:
+        if col.find_one(user) is None:
+            col.insert_one(user)

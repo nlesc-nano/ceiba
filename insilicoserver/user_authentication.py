@@ -7,37 +7,11 @@ API
 
 """
 import json
-import logging
-from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Optional
 
 import requests
-from pymongo.database import Database
 
-__all__ = ["USERS_COLLECTION", "add_users_to_db", "authenticate_username"]
-
-logger = logging.getLogger(__name__)
-
-USERS_COLLECTION = "authenticated_users"
-
-
-def read_users(users_file: Path) -> List[Dict[str, str]]:
-    """Read the users in the file."""
-    with open(users_file, 'r') as handler:
-        xs = handler.read()
-
-    # Generate username dictionary
-    users = xs.split()
-    logger.info(f"Adding users to database:\n{users}")
-    return [{"username": u} for u in users]
-
-
-def add_users_to_db(database: Database, users_file: Path) -> None:
-    """Add the allow users to the database."""
-    col = database[USERS_COLLECTION]
-    all_users = read_users(users_file)
-    for user in all_users:
-        col.update_one(user, user, upsert=True)
+__all__ = ["authenticate_username"]
 
 
 def authenticate_username(
