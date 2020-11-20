@@ -83,7 +83,9 @@ async def resolve_mutation_authentication(
     # Insert new entry if not previously find
     collection.replace_one(filter_name, entry)
 
-    return {"status": "DONE", "text": reply_token}
+    cookie = json.dumps({"username": known_user, "token": reply_token})
+
+    return {"status": "DONE", "text": cookie}
 
 
 @Resolver("Mutation.updateProperty")
@@ -329,3 +331,9 @@ def merge_json_data(old_data: str, new_data: str) -> str:
     data = json.loads(old_data)
     data.update(json.loads(new_data))
     return json.dumps(data)
+
+
+def check_authentication(token: str, database: Database) -> Dict[str, str]:
+    """Check if the user is authenticated."""
+    if not is_user_authenticated(args['token'], database):
+        return {"status": "FAILED", "text": "The user is not authenticated"}

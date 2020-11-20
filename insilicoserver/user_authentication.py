@@ -10,6 +10,7 @@ import json
 from typing import Optional
 
 import requests
+from pymongo.database import Database
 
 __all__ = ["authenticate_username"]
 
@@ -43,3 +44,9 @@ def authenticate_username(
 
     data = json.loads(reply.text)['data']
     return data['viewer']['login']
+
+
+def is_user_authenticated(token: str, database: Database) -> bool:
+    """Check if the user is authenticated in the web service."""
+    col = database[USERS_COLLECTION]
+    col.find_one()

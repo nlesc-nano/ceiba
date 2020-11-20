@@ -1,6 +1,7 @@
 """Test the mutation resolvers."""
 
 import itertools
+import json
 from typing import Any, Dict
 
 import pytest
@@ -125,7 +126,7 @@ async def test_mutation_update_property():
 @pytest.mark.asyncio
 async def test_mutation_authentication_invalid_token():
     """Check the authentication resolver for an invalid_token."""
-    args = {"input": {"token": "InvalidToken"}}
+    args = {"token": "InvalidToken"}
     # Mock database
     ctx = {"mongodb": {
         USERS_COLLECTION: MockedCollection(None)}}
@@ -137,7 +138,7 @@ async def test_mutation_authentication_invalid_token():
 @pytest.mark.asyncio
 async def test_mutation_authentication_invalid_user(mocker: MockFixture):
     """Check the authentication resolver for an invalid_token"""
-    args = {"input": {"token": "VeryLongToken"}}
+    args = {"token": "VeryLongToken"}
     # Mock database
     ctx = {"mongodb": {
         USERS_COLLECTION: MockedCollection(None)}}
@@ -150,13 +151,14 @@ async def test_mutation_authentication_invalid_user(mocker: MockFixture):
 
 @pytest.mark.asyncio
 async def test_mutation_authentication_valid_user(mocker: MockFixture):
-    """Check the authentication resolver for an invalid_token"""
-    args = {"input": {"token": "RosalindToken"}}
+    """Check the authentication resolver for an invalid_token."""
+    args = {"token": "RosalindToken"}
     # Mock database
     ctx = {"mongodb": {
-        USERS_COLLECTION: MockedCollection({"username": "Rosalind_Franklin"})}}
+        USERS_COLLECTION: MockedCollection({"username": "RosalindFranklin"})}}
 
-    mocker.patch("insilicoserver.mutation_resolvers.authenticate_username", return_value="Rosalind_Franklin")
+    mocker.patch("insilicoserver.mutation_resolvers.authenticate_username", return_value="RosalindFranklin")
     reply = await resolve_mutation_authentication(PARENT, args, ctx, INFO)
+    cookie = json.loads(reply['text'])
     assert reply['status'] == "DONE"
-    assert len(reply['text']) == 32
+    assert cookie['username'] == "RosalindFranklin"
