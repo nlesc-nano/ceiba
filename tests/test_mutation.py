@@ -4,13 +4,17 @@ import itertools
 from typing import Any, Dict
 
 import pytest
+from pytest_mock import MockFixture
 
+from insilicoserver.mongo_interface import USERS_COLLECTION
 from insilicoserver.mutation_resolvers import (
-    resolve_mutation_add_job, resolve_mutation_update_job,
-    resolve_mutation_update_job_status, resolve_mutation_update_property)
+    resolve_mutation_add_job, resolve_mutation_authentication,
+    resolve_mutation_update_job, resolve_mutation_update_job_status,
+    resolve_mutation_update_property)
 
 from .utils_test import MockedCollection, read_jobs
 
+# Constant to mock the call
 PARENT = None
 INFO = None
 
@@ -116,3 +120,43 @@ async def test_mutation_update_property():
 
     reply = await resolve_mutation_update_property(PARENT, args, ctx, INFO)
     assert reply['status'] == 'DONE'
+
+
+@pytest.mark.asyncio
+async def test_mutation_authentication_invalid_token():
+    """Check the authentication resolver for an invalid_token."""
+    args = {"input": {"token": "InvalidToken"}}
+    # Mock database
+    ctx = {"mongodb": {
+        USERS_COLLECTION: MockedCollection(None)}}
+
+    reply = await resolve_mutation_authentication(PARENT, args, ctx, INFO)
+    assert reply['status'] == "FAILED"
+    assert "Invalid Token" in reply['text']
+
+@pytest.mark.asyncio
+async def test_mutation_authentication_invalid_user(mocker: MockFixture):
+    """Check the authentication resolver for an invalid_token"""
+    args = {"input": {"token": "VeryLongToken"}}
+    # Mock database
+    ctx = {"mongodb": {
+        USERS_COLLECTION: MockedCollection(None)}}
+
+    mocker.patch("insilicoserver.mutation_resolvers.authenticate_username", return_value="someone")
+    reply = await resolve_mutation_authentication(PARENT, args, ctx, INFO)
+    assert reply['status'] == "FAILED"
+    assert "doesn't have permissions" in reply['text']
+
+
+@pytest.mark.asyncio
+async def test_mutation_authentication_valid_user(mocker: MockFixture):
+    """Check the authentication resolver for an invalid_token"""
+    args = {"input": {"token": "RosalindToken"}}
+    # Mock database
+    ctx = {"mongodb": {
+        USERS_COLLECTION: MockedCollection({"username": "Rosalind_Franklin"})}}
+
+    mocker.patch("insilicoserver.mutation_resolvers.authenticate_username", return_value="Rosalind_Franklin")
+    reply = await resolve_mutation_authentication(PARENT, args, ctx, INFO)
+    assert reply['status'] == "DONE"
+    assert len(reply['text']) == 32

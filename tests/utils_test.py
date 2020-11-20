@@ -64,6 +64,8 @@ class MockedCollection:
     def estimated_document_count(self) -> int:
         return 42
 
+    def replace_one(self, filter_name: Dict[str, Any], replacement: Dict[str, Any]) -> None:
+        return None
 
 class MockedDatabase:
     """Mock a Mongodb database."""

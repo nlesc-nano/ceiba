@@ -3,6 +3,7 @@
 API
 ---
 .. autofunction:: resolve_mutation_add_job
+.. autofunction:: resolve_mutation_authentication
 .. autofunction:: resolve_mutation_update_job
 .. autofunction:: resolve_mutation_update_job_status
 .. autofunction:: resolve_mutation_update_property
@@ -68,7 +69,7 @@ async def resolve_mutation_authentication(
     collection = database[USERS_COLLECTION]
     user_data = collection.find_one({"username": known_user})
     if user_data is None:
-        msg = f"User:{known_user} doesn't have permissions to access the service"
+        msg = f"User `{known_user}` doesn't have permissions to access the service"
         return {"status": "FAILED",
                 "text": msg}
 

@@ -6,7 +6,8 @@ from typing import List
 from pymongo import MongoClient
 from pymongo.database import Database
 
-from insilicoserver.mongo_interface import (DatabaseConfig, connect_to_db,
+from insilicoserver.mongo_interface import (USERS_COLLECTION, DatabaseConfig,
+                                            add_users_to_db, connect_to_db,
                                             store_dataframe_in_mongo)
 from insilicoserver.query_resolvers import get_jobs_by_size
 
@@ -57,3 +58,14 @@ def test_aggregation():
         assert large["_id"] == 135037
     finally:
         col.drop()
+
+
+def test_add_user_to_db():
+    """Check that some users are properly added in the database."""
+    path_users = PATH_TEST / "users.txt"
+
+    try:
+        db = get_database()
+        add_users_to_db(db, path_users)
+    finally:
+        db.drop_collection(USERS_COLLECTION)
