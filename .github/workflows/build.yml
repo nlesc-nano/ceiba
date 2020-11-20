@@ -37,7 +37,7 @@ jobs:
 
       - name: Install library
         run: |
-          pip install -e .[test]
+          pip install -e .[test,docs]
 
       - name: Test
         run: |
