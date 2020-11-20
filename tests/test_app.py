@@ -25,14 +25,9 @@ def test_cli_parser(mocker: MockFixture):
 def test_create_context(mocker: MockFixture):
     """Test context generation."""
     mocker.patch("insilicoserver.app.connect_to_db", return_value="mock")
+    mocker.patch("insilicoserver.app.add_users_to_db", return_value=None)
     ctx = create_context(CLI_ARGS)
     assert "mongodb" in ctx
-
-
-def test_run_app(mocker: MockFixture):
-    """Test that the app starts normally."""
-    mocker.patch("argparse.ArgumentParser.parse_args", return_value=CLI_ARGS)
-    mocker.patch("insilicoserver.app.connect_to_db", return_value="mock")
 
 
 def test_logger(tmp_path: Path):
