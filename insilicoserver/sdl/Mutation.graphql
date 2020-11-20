@@ -78,5 +78,5 @@ type Mutation {
   updateJobStatus(input: InputJobStatus): Message!
   createJob(input: InputJob!): Message!
   updateProperty(input: InputProperty!): Message!
-  authenticateUser(input: String!): Message!
+  authenticateUser(token: String!): Message!
 }

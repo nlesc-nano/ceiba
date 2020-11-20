@@ -60,7 +60,7 @@ async def resolve_mutation_authentication(
 """
     database = ctx["mongodb"]
     # Extract property data
-    token = args['input']
+    token = args['token']
     known_user = authenticate_username(token)
     if known_user is None:
         return {"status": "FAILED", "text": "Invalid Token!"}

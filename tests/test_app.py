@@ -36,5 +36,3 @@ def test_logger(tmp_path: Path):
     """Check the logger."""
     workdir = Path(tmp_path)
     configure_logger(workdir, "insilicoserver")
-
-
