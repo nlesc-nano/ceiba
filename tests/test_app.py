@@ -1,11 +1,13 @@
 """Test the app instantiation."""
 
 import argparse
+import sys
 from pathlib import Path
 
 from pytest_mock import MockFixture
 
 from insilicoserver.app import configure_logger, create_context, read_cli_args
+
 from .utils_test import PATH_TEST
 
 PATH_USERS = PATH_TEST / "users.txt"
@@ -16,10 +18,10 @@ CLI_ARGS = argparse.Namespace(
 
 def test_cli_parser(mocker: MockFixture):
     """Test that the CLI arguments are parsed correctly."""
-    mocker.patch("argparse.ArgumentParser.parse_args", return_value=CLI_ARGS)
+    sys.argv = ["insilico-server", "-f", PATH_USERS.absolute().as_posix(),
+                "-u", "RosalindFranklin", "-p", '42']
     args = read_cli_args()
-    print("args: ", args)
-    assert args.username == "juan" and args.password == "42"
+    assert args.username == "RosalindFranklin" and args.password == "42"
 
 
 def test_create_context(mocker: MockFixture):
@@ -34,3 +36,5 @@ def test_logger(tmp_path: Path):
     """Check the logger."""
     workdir = Path(tmp_path)
     configure_logger(workdir, "insilicoserver")
+
+
