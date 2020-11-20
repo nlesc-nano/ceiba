@@ -19,7 +19,7 @@ from tartiflette import Resolver
 from pymongo.database import Database
 from pymongo.collection import Collection
 
-from .user_authentication import authenticate_username
+from .user_authentication import authenticate_username, is_user_authenticated
 from .mongo_interface import USERS_COLLECTION
 
 
@@ -30,6 +30,7 @@ logger = logging.getLogger(__name__)
 
 PROPERTY_MUTABLE_KEYWORDS = {"data", "input", "geometry", "large_objects"}
 JOB_MUTABLE_KEYWORDS = {"status", "user", "platform", "report_time", "schedule_time"}
+AUTHENTICATION_ERROR_MESSAGE = {"status": "FAILED", "text": "The user is not authenticated"}
 
 
 @Resolver("Mutation.authenticateUser")
@@ -115,6 +116,10 @@ async def resolve_mutation_update_property(
 
     """
     database = ctx["mongodb"]
+    # Check if the user is authenticated
+    if not is_user_authenticated(args['cookie'], database):
+        return AUTHENTICATION_ERROR_MESSAGE
+
     # Extract property data
     property_data = args['input']
 
@@ -148,9 +153,13 @@ async def resolve_mutation_add_job(
 
     Returns
     -------
-    Updated Property
+    Status message
     """
     database = ctx["mongodb"]
+    # Check if the user is authenticated
+    if not is_user_authenticated(args['cookie'], database):
+        return AUTHENTICATION_ERROR_MESSAGE
+
     # Extract property data
     property_data = args['input'].pop('property')
     property_collection = property_data["collection_name"]
@@ -203,6 +212,10 @@ async def resolve_mutation_update_job(
     Updated job
     """
     database = ctx["mongodb"]
+    # Check if the user is authenticated
+    if not is_user_authenticated(args['cookie'], database):
+        return AUTHENTICATION_ERROR_MESSAGE
+
     msg = ""
 
     # Extract property data and Filter non-null data
@@ -243,7 +256,7 @@ async def resolve_mutation_update_job_status(
         parent: Optional[Any],
         args: Dict[str, Any],
         ctx: Dict[str, Any],
-        info: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        info: Dict[str, Any]) -> Dict[str, Any]:
     """Resolver in charge of updating a given job.
 
     Parameters
@@ -259,9 +272,14 @@ async def resolve_mutation_update_job_status(
 
     Returns
     -------
-    Updated job
+    Status message
+
     """
     database = ctx["mongodb"]
+    # Check if the user is authenticated
+    if not is_user_authenticated(args['cookie'], database):
+        return AUTHENTICATION_ERROR_MESSAGE
+
     # Extract property data
     job_data = args['input']
     jobs_collection = database[f"jobs_{job_data['collection_name']}"]
@@ -331,9 +349,3 @@ def merge_json_data(old_data: str, new_data: str) -> str:
     data = json.loads(old_data)
     data.update(json.loads(new_data))
     return json.dumps(data)
-
-
-def check_authentication(token: str, database: Database) -> Dict[str, str]:
-    """Check if the user is authenticated."""
-    if not is_user_authenticated(args['token'], database):
-        return {"status": "FAILED", "text": "The user is not authenticated"}

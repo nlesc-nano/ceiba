@@ -74,9 +74,9 @@ input InputJobStatus {
 }
 
 type Mutation {
-  updateJob(token: String!, input: InputJob!, duplication_policy: DuplicationPolicy): Message!
-  updateJobStatus(token: String!, input: InputJobStatus): Message!
-  createJob(token: String!, input: InputJob!): Message!
-  updateProperty(token: String!, input: InputProperty!): Message!
+  updateJob(cookie: String!, input: InputJob!, duplication_policy: DuplicationPolicy): Message!
+  updateJobStatus(cookie: String!, input: InputJobStatus): Message!
+  createJob(cookie: String!, input: InputJob!): Message!
+  updateProperty(cookie: String!, input: InputProperty!): Message!
   authenticateUser(token: String!): Message!
 }

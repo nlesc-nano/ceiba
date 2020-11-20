@@ -18,6 +18,7 @@ from .utils_test import MockedCollection, read_jobs
 # Constant to mock the call
 PARENT = None
 INFO = None
+COOKIE = '{"username": "felipeZ", "token": "Token"}'
 
 
 def check_reply(reply: Dict[str, str]) -> None:
@@ -26,39 +27,43 @@ def check_reply(reply: Dict[str, str]) -> None:
 
 
 @pytest.mark.asyncio
-async def test_mutation_add_job():
+async def test_mutation_add_job(mocker: MockFixture):
     """Test the resolver for adding jobs."""
     job = read_jobs()[1]
 
-    args = {"input": job}
+    args = {"input": job, "cookie": COOKIE}
     # Mock database
     ctx = {"mongodb": {
         "jobs_awesome_data": MockedCollection(job),
         "awesome_data": MockedCollection(None)}}
 
+    mocker.patch("insilicoserver.mutation_resolvers.is_user_authenticated", return_value=True)
     reply = await resolve_mutation_add_job(PARENT, args, ctx, INFO)
     check_reply(reply)
 
 
 @pytest.mark.asyncio
-async def test_mutation_add_nonexisting_job():
+async def test_mutation_add_nonexisting_job(mocker: MockFixture):
     """Test the resolver for adding jobs."""
     job = read_jobs()[1]
 
-    args = {"input": job}
+    args = {"input": job, 'cookie': COOKIE}
     # Mock database
     ctx = {"mongodb": {
         "jobs_awesome_data": MockedCollection(None),
         "awesome_data": MockedCollection(None)}}
 
+    mocker.patch("insilicoserver.mutation_resolvers.is_user_authenticated", return_value=True)
     reply = await resolve_mutation_add_job(PARENT, args, ctx, INFO)
     check_reply(reply)
+
 
 async def run_mutation_update_job(
         policy: str, new: Dict[str, Any], old: Dict[str, Any]) -> Dict[str, Any]:
     """Test the resolver for updating jobs."""
     args = {
         "input": new,
+        'cookie': COOKIE,
         "duplication_policy": policy
     }
     # Mock database
@@ -71,8 +76,9 @@ async def run_mutation_update_job(
 
 
 @pytest.mark.asyncio
-async def test_mutation_update_job():
+async def test_mutation_update_job(mocker: MockFixture):
     """Test the resolver for updating jobs."""
+    mocker.patch("insilicoserver.mutation_resolvers.is_user_authenticated", return_value=True)
     # The first job is done the second available
     done_available = read_jobs()
     # Test keep policy
@@ -92,33 +98,36 @@ async def test_mutation_update_job():
 
 
 @pytest.mark.asyncio
-async def test_mutation_update_job_status():
+async def test_mutation_update_job_status(mocker: MockFixture):
     """Check the job status updater."""
     args = {"input": {
         "_id": 3141592,
         "collection_name": "awesome_data",
-        "status": "RESERVED"}
+        "status": "RESERVED"},
+        'cookie': COOKIE
     }
     # Mock database
     ctx = {"mongodb": {
         "jobs_awesome_data": MockedCollection(read_jobs())}}
 
+    mocker.patch("insilicoserver.mutation_resolvers.is_user_authenticated", return_value=True)
     reply = await resolve_mutation_update_job_status(PARENT, args, ctx, INFO)
     assert reply['status'] == 'DONE'
 
 
 @pytest.mark.asyncio
-async def test_mutation_update_property():
+async def test_mutation_update_property(mocker: MockFixture):
     """Check the job status updater."""
     args = {"input": {
         "_id": 101010,
         "collection_name": "awesome_data",
-        "data": '{"pi": "3.14159265358979323846"}'
-    }}
+        "data": '{"pi": "3.14159265358979323846"}'},
+        'cookie': COOKIE}
     # Mock database
     ctx = {"mongodb": {
         "awesome_data": MockedCollection(None)}}
 
+    mocker.patch("insilicoserver.mutation_resolvers.is_user_authenticated", return_value=True)
     reply = await resolve_mutation_update_property(PARENT, args, ctx, INFO)
     assert reply['status'] == 'DONE'
 
@@ -135,9 +144,10 @@ async def test_mutation_authentication_invalid_token():
     assert reply['status'] == "FAILED"
     assert "Invalid Token" in reply['text']
 
+
 @pytest.mark.asyncio
 async def test_mutation_authentication_invalid_user(mocker: MockFixture):
-    """Check the authentication resolver for an invalid_token"""
+    """Check the authentication resolver for an invalid_token."""
     args = {"token": "VeryLongToken"}
     # Mock database
     ctx = {"mongodb": {

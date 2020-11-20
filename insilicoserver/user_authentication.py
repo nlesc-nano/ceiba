@@ -11,6 +11,7 @@ from typing import Optional
 
 import requests
 from pymongo.database import Database
+from .mongo_interface import USERS_COLLECTION
 
 __all__ = ["authenticate_username"]
 
@@ -46,7 +47,9 @@ def authenticate_username(
     return data['viewer']['login']
 
 
-def is_user_authenticated(token: str, database: Database) -> bool:
+def is_user_authenticated(cookie: str, database: Database) -> bool:
     """Check if the user is authenticated in the web service."""
     col = database[USERS_COLLECTION]
-    col.find_one()
+    user_data = json.loads(cookie)
+    data = col.find_one({key: user_data[key] for key in {"username", "token"}})
+    return False if data is None else True
