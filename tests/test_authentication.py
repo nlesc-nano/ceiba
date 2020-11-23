@@ -2,7 +2,10 @@
 
 from pytest_mock import MockerFixture
 
-from insilicoserver.user_authentication import authenticate_username
+from insilicoserver.user_authentication import (authenticate_username,
+                                                is_user_authenticated)
+
+from .test_mongo_interface import get_database
 
 
 class MockReply(dict):
@@ -26,3 +29,9 @@ def test_correct_token(mocker: MockerFixture):
     username = authenticate_username("validtoken")
 
     assert username == "felipeZ"
+
+
+def test_is_user_authenticated():
+    """Check that the user credentials are searched in the database."""
+    cookie = '{"username": "felipeZ", "token": "Token42"}'
+    assert not is_user_authenticated(cookie, get_database())
