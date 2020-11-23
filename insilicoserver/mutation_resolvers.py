@@ -59,13 +59,13 @@ async def resolve_mutation_authentication(
     Temporal token to authenticate the user or failure message
 
 """
-    database = ctx["mongodb"]
     # Extract property data
     token = args['token']
     known_user = authenticate_username(token)
     if known_user is None:
         return {"status": "FAILED", "text": "Invalid Token!"}
 
+    database = ctx["mongodb"]
     # Check if the user is allowed to interact with the service
     collection = database[USERS_COLLECTION]
     user_data = collection.find_one({"username": known_user})

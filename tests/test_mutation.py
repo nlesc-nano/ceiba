@@ -26,6 +26,23 @@ def check_reply(reply: Dict[str, str]) -> None:
     assert all(x in reply.keys() for x in {"status", "text"})
 
 
+async def run_mutation_update_job(
+        policy: str, new: Dict[str, Any], old: Dict[str, Any]) -> Dict[str, Any]:
+    """Test the resolver for updating jobs."""
+    args = {
+        "input": new,
+        'cookie': COOKIE,
+        "duplication_policy": policy
+    }
+    # Mock database
+    ctx = {"mongodb": {
+        "jobs_awesome_data": MockedCollection(old),
+        "awesome_data": MockedCollection({'data': '{"prop": 42}'})}}
+
+    reply = await resolve_mutation_update_job(PARENT, args, ctx, INFO)
+    return reply
+
+
 @pytest.mark.asyncio
 async def test_mutation_add_job(mocker: MockFixture):
     """Test the resolver for adding jobs."""
@@ -56,23 +73,6 @@ async def test_mutation_add_nonexisting_job(mocker: MockFixture):
     mocker.patch("insilicoserver.mutation_resolvers.is_user_authenticated", return_value=True)
     reply = await resolve_mutation_add_job(PARENT, args, ctx, INFO)
     check_reply(reply)
-
-
-async def run_mutation_update_job(
-        policy: str, new: Dict[str, Any], old: Dict[str, Any]) -> Dict[str, Any]:
-    """Test the resolver for updating jobs."""
-    args = {
-        "input": new,
-        'cookie': COOKIE,
-        "duplication_policy": policy
-    }
-    # Mock database
-    ctx = {"mongodb": {
-        "jobs_awesome_data": MockedCollection(old),
-        "awesome_data": MockedCollection({'data': '{"prop": 42}'})}}
-
-    reply = await resolve_mutation_update_job(PARENT, args, ctx, INFO)
-    return reply
 
 
 @pytest.mark.asyncio
@@ -172,3 +172,28 @@ async def test_mutation_authentication_valid_user(mocker: MockFixture):
     cookie = json.loads(reply['text'])
     assert reply['status'] == "DONE"
     assert cookie['username'] == "RosalindFranklin"
+
+
+async def check_non_authenticated_user(fun, mocker: MockFixture) -> None:
+    """Check that an error message is return if the user is not authenticated."""
+    args = {
+        'cookie': COOKIE,
+    }
+    # Mock database
+    ctx = {"mongodb": None}
+
+    mocker.patch("insilicoserver.mutation_resolvers.is_user_authenticated",
+                 return_value=False)
+
+    reply = await fun(PARENT, args, ctx, INFO)
+    assert reply['status'] == "FAILED"
+    assert "The user is not authenticated" in reply['text']
+
+
+@pytest.mark.asyncio
+async def test_nonauthenticated_user(mocker: MockFixture):
+    """Check that an error message is return if the user is not authenticated."""
+    functions = {resolve_mutation_update_job, resolve_mutation_update_job_status,
+                 resolve_mutation_update_property, resolve_mutation_add_job}
+    for fun in functions:
+        await check_non_authenticated_user(fun, mocker)
