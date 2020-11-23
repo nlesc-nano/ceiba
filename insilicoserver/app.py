@@ -12,8 +12,7 @@ from typing import Any, Dict
 import pkg_resources as pkg
 from aiohttp import web
 from tartiflette_aiohttp import register_graphql_handlers
-from .mongo_interface import DatabaseConfig, connect_to_db
-
+from .mongo_interface import DatabaseConfig, add_users_to_db, connect_to_db
 
 from .__version__ import __version__
 
@@ -25,8 +24,12 @@ logger = logging.getLogger(__name__)
 
 def create_context(args: argparse.Namespace) -> Dict[str, Any]:
     """Create context to run the app."""
+    # Create Database
     db_info = DatabaseConfig(
         "properties", host=args.mongo_url, username=args.username, password=args.password)
+    # Add Allow users
+    database = connect_to_db(db_info)
+    add_users_to_db(database, args.file)
     context = {
         "mongodb": connect_to_db(db_info)
     }
@@ -50,12 +53,23 @@ def configure_logger(workdir: Path, package_name: str) -> None:
     logger.info(f"Working directory is: {workdir}")
 
 
+def exists(input_file: str) -> Path:
+    """Check if the input file exists."""
+    path = Path(input_file)
+    if not path.exists():
+        raise argparse.ArgumentTypeError(f"{input_file} doesn't exist!")
+
+    return path
+
+
 def read_cli_args() -> argparse.Namespace:
     """Read the command line arguments."""
     parser = argparse.ArgumentParser("insilico-server")
+    parser.add_argument(
+        '-f', "--file", required=True, type=exists, help="File with the allow users")
     parser.add_argument('-m', '--mongo_url', default="localhost")
-    parser.add_argument('-u', '--username', default=None)
-    parser.add_argument('-p', '--password', default=None)
+    parser.add_argument('-u', '--username', default=None, help="mongo username")
+    parser.add_argument('-p', '--password', default=None, help="mongo password")
     return parser.parse_args()
 
 

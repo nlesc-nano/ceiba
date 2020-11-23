@@ -3,6 +3,7 @@
 API
 ---
 .. autofunction:: resolve_mutation_add_job
+.. autofunction:: resolve_mutation_authentication
 .. autofunction:: resolve_mutation_update_job
 .. autofunction:: resolve_mutation_update_job_status
 .. autofunction:: resolve_mutation_update_property
@@ -10,11 +11,17 @@ API
 """
 import json
 import logging
+import secrets
+from datetime import datetime
 from typing import Any, Dict, Optional, Set
 
 from tartiflette import Resolver
 from pymongo.database import Database
 from pymongo.collection import Collection
+
+from .user_authentication import authenticate_username, is_user_authenticated
+from .mongo_interface import USERS_COLLECTION
+
 
 __all__ = ["resolve_mutation_add_job", "resolve_mutation_update_job",
            "resolve_mutation_update_job_status", "resolve_mutation_update_property"]
@@ -23,6 +30,63 @@ logger = logging.getLogger(__name__)
 
 PROPERTY_MUTABLE_KEYWORDS = {"data", "input", "geometry", "large_objects"}
 JOB_MUTABLE_KEYWORDS = {"status", "user", "platform", "report_time", "schedule_time"}
+AUTHENTICATION_ERROR_MESSAGE = {"status": "FAILED", "text": "The user is not authenticated"}
+
+
+@Resolver("Mutation.authenticateUser")
+async def resolve_mutation_authentication(
+    parent: Optional[Any],
+    args: Dict[str, Any],
+    ctx: Dict[str, Any],
+    info: Dict[str, Any],
+) -> Dict[str, Any]:
+    """
+    Resolver to authenticate a user.
+
+    Parameters
+    ----------
+    paren
+        initial value filled in to the engine `execute` method
+    args
+        computed arguments related to the field
+    ctx
+        context filled in at engine initialization
+    info
+        information related to the execution and field resolution
+
+    Returns
+    -------
+    Temporal token to authenticate the user or failure message
+
+"""
+    # Extract property data
+    token = args['token']
+    known_user = authenticate_username(token)
+    if known_user is None:
+        return {"status": "FAILED", "text": "Invalid Token!"}
+
+    database = ctx["mongodb"]
+    # Check if the user is allowed to interact with the service
+    collection = database[USERS_COLLECTION]
+    user_data = collection.find_one({"username": known_user})
+    if user_data is None:
+        msg = f"User `{known_user}` doesn't have permissions to access the service"
+        return {"status": "FAILED",
+                "text": msg}
+
+    # Update the token used to authenticate the client
+    reply_token = secrets.token_hex(16)
+
+    filter_name = {"username": known_user}
+    entry = {"token": reply_token, "username": known_user,
+             "time": datetime.now()}
+
+    # Insert new entry if not previously find
+    collection.replace_one(filter_name, entry)
+
+    cookie = json.dumps({"username": known_user, "token": reply_token})
+
+    return {"status": "DONE", "text": cookie}
 
 
 @Resolver("Mutation.updateProperty")
@@ -48,9 +112,14 @@ async def resolve_mutation_update_property(
 
     Returns
     -------
-    Update
+    Message with the status of the update
+
     """
     database = ctx["mongodb"]
+    # Check if the user is authenticated
+    if not is_user_authenticated(args['cookie'], database):
+        return AUTHENTICATION_ERROR_MESSAGE
+
     # Extract property data
     property_data = args['input']
 
@@ -84,9 +153,13 @@ async def resolve_mutation_add_job(
 
     Returns
     -------
-    Updated Property
+    Status message
     """
     database = ctx["mongodb"]
+    # Check if the user is authenticated
+    if not is_user_authenticated(args['cookie'], database):
+        return AUTHENTICATION_ERROR_MESSAGE
+
     # Extract property data
     property_data = args['input'].pop('property')
     property_collection = property_data["collection_name"]
@@ -139,6 +212,10 @@ async def resolve_mutation_update_job(
     Updated job
     """
     database = ctx["mongodb"]
+    # Check if the user is authenticated
+    if not is_user_authenticated(args['cookie'], database):
+        return AUTHENTICATION_ERROR_MESSAGE
+
     msg = ""
 
     # Extract property data and Filter non-null data
@@ -179,7 +256,7 @@ async def resolve_mutation_update_job_status(
         parent: Optional[Any],
         args: Dict[str, Any],
         ctx: Dict[str, Any],
-        info: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        info: Dict[str, Any]) -> Dict[str, Any]:
     """Resolver in charge of updating a given job.
 
     Parameters
@@ -195,9 +272,14 @@ async def resolve_mutation_update_job_status(
 
     Returns
     -------
-    Updated job
+    Status message
+
     """
     database = ctx["mongodb"]
+    # Check if the user is authenticated
+    if not is_user_authenticated(args['cookie'], database):
+        return AUTHENTICATION_ERROR_MESSAGE
+
     # Extract property data
     job_data = args['input']
     jobs_collection = database[f"jobs_{job_data['collection_name']}"]

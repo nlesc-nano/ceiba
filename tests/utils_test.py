@@ -22,7 +22,7 @@ def read_properperties_and_jobs() -> Dict[str, Any]:
         return json.load(handler)
 
 
-def read_jobs() -> Dict[str, Any]:
+def read_jobs() -> List[Dict[str, Any]]:
     """Get the mock data for the jobs."""
     data = read_properperties_and_jobs()
     jobs = data["JOBS"]
@@ -64,6 +64,8 @@ class MockedCollection:
     def estimated_document_count(self) -> int:
         return 42
 
+    def replace_one(self, filter_name: Dict[str, Any], replacement: Dict[str, Any]) -> None:
+        return None
 
 class MockedDatabase:
     """Mock a Mongodb database."""

@@ -1,34 +1,48 @@
 """Test the app instantiation."""
 
 import argparse
+import sys
 from pathlib import Path
 
+import pytest
 from pytest_mock import MockFixture
 
 from insilicoserver.app import configure_logger, create_context, read_cli_args
 
-CLI_ARGS = argparse.Namespace(mongo_url="localhost", username="juan", password="42")
+from .utils_test import PATH_TEST
+
+PATH_USERS = PATH_TEST / "users.txt"
+
+CLI_ARGS = argparse.Namespace(
+    file=PATH_USERS, mongo_url="localhost", username="juan", password="42")
 
 
 def test_cli_parser(mocker: MockFixture):
     """Test that the CLI arguments are parsed correctly."""
-    mocker.patch("argparse.ArgumentParser.parse_args", return_value=CLI_ARGS)
+    sys.argv = ["insilico-server", "-f", PATH_USERS.absolute().as_posix(),
+                "-u", "RosalindFranklin", "-p", '42']
     args = read_cli_args()
-    print("args: ", args)
-    assert args.username == "juan" and args.password == "42"
+    assert args.username == "RosalindFranklin" and args.password == "42"
+
+
+def test_nonexisting_user_file(mocker: MockFixture):
+    """Check that an error is raised if a nonexisting file is passed."""
+    sys.argv = ["insilico-server", "-f", "Nowhere/Nonexistingfile",
+                "-u", "RosalindFranklin", "-p", '42']
+
+    with pytest.raises(SystemExit) as info:
+        read_cli_args()
+
+    error = info.value.args[0]
+    print("err: ", error)
 
 
 def test_create_context(mocker: MockFixture):
     """Test context generation."""
     mocker.patch("insilicoserver.app.connect_to_db", return_value="mock")
+    mocker.patch("insilicoserver.app.add_users_to_db", return_value=None)
     ctx = create_context(CLI_ARGS)
     assert "mongodb" in ctx
-
-
-def test_run_app(mocker: MockFixture):
-    """Test that the app starts normally."""
-    mocker.patch("argparse.ArgumentParser.parse_args", return_value=CLI_ARGS)
-    mocker.patch("insilicoserver.app.connect_to_db", return_value="mock")
 
 
 def test_logger(tmp_path: Path):

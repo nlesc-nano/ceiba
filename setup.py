@@ -41,11 +41,10 @@ setup(
         'console_scripts': ['insilico-server=insilicoserver.app:run']},
     data_files=[('citation/insilicoserver', ['CITATION.cff'])],
     install_requires=['more-itertools', 'tartiflette', 'tartiflette-aiohttp',
-                      'pandas', 'pymongo'],
+                      'pandas', 'pymongo', 'requests'],
     extras_require={
         'test': ['coverage', 'mypy', 'pycodestyle', 'pytest>=3.9',
                  'pytest-asyncio', 'pytest-cov', 'pytest-mock'],
-        'doc': ['sphinx', 'sphinx-autodoc-typehints', 'sphinx_rtd_theme',
-                'nbsphinx']
+        'docs': ['sphinx', 'sphinx_rtd_theme']
     }
 )

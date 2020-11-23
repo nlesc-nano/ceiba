@@ -17,13 +17,13 @@ without the user's manual intervention. See `documentation <https://insilico-ser
 Installation
 ************
 
-1.🐳 Install `Docker <https://www.docker.com/>`_
+#. 🐳 Install `Docker <https://www.docker.com/>`_
 
-2. 🚀 Define a environment variable `MONGO_PASSWORD` with the database password. Now you can run the following
+#. 🚀 Define a environment variable `MONGO_PASSWORD` with the database password. Now you can run the following
    command to start both the server and the mongodb services:
-::
+   ::
 
-   provisioning/start_app.sh
+      provisioning/start_app.sh
 
 
 Contributing
