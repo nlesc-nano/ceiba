@@ -4,6 +4,7 @@ import argparse
 import sys
 from pathlib import Path
 
+import pytest
 from pytest_mock import MockFixture
 
 from insilicoserver.app import configure_logger, create_context, read_cli_args
@@ -22,6 +23,18 @@ def test_cli_parser(mocker: MockFixture):
                 "-u", "RosalindFranklin", "-p", '42']
     args = read_cli_args()
     assert args.username == "RosalindFranklin" and args.password == "42"
+
+
+def test_nonexisting_user_file(mocker: MockFixture):
+    """Check that an error is raised if a nonexisting file is passed."""
+    sys.argv = ["insilico-server", "-f", "Nowhere/Nonexistingfile",
+                "-u", "RosalindFranklin", "-p", '42']
+
+    with pytest.raises(SystemExit) as info:
+        read_cli_args()
+
+    error = info.value.args[0]
+    print("err: ", error)
 
 
 def test_create_context(mocker: MockFixture):
