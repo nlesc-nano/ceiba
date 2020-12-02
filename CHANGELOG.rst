@@ -11,6 +11,7 @@ New
 * Add mutation to authenticate user (#2)
 * Add token to identify user (#6)
 * Docker container recipe (#8)
+* Use `docker-compose to start the app <https://github.com/nlesc-nano/insilico-server/issues/13>`_
 
 CHANGED
 -------
