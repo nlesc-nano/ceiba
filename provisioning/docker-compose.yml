@@ -1,0 +1,27 @@
+version: "3"
+
+services:
+  database:
+    image: mongo:latest
+    container_name: mongodbauth
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=$MONGO_PASSWORD
+    ports:
+      - 27017:27017
+    network_mode: "bridge"
+    volumes:
+      - ~/mongodb_data:/data/db
+    restart: always
+
+  insilico:
+    depends_on:
+      - database
+    image: felipez/insilico:prototype
+    environment:
+      - MONGO_PASSWORD=${MONGO_PASSWORD}
+    ports:
+      - 8080:8080
+    network_mode: "bridge"
+    restart: always
+    entrypoint: insilico-server -m 172.17.0.2 -u admin -p ${MONGO_PASSWORD} -f users.txt
