@@ -5,5 +5,5 @@ if [[ -z "${MONGO_PASSWORD}" ]]; then
     exit 1
 fi
 
-docker-compose pull
-docker-compose up -d
+docker-compose -f "${DOCKER_COMPOSE_FILE}" pull
+docker-compose -f "${DOCKER_COMPOSE_FILE}" up -d

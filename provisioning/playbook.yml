@@ -12,6 +12,7 @@
       loop:
         - wget
         - git
+        - docker-compose
 
     - name: Docker ppa key
       apt_key: 
@@ -22,7 +23,7 @@
       apt_repository:
         repo: deb [arch=amd64] https://download.docker.com/linux/{{ansible_distribution | lower}} {{ansible_distribution_release}} stable
 
-    - name: Docker
+    - name: Install Docker
       apt:
         name: docker-ce
 
@@ -31,13 +32,31 @@
         name: "{{ ansible_user }}"
         groups:
           - docker
-    
+
     - name: Allow http port
       ufw:
         rule: allow
         port: "8080"
 
+    - name: Add Caddy APT repository
+      apt_repository:
+        repo: deb [trusted=yes] https://apt.fury.io/caddy/ /
+
+    - name: Install Caddy
+      apt:
+        name: caddy
+
+    - name: Create reverse proxy
+      command: caddy reverse-proxy --to 127.0.0.1:8080
+      ignore_errors: yes
+
+    - name: Get docker-compose file
+      get_url:
+        url: https://raw.githubusercontent.com/nlesc-nano/insilico-server/master/provisioning/docker-compose.yml
+        dest: /tmp/docker-compose.yml
+
     - name: Start the app
       script: ./start_app.sh
       environment:
         MONGO_PASSWORD: '{{ mongodb_password }}'
+        DOCKER_COMPOSE_FILE: /tmp/docker-compose.yml
