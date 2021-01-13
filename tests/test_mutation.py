@@ -7,8 +7,8 @@ from typing import Any, Dict
 import pytest
 from pytest_mock import MockFixture
 
-from insilicoserver.mongo_interface import USERS_COLLECTION
-from insilicoserver.mutation_resolvers import (
+from ceiba.mongo_interface import USERS_COLLECTION
+from ceiba.mutation_resolvers import (
     resolve_mutation_add_job, resolve_mutation_authentication,
     resolve_mutation_update_job, resolve_mutation_update_job_status,
     resolve_mutation_update_property)
@@ -54,7 +54,7 @@ async def test_mutation_add_job(mocker: MockFixture):
         "jobs_awesome_data": MockedCollection(job),
         "awesome_data": MockedCollection(None)}}
 
-    mocker.patch("insilicoserver.mutation_resolvers.is_user_authenticated", return_value=True)
+    mocker.patch("ceiba.mutation_resolvers.is_user_authenticated", return_value=True)
     reply = await resolve_mutation_add_job(PARENT, args, ctx, INFO)
     check_reply(reply)
 
@@ -70,7 +70,7 @@ async def test_mutation_add_nonexisting_job(mocker: MockFixture):
         "jobs_awesome_data": MockedCollection(None),
         "awesome_data": MockedCollection(None)}}
 
-    mocker.patch("insilicoserver.mutation_resolvers.is_user_authenticated", return_value=True)
+    mocker.patch("ceiba.mutation_resolvers.is_user_authenticated", return_value=True)
     reply = await resolve_mutation_add_job(PARENT, args, ctx, INFO)
     check_reply(reply)
 
@@ -78,7 +78,7 @@ async def test_mutation_add_nonexisting_job(mocker: MockFixture):
 @pytest.mark.asyncio
 async def test_mutation_update_job(mocker: MockFixture):
     """Test the resolver for updating jobs."""
-    mocker.patch("insilicoserver.mutation_resolvers.is_user_authenticated", return_value=True)
+    mocker.patch("ceiba.mutation_resolvers.is_user_authenticated", return_value=True)
     # The first job is done the second available
     done_available = read_jobs()
     # Test keep policy
@@ -110,7 +110,7 @@ async def test_mutation_update_job_status(mocker: MockFixture):
     ctx = {"mongodb": {
         "jobs_awesome_data": MockedCollection(read_jobs())}}
 
-    mocker.patch("insilicoserver.mutation_resolvers.is_user_authenticated", return_value=True)
+    mocker.patch("ceiba.mutation_resolvers.is_user_authenticated", return_value=True)
     reply = await resolve_mutation_update_job_status(PARENT, args, ctx, INFO)
     assert reply['status'] == 'DONE'
 
@@ -127,7 +127,7 @@ async def test_mutation_update_property(mocker: MockFixture):
     ctx = {"mongodb": {
         "awesome_data": MockedCollection(None)}}
 
-    mocker.patch("insilicoserver.mutation_resolvers.is_user_authenticated", return_value=True)
+    mocker.patch("ceiba.mutation_resolvers.is_user_authenticated", return_value=True)
     reply = await resolve_mutation_update_property(PARENT, args, ctx, INFO)
     assert reply['status'] == 'DONE'
 
@@ -153,7 +153,7 @@ async def test_mutation_authentication_invalid_user(mocker: MockFixture):
     ctx = {"mongodb": {
         USERS_COLLECTION: MockedCollection(None)}}
 
-    mocker.patch("insilicoserver.mutation_resolvers.authenticate_username", return_value="someone")
+    mocker.patch("ceiba.mutation_resolvers.authenticate_username", return_value="someone")
     reply = await resolve_mutation_authentication(PARENT, args, ctx, INFO)
     assert reply['status'] == "FAILED"
     assert "doesn't have permissions" in reply['text']
@@ -167,7 +167,7 @@ async def test_mutation_authentication_valid_user(mocker: MockFixture):
     ctx = {"mongodb": {
         USERS_COLLECTION: MockedCollection({"username": "RosalindFranklin"})}}
 
-    mocker.patch("insilicoserver.mutation_resolvers.authenticate_username", return_value="RosalindFranklin")
+    mocker.patch("ceiba.mutation_resolvers.authenticate_username", return_value="RosalindFranklin")
     reply = await resolve_mutation_authentication(PARENT, args, ctx, INFO)
     cookie = json.loads(reply['text'])
     assert reply['status'] == "DONE"
@@ -182,7 +182,7 @@ async def check_non_authenticated_user(fun, mocker: MockFixture) -> None:
     # Mock database
     ctx = {"mongodb": None}
 
-    mocker.patch("insilicoserver.mutation_resolvers.is_user_authenticated",
+    mocker.patch("ceiba.mutation_resolvers.is_user_authenticated",
                  return_value=False)
 
     reply = await fun(PARENT, args, ctx, INFO)

@@ -6,10 +6,10 @@ from typing import List
 from pymongo import MongoClient
 from pymongo.database import Database
 
-from insilicoserver.mongo_interface import (USERS_COLLECTION, DatabaseConfig,
+from ceiba.mongo_interface import (USERS_COLLECTION, DatabaseConfig,
                                             add_users_to_db, connect_to_db,
                                             store_dataframe_in_mongo)
-from insilicoserver.query_resolvers import get_jobs_by_size
+from ceiba.query_resolvers import get_jobs_by_size
 
 from .utils_test import PATH_TEST, read_jobs
 

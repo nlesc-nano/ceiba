@@ -1,5 +1,5 @@
 # What is this repository for?
-This recipe installs and configures the **insilico-server** app using [ansible](https://www.ansible.com/).
+This recipe installs and configures the **ceiba** app using [ansible](https://www.ansible.com/).
 
 ## Step to install the app
 1. Install [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html) in your computer.

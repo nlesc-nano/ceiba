@@ -1,5 +1,5 @@
 
-The Insilico Web Service
+The Ceiba Web Service
 ########################
 🧬🧪  Most of the scientific simulations are usually performed in supercomputer
 or high tech facilities. Usually the data is kept on those facilities

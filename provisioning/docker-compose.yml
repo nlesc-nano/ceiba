@@ -14,14 +14,14 @@ services:
       - ~/mongodb_data:/data/db
     restart: always
 
-  insilico:
+  ceiba:
     depends_on:
       - database
-    image: felipez/insilico:prototype
+    image: felipez/ceiba:prototype
     environment:
       - MONGO_PASSWORD=${MONGO_PASSWORD}
     ports:
       - 8080:8080
     network_mode: "bridge"
     restart: always
-    entrypoint: insilico-server -m 172.17.0.2 -u admin -p ${MONGO_PASSWORD} -f users.txt
+    entrypoint: ceiba -m 172.17.0.2 -u admin -p ${MONGO_PASSWORD} -f users.txt

@@ -1,17 +1,17 @@
-.. image:: https://github.com/nlesc-nano/insilico-server/workflows/build/badge.svg
-   :target: https://github.com/nlesc-nano/insilico-server/actions
-.. image:: https://readthedocs.org/projects/insilico-server/badge/?version=latest
-   :target: https://insilico-server.readthedocs.io/en/latest/?badge=latest
-.. image:: https://codecov.io/gh/nlesc-nano/insilico-server/branch/master/graph/badge.svg
-  :target: https://codecov.io/gh/nlesc-nano/insilico-server
+.. image:: https://github.com/nlesc-nano/ceiba/workflows/build/badge.svg
+   :target: https://github.com/nlesc-nano/ceiba/actions
+.. image:: https://readthedocs.org/projects/ceiba/badge/?version=latest
+   :target: https://ceiba.readthedocs.io/en/latest/?badge=latest
+.. image:: https://codecov.io/gh/nlesc-nano/ceiba/branch/master/graph/badge.svg
+  :target: https://codecov.io/gh/nlesc-nano/ceiba
 .. image:: https://zenodo.org/badge/297567281.svg
    :target: https://zenodo.org/badge/latestdoi/297567281
 
 ###############
-insilico-server
+ceiba
 ###############
 This web service provides an interface to retrieve and store simulation data,
-without the user's manual intervention. See `documentation <https://insilico-server.readthedocs.io/en/latest/>`_.
+without the user's manual intervention. See `documentation <https://ceiba.readthedocs.io/en/latest/>`_.
 
 
 Installation
@@ -29,7 +29,7 @@ Installation
 Contributing
 ************
 
-If you want to contribute to the development of insilico-server,
+If you want to contribute to the development of ceiba,
 have a look at the `contribution guidelines <CONTRIBUTING.rst>`_.
 
 License

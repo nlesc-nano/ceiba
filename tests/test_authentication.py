@@ -2,7 +2,7 @@
 
 from pytest_mock import MockerFixture
 
-from insilicoserver.user_authentication import (authenticate_username,
+from ceiba.user_authentication import (authenticate_username,
                                                 is_user_authenticated)
 
 from .test_mongo_interface import get_database

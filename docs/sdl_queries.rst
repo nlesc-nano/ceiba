@@ -1,4 +1,4 @@
 Schema Queries
 ##############
 
-See `the available queries schema definitions <https://github.com/nlesc-nano/insilico-server/blob/master/insilicoserver/sdl/Query.graphql>`_.
+See `the available queries schema definitions <https://github.com/nlesc-nano/ceiba/blob/master/ceiba/sdl/Query.graphql>`_.

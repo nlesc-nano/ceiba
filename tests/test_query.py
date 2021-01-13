@@ -2,7 +2,7 @@
 
 import pytest
 
-from insilicoserver.query_resolvers import (resolver_query_collections,
+from ceiba.query_resolvers import (resolver_query_collections,
                                             resolver_query_jobs,
                                             resolver_query_properties)
 

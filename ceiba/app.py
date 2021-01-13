@@ -18,7 +18,7 @@ from .__version__ import __version__
 
 __all__ = ["run"]
 
-PATH_LIB = Path(pkg.resource_filename('insilicoserver', ''))
+PATH_LIB = Path(pkg.resource_filename('ceiba', ''))
 logger = logging.getLogger(__name__)
 
 
@@ -64,7 +64,7 @@ def exists(input_file: str) -> Path:
 
 def read_cli_args() -> argparse.Namespace:
     """Read the command line arguments."""
-    parser = argparse.ArgumentParser("insilico-server")
+    parser = argparse.ArgumentParser("ceiba")
     parser.add_argument(
         '-f', "--file", required=True, type=exists, help="File with the allow users")
     parser.add_argument('-m', '--mongo_url', default="localhost")
@@ -75,7 +75,7 @@ def read_cli_args() -> argparse.Namespace:
 
 def run() -> None:
     """Entry point of the application."""
-    configure_logger(Path("."), "insilicoserver")
+    configure_logger(Path("."), "ceiba")
     args = read_cli_args()
     web.run_app(
         register_graphql_handlers(
@@ -83,11 +83,11 @@ def run() -> None:
             executor_context=create_context(args),
             engine_sdl=(PATH_LIB / "sdl").absolute().as_posix(),
             engine_modules=[
-                "insilicoserver.query_resolvers",
-                "insilicoserver.mutation_resolvers",
-                "insilicoserver.subscription_resolvers",
-                "insilicoserver.directives.rate_limiting",
-                "insilicoserver.directives.auth",
+                "ceiba.query_resolvers",
+                "ceiba.mutation_resolvers",
+                "ceiba.subscription_resolvers",
+                "ceiba.directives.rate_limiting",
+                "ceiba.directives.auth",
             ],
             executor_http_endpoint="/graphql",
             executor_http_methods=["POST"],

@@ -9,7 +9,7 @@ if "%SPHINXBUILD%" == "" (
 )
 set SOURCEDIR=.
 set BUILDDIR=_build
-set SPHINXPROJ=insilico-server
+set SPHINXPROJ=ceiba
 
 if "%1" == "" goto help
 

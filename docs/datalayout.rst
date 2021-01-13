@@ -28,7 +28,7 @@ The following schema defines how the properties are stored:
   input: Optional[String]
 
 Notice that the previous schema mirros the
-`GraphQL definition of Property in the server <https://github.com/nlesc-nano/insilico-server/blob/master/insilicoserver/sdl/Query.graphql>`_.
+`GraphQL definition of Property in the server <https://github.com/nlesc-nano/ceiba/blob/master/ceiba/sdl/Query.graphql>`_.
 
 
 Jobs collections
@@ -62,7 +62,7 @@ The following schema defines how jobs are defined:
    
 
 Notice that the previous schema mirros the
-`GraphQL definition of Job in the server <https://github.com/nlesc-nano/insilico-server/blob/master/insilicoserver/sdl/Query.graphql>`_.
+`GraphQL definition of Job in the server <https://github.com/nlesc-nano/ceiba/blob/master/ceiba/sdl/Query.graphql>`_.
 
 
 .. Note::

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# insilico-server documentation build configuration file, created by
+# ceiba documentation build configuration file, created by
 # sphinx-quickstart on Tue Sep 22 09:35:44 2020.
 #
 # This file is execfile()d with the current directory set to its
@@ -47,12 +47,12 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'insilico-server'
+project = u'ceiba'
 copyright = u'2020, Netherlands eScience Center'
 author = u"Felipe Zapata"
 
 vers = {}
-with open(os.path.join(here, '..', 'insilicoserver', '__version__.py')) as f:
+with open(os.path.join(here, '..', 'ceiba', '__version__.py')) as f:
     exec(f.read(), vers)
 
 version = vers["__version__"]
@@ -115,7 +115,7 @@ html_sidebars = {
 # -- Options for HTMLHelp output ------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'insilico-server_doc'
+htmlhelp_basename = 'ceiba_doc'
 
 
 # -- Options for LaTeX output ---------------------------------------------
@@ -142,7 +142,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'insilico-server.tex', u'insilico-server Documentation',
+    (master_doc, 'ceiba.tex', u'ceiba Documentation',
      u"Felipe Zapata", 'manual'),
 ]
 
@@ -152,7 +152,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'insilico-server', u'insilico-server Documentation',
+    (master_doc, 'ceiba', u'ceiba Documentation',
      [author], 1)
 ]
 
@@ -163,7 +163,7 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'insilico-server', u'insilico-server Documentation',
-     author, 'insilico-server', "Server to handle the molecular properties",
+    (master_doc, 'ceiba', u'ceiba Documentation',
+     author, 'ceiba', "Server to handle the molecular properties",
      'Miscellaneous'),
 ]

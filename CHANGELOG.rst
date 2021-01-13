@@ -12,7 +12,7 @@ New
 * Add token to identify user (#6)
 * Docker container recipe (#8)
 * use `Caddy <https://caddyserver.com/>`_ to generate the certificate and the start the reverse-proxy (#12)
-* Use `docker-compose to start the app <https://github.com/nlesc-nano/insilico-server/issues/13>`_
+* Use `docker-compose to start the app <https://github.com/nlesc-nano/ceiba/issues/13>`_
 
 CHANGED
 -------

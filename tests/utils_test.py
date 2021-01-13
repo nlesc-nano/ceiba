@@ -6,11 +6,11 @@ from typing import Any, Dict, List
 
 import pkg_resources as pkg
 
-__all__ = ["PATH_INSILICOSERVER", "PATH_TEST", "read_jobs", "read_properperties_and_jobs"]
+__all__ = ["PATH_CEIBA", "PATH_TEST", "read_jobs", "read_properperties_and_jobs"]
 
 # Environment data
-PATH_INSILICOSERVER = Path(pkg.resource_filename('insilicoserver', ''))
-ROOT = PATH_INSILICOSERVER.parent
+PATH_CEIBA = Path(pkg.resource_filename('ceiba', ''))
+ROOT = PATH_CEIBA.parent
 
 PATH_TEST = ROOT / "tests" / "files"
 
