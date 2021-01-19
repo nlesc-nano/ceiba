@@ -10,8 +10,16 @@
 #####
 ceiba
 #####
-This web service provides an interface to retrieve and store simulation data,
-without the user's manual intervention. See `documentation <https://ceiba.readthedocs.io/en/latest/>`_.
+ 🧬 🔭 🔬 Scientific simulations generate large volume of data that needs to be stored and processed
+by multidisciplinary teams across different geographical locations. Distributing computational expensive
+simulations among the available resources, avoiding duplication and keeping the data safe are challenges
+that scientists face every day.
+
+Ceiba and its command line interface Ceiba-cli. Ceiba solves the problem of computing, storing and securely sharing
+computationally expensive simulation results. Researchers can save significant time and resources by easily
+computing new data and reusing existing simulation data to answer their questions.
+
+See `documentation <https://ceiba.readthedocs.io/en/latest/>`_.
 
 
 Installation
