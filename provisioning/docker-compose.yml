@@ -17,7 +17,7 @@ services:
   ceiba:
     depends_on:
       - database
-    image: felipez/ceiba:prototype
+    image: ghcr.io/nlesc-nano/ceiba:prototype
     environment:
       - MONGO_PASSWORD=${MONGO_PASSWORD}
     ports:
