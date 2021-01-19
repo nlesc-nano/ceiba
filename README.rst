@@ -10,7 +10,7 @@
 #####
 ceiba
 #####
- 🧬 🔭 🔬 Scientific simulations generate large volume of data that needs to be stored and processed
+🧬 🔭 🔬 Scientific simulations generate large volume of data that needs to be stored and processed
 by multidisciplinary teams across different geographical locations. Distributing computational expensive
 simulations among the available resources, avoiding duplication and keeping the data safe are challenges
 that scientists face every day.
