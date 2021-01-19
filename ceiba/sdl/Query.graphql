@@ -1,4 +1,4 @@
-"""Possible job status"""
+"Possible job status"
 enum Status{
   AVAILABLE
   DONE
@@ -59,8 +59,25 @@ type Collection {
 
 type Query {
   """Query jobs by status and maximum number of jobs to retrieve"""
-  jobs(status: Status!, collection_name: String!, max_jobs: Int, job_size: JobSize) : [Job!]
-  properties(collection_name: String!): [Property!]
-  property(smile: String!, collection_name: String!): Property
+  jobs(
+    "One of: AVAILABLE, DONE, FAILED, RUNNING, RESERVED"
+    status: Status!,
+    "Name of the collection where the property is stored"
+    collection_name: String!,
+    "Maximum number of jobs to request"
+    max_jobs: Int,
+    "Either SMALL or LARGE"
+    job_size: JobSize) : [Job!]
+  """Query all the properties in a given collection"""
+  properties(
+    "Name of the collection where the property is stored"
+    collection_name: String!): [Property!]
+  """Query a single smile's property in a given collection"""
+  property(
+    "Smile to look for"
+    smile: String!,
+    "Name of the collection where the property is stored"
+    collection_name: String!): Property
+  """Ask for the names of all collections"""
   collections: [Collection!]
 }
