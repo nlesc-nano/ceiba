@@ -72,12 +72,12 @@ Once the user has been succesfully authenticated with the web service, she can r
 the web service response is:
 ```
 Available collections:
-	name size
-	simulation1 23
-	simulation2 5
+  name size
+simulation1 23
+simulation2 5
 ```
 The previous output means that there are two datasets: *simulation1* and *simulation2*, with 23 and 5 elements, respectively.
-The Use can then request for all the available data in *simulation2* using the following command:
+The user can then request for all the available data in *simulation2* using the following command:
 ```bash
  ceibacli query -w http://localhost:8080/graphql --collection_name simulation2
 ```
