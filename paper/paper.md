@@ -43,13 +43,13 @@ simulation data to answer their questions.
 
 
 # Functionalities
-the architecture figure, represents schematically the architecture of the web service.
+Figure \ref{fig:architecture} represents schematically the architecture of the web service.
 The *Ceiba-CLI* initializes the communication with the *Ceiba web service* by requesting some resources
 (e.g. precomputed data). Then, the services checks that the requests is available and the user can
 perform the action, if those initial steps success the service communicates with the database and
 return the requested resources or performed the actions requested by the user.
 
-![Diagram representing the Ceiba architecture.\label{fig:architecture}](architecture.jpg){ width=30% }
+![Diagram representing the Ceiba architecture.\label{fig:architecture}](architecture.jpg){ width=90% }
 
 *Ceiba* Uses MongoDB [@mongodb] as backing database. Using a non-SQL database as MongoDB helps to
 manipulate non-structure data, like json files, without having to impose a schema over the simulation data.
