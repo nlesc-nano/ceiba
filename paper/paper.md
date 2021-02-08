@@ -12,38 +12,29 @@ affiliations:
  - name: Netherlands eScience Center
    index: 1
 
-date: 19 January 2021
+date: February 2021
 bibliography: paper.bib
 
 
 # Summary
+
+Ceiba is implemented in Python using the Tartiflete GraphQL server.
+
+# Statement of need
 Scientific simulations generate large volume of data that needs to be stored and processed
 by multidisciplinary teams across different geographical locations. Distributing
 computational expensive simulations among the available resources, avoiding duplication
 and keeping the data safe are challenges that scientists face every day.
 
-Ceiba and its command line interface Ceiba-cl solve the problem of computing,
+Ceiba and its command line interface Ceiba-cli solve the problem of computing,
 storing and securely sharing computationally expensive simulation results. Researchers
 can save significant time and resources by easily computing new data and reusing existing
 simulation data to answer their questions.
 
-Ceiba is implemented in Python using the Tartiflete GraphQL server.
 
-# Statement of need
+# Functionalities
+![Diagram representing the Ceiba architecture.\label{fig:architecture}][architecture](architecture.jpg)
 
-# Citations
-
-Citations to entries in paper.bib should be in
-[rMarkdown](http://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html)
-format.
-
-If you want to cite a software repository URL (e.g. something on GitHub without a preferred
-citation) then you can do it with the example BibTeX entry below for @fidgit.
-
-For a quick reference, the following citation commands can be used:
-- `@author:2001`  ->  "Author et al. (2001)"
-- `[@author:2001]` -> "(Author et al., 2001)"
-- `[@author1:2001; @author2:2001]` -> "(Author1 et al., 2001; Author2 et al., 2002)"
 
 # Figures
 
@@ -55,5 +46,8 @@ Figure sizes can be customized by adding an optional second parameter:
 ![Caption for example figure.](figure.png){ width=20% }
 
 # Acknowledgements
-
+I would like to express my deepest appreciation to Stefan Verhoeven (@sverhoeven) for guiding me on the web developing world.
+I am also grateful to Jen Wehner (@JensWehner) and Nicolas Renaud (@NicoRenaud) for their support and feedback designing 
+the Ceiba web service.
+	
 # References
