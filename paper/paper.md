@@ -33,7 +33,7 @@ simulation data to answer their questions.
 
 
 # Functionalities
-![Diagram representing the Ceiba architecture.\label{fig:architecture}][architecture](architecture.jpg)
+![Diagram representing the Ceiba architecture.\label{fig:architecture}](architecture.jpg)
 
 
 # Figures
