@@ -24,11 +24,17 @@ to/from a (remote) database.
 Using  the *Ceiba-CLI* command line user can interact with the web service, they can for instance download available
 data, upload data, request metadata, etc.
 
-The *Ceiba web service* installation and deployment is intendent to be perform at a local/national infrastucture.
-While the *Ceiba-CLI* can be easily install on personal computers, workstations or the supercomputer infrasctuctures
-where the simulations are performed.
+A typical use case for the *Ceiba* web service is a large number of simulations that are performed as independent jobs.
+For instance, a job can be a single molecular simulation under some specific conditions. We would like to make all 
+these jobs available to users, in such a way that they can run one or more jobs at a time but avoiding that the same job
+is run by more than one user. Oonce the simulation is done, a user can send the results to the web service or ask for 
+already available results. We also want to be able to call the web service from our local computer,
+specialized infrastructure or wherever we want to perform the computation, without worrying about where the service is running.
+Finally, the *Ceiba web service* installation and deployment is intendent to be perform at a local/national or
+cloud computing infrascture.
 
-Ceiba is implemented in Python using the Tartiflete GraphQL [@graphql;@tartiflette] server.
+*Ceiba* is implemented in Python using the Tartiflete GraphQL [@graphql;@tartiflette] server.
+
 
 # Statement of need
 Scientific simulations generate large volume of data that needs to be stored and processed
@@ -44,10 +50,10 @@ simulation data to answer their questions.
 
 # Functionalities
 Figure \ref{fig:architecture} represents schematically the architecture of the web service.
-The *Ceiba-CLI* initializes the communication with the *Ceiba web service* by requesting some resources
-(e.g. precomputed data). Then, the services checks that the requests is available and the user can
+The *Ceiba-CLI* initializes the communication with the *Ceiba web service* by requesting some resources, for instance
+some precomputed data or a  new job to run. Then, the services checks that the requests is available and the user can
 perform the action, if those initial steps success the service communicates with the database and
-return the requested resources or performed the actions requested by the user.
+return the requested resources and/or performes an update in the database.
 
 ![Diagram representing the Ceiba architecture.\label{fig:architecture}](architecture.jpg){ width=90% }
 
@@ -58,12 +64,12 @@ Currently the Ceiba library is focused on computational-chemistry/materials scie
 it can be extended to other simulations domains.
 
 # Examples
-Let us suppose for the sake of the example that the web service URL is **http://ceiba.org:8080/graphql** (the actual
-address depends on the actual hosting place). A user can then login into the web service by running the following command:
+Let us suppose for the sake of the example that the web service URL is **https://ceiba.org:8080/graphql** (the actual
+address depends on domain/IP where you are hosting the service). A user can then login into the web service by running the following command:
 ```bash
 ceibacli login -t ${LOGIN_TOKEN} -w https://ceiba.org:8080/graphql
 ```
-where `LOGIN_TOKEN` is is a [GitHub token to authenticate the user](https://ceiba-cli.readthedocs.io/en/latest/authentication.html#authentication).
+where `LOGIN_TOKEN` is is a [read-only GitHub token to authenticate the user](https://ceiba-cli.readthedocs.io/en/latest/authentication.html#authentication).
 
 Once the user has been succesfully authenticated with the web service, she can request some available data like:
 ```bash
