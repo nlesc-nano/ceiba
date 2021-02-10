@@ -2,81 +2,155 @@
 Keep the old data
 Merge the old and the new data
 Overwrite the old data with the new one
-Make the data a list and append the new data to it"""
-enum DuplicationPolicy{
+Make the data a list and append the new data to it
+"""
+enum DuplicationPolicy {
   KEEP
   MERGE
   OVERWRITE
   APPEND
 }
 
-"""Whether or not the request succeeded"""
+"""
+Whether or not the request succeeded
+"""
 enum RequestStatus {
   FAILED
   DONE
 }
 
-"""Message to report back"""
+"""
+Message to report back
+"""
 type Message {
   status: RequestStatus!
   text: String
 }
 
 input InputProperty {
-  """Unique identifier"""
+  """
+  Unique identifier
+  """
   _id: Int!
-  """Name to which the property belongs. e.g. Theory level"""
+  """
+  Name to which the property belongs. e.g. Theory level
+  """
   collection_name: String!
-  """Smile representing the molecule"""
+  """
+  Smile representing the molecule
+  """
   smile: String!
-  """Optimize geometry"""
+  """
+  Optimize geometry
+  """
   geometry: String
-  """properties values as JSON"""
+  """
+  properties values as JSON
+  """
   data: String
-  """Input with which the property was computed encoded as JSON"""
+  """
+  Input with which the property was computed encoded as JSON
+  """
   input: String
-   """Metadata in JSON of the large output files stored somewhere else"""
+  """
+  Metadata in JSON of the large output files stored somewhere else
+  """
   large_objects: String
 }
 
 input InputJob {
-  """Unique identifier"""
+  """
+  Unique identifier
+  """
   _id: Int!
-  """compute Properties"""
+  """
+  compute Properties
+  """
   property: InputProperty!
-  """Job status"""
+  """
+  Job status
+  """
   status: Status!
-  """Settings to run the job."""
+  """
+  Settings to run the job.
+  """
   settings: String
-  """User who es executing the job."""
+  """
+  User who es executing the job.
+  """
   user: String
-  """Timestamp=datatime.timestamp() """
+  """
+  Timestamp=datatime.timestamp()
+  """
   schedule_time: Float
-  """Timestamp=datatime.timestamp()"""
+  """
+  Timestamp=datatime.timestamp()
+  """
   report_time: Float
-  """platform where the job was run: platform.platform()"""
+  """
+  platform where the job was run: platform.platform()
+  """
   platform: String
 }
 
 input InputJobStatus {
-  """Unique identifier"""
+  """
+  Unique identifier
+  """
   _id: Int!
-  """Job status"""
+  """
+  Job status
+  """
   status: Status!
-  """collection name of the properties"""
+  """
+  collection name of the properties
+  """
   collection_name: String!
-  """User who es executing the job."""
+  """
+  User who es executing the job.
+  """
   user: String
-  """Timestamp=datatime.timestamp() """
+  """
+  Timestamp=datatime.timestamp()
+  """
   schedule_time: Float
-  """Timestamp=datatime.timestamp()"""
+  """
+  Timestamp=datatime.timestamp()
+  """
   report_time: Float
 }
 
 type Mutation {
-  updateJob(cookie: String!, input: InputJob!, duplication_policy: DuplicationPolicy): Message!
-  updateJobStatus(cookie: String!, input: InputJobStatus): Message!
-  createJob(cookie: String!, input: InputJob!): Message!
-  updateProperty(cookie: String!, input: InputProperty!): Message!
-  authenticateUser(token: String!): Message!
+  "Update a job state"
+  updateJob(
+    "serialize data to authenticate the user"
+    cookie: String!
+    "Job data"
+    input: InputJob!
+    "Policy to handle duplicated jobs"
+    duplication_policy: DuplicationPolicy
+  ): Message!
+  "Update only the job status"
+  updateJobStatus(
+    "serialize data to authenticate the user"
+    cookie: String!
+    "Data with the new job status "
+    input: InputJobStatus
+  ): Message!
+  "Create a new job using the given input"
+  createJob(
+    "serialize data to authenticate the user"
+    cookie: String!
+    "Job data"
+    input: InputJob!
+  ): Message!
+  "Update the property dataset"
+  updateProperty(
+    "serialize data to authenticate the user"
+    cookie: String!
+    "data and metadata of the property"
+    input: InputProperty!
+  ): Message!
+  "Check that the user has permission to login in the web service"
+  authenticateUser("GitHub readonly token" token: String!): Message!
 }
