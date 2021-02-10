@@ -48,7 +48,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'ceiba'
-copyright = u'2020, Netherlands eScience Center'
+copyright = u'2020-2021, Netherlands eScience Center'
 author = u"Felipe Zapata"
 
 vers = {}
