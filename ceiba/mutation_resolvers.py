@@ -323,7 +323,7 @@ def update_entry(
     entry_updates = {key: entry[key] for key in entry.keys() if key in mutable_keywords}
     query = {"_id": entry["_id"]}
     update = {"$set": entry_updates}
-    collection.update_one(query, update)
+    collection.update_one(query, update, upsert=True)
 
 
 def store_property(database: Database, property_data: Dict[str, Any]) -> None:
