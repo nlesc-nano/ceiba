@@ -33,23 +33,19 @@ input InputProperty {
   """
   _id: Int!
   """
-  Name to which the property belongs. e.g. Theory level
+  Name to which the properties belongs
   """
   collection_name: String!
   """
-  Smile representing the molecule
+  Metadata associated to the properties
   """
-  smile: String!
-  """
-  Optimize geometry
-  """
-  geometry: String
+  metadata: String!
   """
   properties values as JSON
   """
   data: String
   """
-  Input with which the property was computed encoded as JSON
+  Input with which the properties was computed encoded as JSON
   """
   input: String
   """

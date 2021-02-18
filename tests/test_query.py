@@ -3,8 +3,8 @@
 import pytest
 
 from ceiba.query_resolvers import (resolver_query_collections,
-                                            resolver_query_jobs,
-                                            resolver_query_properties)
+                                   resolver_query_jobs,
+                                   resolver_query_properties)
 
 from .utils_test import (MockedCollection, MockedDatabase,
                          read_properperties_and_jobs)

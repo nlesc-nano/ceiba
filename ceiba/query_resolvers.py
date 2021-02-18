@@ -7,10 +7,9 @@ API
 .. autofunction:: resolver_query_jobs
 
 """
-from typing import Any, Dict, Iterable, List, Optional
+from typing import Any, Dict, List, Optional
 
 from more_itertools import take
-from pymongo.collection import Collection
 from tartiflette import Resolver
 
 
@@ -80,11 +79,7 @@ async def resolver_query_jobs(
     collection = ctx["mongodb"][jobs_collection]
 
     # Return the first available jobs
-    if args["job_size"] is None:
-        data = collection.find(query)
-    # Return a small or large job if the user requested so
-    else:
-        data = get_jobs_by_size(args["job_size"], collection)
+    data = collection.find(query)
 
     if args["max_jobs"] is not None:
         jobs = take(args["max_jobs"], data)
@@ -92,21 +87,6 @@ async def resolver_query_jobs(
         jobs = list(data)
 
     return jobs
-
-
-def get_jobs_by_size(
-        job_size: str, collection: Collection,
-        status: str = "AVAILABLE") -> Iterable[Dict[str, Any]]:
-    """Retrieve jobs by size."""
-    order = 1 if job_size == "SMALL" else -1
-    cursor = collection.aggregate([
-        {"$match": {"status": status}},
-        {"$addFields": {
-            "lensmile": {"$strLenCP": "$property.smile"}}},
-        {"$sort": {"lensmile": order}}
-    ])
-
-    return cursor
 
 
 @Resolver("Query.collections")
