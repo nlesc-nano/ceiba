@@ -96,10 +96,13 @@ the central database. Also, at all times the user can retrieve available datapoi
 
 ## Creation of the database
 
-For this example we will consider a simple case where a database containing XXX must be computed by different collaborators.
-Before using *Ceiba* the administrator of the database, Adam, must create the database. While in a real aplication this database
-will most likely be stored on a cloud service, we will for the sake if illustration create a local dabase in a docker container.
-Once the database create Adam must specify the jobs that his collaborators will run to compute the different data points.
+For this example, we will consider a simple case where a database contains a set of molecules represented as smiles [@Weininger1998]
+for which we want to compute some properties. Before using *Ceiba* the administrator of the database, Adam, must create the database.
+While in a real aplication this database will most likely be stored on a cloud service, we will for the sake if illustration create
+a local dabase in a docker container. Once the database create Adam must specify the jobs that his collaborators will run to compute
+the different data points.
+
+To 
 *Example of how to do that*
 
 ## Requesting job and uploading the results
