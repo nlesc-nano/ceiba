@@ -35,7 +35,7 @@ requires the same data to perform their research.
 
 # Statement of need
 
-Many resarch project require running a large number of computationally heavy but independent simulations.
+Many resarch projects require running a large number of computationally heavy but independent simulations.
 Those can be molecular dynamics simulations of proteins, fluid dynamics simulations with different initial conditions, etc.
 As the number of independent simulations grows, their orchestration and execution require a collaborative effort among a
 team of researchers. Through its dedicated server and command line interface, *Ceiba* facilitates this team effort.
@@ -47,9 +47,9 @@ The *Ceiba web service* has been designed as a two levels service: one for manag
 the data and another for handling the actual data. This partition, allow to keep a clean boundary between
 the metadata and provenance of a given job, from the concrete results that produces that job. Since these
 two layers are independent, Ceiba users can also manage data without associated jobs, for example, because
-the data has been previously computed and the users just want to share it among themselves.
+the data has been previously computed and users just want to share it among themselves.
 
-We use docker [@docker] to setup and run both the server and the database, in their own isolated and indepedent
+We use docker [@docker] to setup and run both the server and the database in their own isolated and indepedent
 linux containers. The server and database containers are deployed using docker-compose [@dockercompose] and
 communicate with each other using their own internal network [@dockernetwork]. The docker-compose tool makes sure that
 the server is listening to client requests in a given port (e.g. 8080 by default) and the database is stored
@@ -59,8 +59,8 @@ manipulate non-structure data, like json files, without having to impose a schem
 
 Since both the server and the database need some computational resources to run, we anticipate that both
 the server and database can be deployed at a local/national or cloud computing infrastructure. 
-Once the server is up and running, user can install the client (*ceiba-cli*) on their local computer, local
-cluster, national computing infrascture, cloud, etc. 
+Once the server is up and running, user can install the client (*ceiba-cli*) on their local computer,
+national computing infrascture, cloud, etc. 
 
 Using the client (*ceiba-cli*) the user can interact with the server and perform actions like:
  * store new jobs in the database
@@ -69,27 +69,25 @@ Using the client (*ceiba-cli*) the user can interact with the server and perform
  * query some available data
  * perform administrative tasks on the database
 
-Notice that in order to keep the data safe, it is required that users login with the database.
-Managing and implementing 
+Notice that in order to keep the data safe, it is required that users login with the Ceiba web service.
+Since managing our own authentication system takes considerable time and resources, we use the
+GitHub authentication system [@authentication] to authenticate users on behalf of the Ceiba Web service. Users just
+need to have a GitHub account and request a personal access token [@token].
 
-Jobs are created by.. the example section will ilustrate how this proccess is carried out.
+Once the user has authenticated with the web service, she can add new jobs by calling the client (`ceibacli add`)
+with a YAML input file specifying the parameters to run the simulation. Similarly, the user can request through
+the command line interface the parameters to compute new data points (`ceibacli compute`). This last command,
+will fetch the parameters to run a specific calculation and will feed those parameters to the executable
+provided by the user, as part of the input for `compute` command. Finally, the client will run the job locally
+or on the ressources specified by the user (cluster/cloud etc.). Notice that when a user request to compute a job,
+that job is not longer available for other users and will remain in a "reserved" state until its corresponding
+results are reported or a given amount of time has passed without receiving the results. This reservation mechanism
+ensures that two users do not compute the same datapoint, saving computational ressources and human time.
 
-The server allows to handle client request, validate the request against a schema,
-connect to the database and return the data to the client. **Need to write that a bit better.**
+Having run the jobs, the user can easily upload (`ceibacli report`) the results and their metadata in
+the central database. Also, at all times the user can retrieve available datapoints from the database 
+(`ceibacli query`). The example section will provide a hands-on ilustration of the aforementioned actions.
 
-
-**HOW DO WE CREATE THE DATABASE** 
-**Where is the database stored**
-**definition of the jobs etc ...**
-
-
-After authentication (`Login`), users can request through the command line interface instruction to compute
-new data points (`Compute`). This will return specifications to run simulations required for new data points
-in the database. This therefore ensure that two users do not compute the same datapoint, saving computational
-ressources and human time. The job files returned by the CLI can be executed either locally or on the ressources
-of their choice (cluster/cloud etc...). Once the calculations complete, users can easily upload the results of 
-these calculations (and their metadata) in the central database (`Add`, `Report`). Users can also simply retrieve
-datapoints from the data base (`query`). 
 
 ![Diagram representing the Ceiba architecture.\label{fig:architecture}](architecture.jpg){ width=90% }
 
