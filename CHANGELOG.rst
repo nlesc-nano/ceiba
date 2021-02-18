@@ -4,6 +4,9 @@ Change Log
 
 0.3.0 [Unreleased]
 ******************
+CHANGED
+-------
+* Generalize server by removing references to smiles and adding a metadata field (#21)
 
 0.2.0 [10/02/2021]
 ******************

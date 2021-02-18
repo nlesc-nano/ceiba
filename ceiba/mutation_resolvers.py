@@ -28,7 +28,7 @@ __all__ = ["resolve_mutation_add_job", "resolve_mutation_update_job",
 
 logger = logging.getLogger(__name__)
 
-PROPERTY_MUTABLE_KEYWORDS = {"data", "input", "geometry", "large_objects"}
+PROPERTY_MUTABLE_KEYWORDS = {"data", "input", "metadata", "large_objects"}
 JOB_MUTABLE_KEYWORDS = {"status", "user", "platform", "report_time", "schedule_time"}
 AUTHENTICATION_ERROR_MESSAGE = {"status": "FAILED", "text": "The user is not authenticated"}
 
@@ -176,7 +176,7 @@ async def resolve_mutation_add_job(
         # Extract job metadataa
         job_data = args['input']
         job_data["property"] = {
-            key: property_data[key] for key in ("_id", "smile", "collection_name")}
+            key: property_data[key] for key in ("_id", "metadata", "collection_name")}
         # Save jobs into the database
         job_id = jobs_collection.insert_one(job_data).inserted_id
         msg = f"Stored job with id {job_id} into collection jobs_{property_data['collection_name']}"
@@ -323,7 +323,8 @@ def update_entry(
     entry_updates = {key: entry[key] for key in entry.keys() if key in mutable_keywords}
     query = {"_id": entry["_id"]}
     update = {"$set": entry_updates}
-    collection.update_one(query, update)
+    print("type: ", type(collection))
+    collection.update_one(query, update, upsert=True)
 
 
 def store_property(database: Database, property_data: Dict[str, Any]) -> None:

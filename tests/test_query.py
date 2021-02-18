@@ -3,8 +3,8 @@
 import pytest
 
 from ceiba.query_resolvers import (resolver_query_collections,
-                                            resolver_query_jobs,
-                                            resolver_query_properties)
+                                   resolver_query_jobs,
+                                   resolver_query_properties)
 
 from .utils_test import (MockedCollection, MockedDatabase,
                          read_properperties_and_jobs)
@@ -24,7 +24,7 @@ async def test_query_properties():
     results = await resolver_query_properties(PARENT, args, ctx, INFO)
     print("received results: ", results)
     first = results[0]
-    assert all((first['smile'] == "O=O", first['_id'] == 0))
+    assert all((first['metadata']['smile'] == "O=O", first['_id'] == 0))
 
 
 @pytest.mark.asyncio

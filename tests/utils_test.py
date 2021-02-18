@@ -55,7 +55,7 @@ class MockedCollection:
     def find(self, query: Any = None) -> Any:
         return self.data
 
-    def update_one(self, query: Dict[str, Any], update: Dict[str, Any]) -> None:
+    def update_one(self, query: Dict[str, Any], update: Dict[str, Any], **kwargs) -> None:
         return None
 
     def insert_one(self, query: Dict[str, Any]) -> MockInsertion:
@@ -66,6 +66,7 @@ class MockedCollection:
 
     def replace_one(self, filter_name: Dict[str, Any], replacement: Dict[str, Any]) -> None:
         return None
+
 
 class MockedDatabase:
     """Mock a Mongodb database."""

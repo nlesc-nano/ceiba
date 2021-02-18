@@ -1,5 +1,5 @@
 "Possible job status"
-enum Status{
+enum Status {
   AVAILABLE
   DONE
   FAILED
@@ -7,77 +7,122 @@ enum Status{
   RESERVED
 }
 
-"""Larger jobs are computationally more expensive."""
+"""
+Larger jobs are computationally more expensive.
+"""
 enum JobSize {
   SMALL
   LARGE
 }
 
-"""Job computed by an user"""
+"""
+Job computed by an user
+"""
 type Job {
-  """Unique identifier"""
+  """
+  Unique identifier
+  """
   _id: Int
-  """compute Properties"""
+  """
+  compute Properties
+  """
   property: Property!
-  """Input to perform the computation"""
+  """
+  Input to perform the computation
+  """
   settings: String!
-  """Job status"""
+  """
+  Job status
+  """
   status: Status!
-  """User who es executing the job."""
+  """
+  User who es executing the job.
+  """
   user: String
-  """Timestamp=datatime.timestamp() """
+  """
+  Timestamp=datatime.timestamp()
+  """
   schedule_time: Float
-  """Timestamp=datatime.timestamp()"""
+  """
+  Timestamp=datatime.timestamp()
+  """
   report_time: Float
-  """platform where the job was run: platform.platform()"""
+  """
+  platform where the job was run: platform.platform()
+  """
   platform: String
 }
 
 type Property {
-  """Unique identifier"""
+  """
+  Unique identifier
+  """
   _id: Int
-  """Name to which the property belongs. e.g. Theory level"""
+  """
+  Name to which the property belongs. e.g. Theory level
+  """
   collection_name: String!
-  """Smile representing the molecule"""
-  smile: String!
-  """Optimize geometry"""
-  geometry: String
-  """Properties values as JSON"""
+  """
+  Metadata associated to the given property.
+  """
+  metadata: String!
+  """
+  Properties values as JSON
+  """
   data: String
-  """Input with which the property was computed encoded as JSON"""
+  """
+  Input with which the property was computed encoded as JSON
+  """
   input: String
-  """Metadata in JSON of the large output files stored somewhere else"""
+  """
+  Metadata in JSON of the large output files stored somewhere else
+  """
   large_objects: String
-  }
+}
 
 type Collection {
-  """Collection name"""
+  """
+  Collection name
+  """
   name: String!
-  """Number of documents in the Collection"""
+  """
+  Number of documents in the Collection
+  """
   size: Int!
 }
 
 type Query {
-  """Query jobs by status and maximum number of jobs to retrieve"""
+  """
+  Query jobs by status and maximum number of jobs to retrieve
+  """
   jobs(
     "One of: AVAILABLE, DONE, FAILED, RUNNING, RESERVED"
-    status: Status!,
+    status: Status!
     "Name of the collection where the property is stored"
-    collection_name: String!,
+    collection_name: String!
     "Maximum number of jobs to request"
-    max_jobs: Int,
-    "Either SMALL or LARGE"
-    job_size: JobSize) : [Job!]
-  """Query all the properties in a given collection"""
+    max_jobs: Int
+  ): [Job!]
+  """
+  Query all the properties in a given collection
+  """
   properties(
-    "Name of the collection where the property is stored"
-    collection_name: String!): [Property!]
-  """Query a single smile's property in a given collection"""
+    "Name of the collection where the properties are stored"
+    collection_name: String!
+  ): [Property!]
+  """
+  Query a single smile's property in a given collection
+  """
   property(
-    "Smile to look for"
-    smile: String!,
+    """
+    Metadata to look for
+    """
+    metadata: String!
     "Name of the collection where the property is stored"
-    collection_name: String!): Property
-  """Ask for the names of all collections"""
+    collection_name: String!
+  ): Property
+  """
+  Ask for the names of all collections
+  """
   collections: [Collection!]
 }
