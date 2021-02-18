@@ -85,7 +85,6 @@ def run() -> None:
             engine_modules=[
                 "ceiba.query_resolvers",
                 "ceiba.mutation_resolvers",
-                "ceiba.subscription_resolvers",
                 "ceiba.directives.rate_limiting",
                 "ceiba.directives.auth",
             ],
