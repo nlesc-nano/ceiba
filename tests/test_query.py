@@ -24,7 +24,7 @@ async def test_query_properties():
     results = await resolver_query_properties(PARENT, args, ctx, INFO)
     print("received results: ", results)
     first = results[0]
-    assert all((first['smile'] == "O=O", first['_id'] == 0))
+    assert all((first['metadata']['smile'] == "O=O", first['_id'] == 0))
 
 
 @pytest.mark.asyncio
