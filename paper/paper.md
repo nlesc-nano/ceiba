@@ -88,36 +88,77 @@ Having run the jobs, the user can easily upload (`ceibacli report`) the results 
 the central database. Also, at all times the user can retrieve available datapoints from the database 
 (`ceibacli query`). The example section will provide a hands-on ilustration of the aforementioned actions.
 
+Optionally, *Ceiba* allows you to store large binary/text objects using the Swift openstack data
+storage service [@openstack]. Large objects are not suitable for storage in a database, but the 
+Swift service allows to handle these kind of objects efficiently. The drawback of this approach
+is that users need to request (and pay) for the cloud infrastructure necessary to provide this extra
+service.
+
 
 ![Diagram representing the Ceiba architecture.\label{fig:architecture}](architecture.jpg){ width=90% }
 
 
 # Examples
 
-## Creation of the database
 
-For this example, we will consider a simple case where a database contains a set of molecules represented as smiles [@Weininger1998]
-for which we want to compute some properties. Before using *Ceiba* the administrator of the database, Adam, must create the database.
-While in a real aplication this database will most likely be stored on a cloud service, we will for the sake if illustration create
-a local dabase in a docker container. Once the database create Adam must specify the jobs that his collaborators will run to compute
-the different data points.
+## Deploying the server and the database
+Before using *Ceiba* the administrator of the server, Adam, must deploy the server and database.
+While in a real aplication both the server and database will most likely be hosted on a cloud service, we will create for the sake of illustration
+a couple of containers hosted locally.
 
-To 
-*Example of how to do that*
+In order to start the *Ceiba server*, Adam needs to install [docker](https://docs.docker.com/get-docker/)
+and [docker-compose](https://docs.docker.com/compose/install/). then he needs to clone the [ceiba repository](https://github.com/nlesc-nano/ceiba)
+and goes to the *provisioning* folder. Inside that folder he needs to define an enviromental variable defining
+the mongodb password like:
+```bash
+export MONGO_PASSWORD="secure_password"
+```
+And now he can launch the server like:
+```bash
+docker compose up -d
+```
+The previous command will launch two containers to run in the background, one with the database and the other with the server.
+
+
+## Adding jobs to the database
+Once the server and database are created, Adam must specify the jobs that his collaborators will
+run to compute the different data points.
+
+For this example, we will consider a simple case where we want to compute Pi using the Monte-Carlo method.
+To perform the simulations we will use [this Python code](./monte_carlo_example.py). Each job is the number of *samples*
+to estimate Pi. 
+
+Adam must then define the jobs using a JSON, e.g. jobs.json, file that looks like:
+```json
+  [
+      { "samples": 100 },
+      { "samples": 1000 },
+	  { "samples": 5000 },
+	  ........
+  ]
+```
+
+Adam can then add the jobs to the database like:
+```bash
+ceibacli add -w http://localhost:8080/graphql -c monte_carlo -j jobs.json
+```
 
 ## Requesting job and uploading the results
 
-Now that the database is created, Julie a collaborator of Adam wants to request XX jobs to compute. She must first must login to the database 
+Now that the database is created, Julie a collaborator of Adam wants to request 5 jobs to compute. Before requesting the jobs,
+she must first must login in to the server:
 
 ```bash
 ceibacli login -t ${LOGIN_TOKEN} -w https://ceiba.org:8080/graphql
 ```
-where `LOGIN_TOKEN` is is a [read-only GitHub token to authenticate the user](https://ceiba-cli.readthedocs.io/en/latest/authentication.html#authentication).
-Once authentication is complete Julie can request job with :
+where `LOGIN_TOKEN` is a [read-only GitHub token to authenticate the user](https://ceiba-cli.readthedocs.io/en/latest/authentication.html#authentication).
+Once authentication is complete Julie can request jobs and run the jobs with the following command:
 
 ```bash
-ceibacli compute <....>
+ceibacli compute -i compute_input.yml
 ```
+
+where 
 
 This return here available job files `xxx` that still needs to be computed. These jobs will now be markes as 'In progress' in the database so that other collaborators can't compute them as well. Julie can run locally those jobs to obtaing the results of the simulations that are then stored in file `xxxx`. Julie can then upload these new datapoints to the central database by executing 
 
@@ -128,26 +169,25 @@ The jobs run by Julie will now be marked as `Completed` in the database. Julie o
 
 ## Querying the database
 
-At any point all the collaborators can obtain an overview of the current status in the database via :  
+At any point all the collaborators can obtain an overview of the current status in the database via :
 
 ```bash
  ceibacli query -w http://localhost:8080/graphql
 ```
 
-This will return :
+This will return:
 
 ```
 Available collections:
   name size
-simulation1 23
-simulation2 5
+monte_carlo 7
 ```
 
-indicating that there are currently two datasets: *simulation1* and *simulation2*, with 23 and 5 elements, respectively.
+indicating that there are currently one datasets: *monte_carlo*. It contains 7 data points.
 
-If user want to retreive all the available data in *simulation2* they can use:
+If the users want to retreive all the available data in *monte_carlo* they can use:
 ```bash
- ceibacli query -w http://localhost:8080/graphql --collection_name simulation2
+ ceibacli query -w http://localhost:8080/graphql --collection_name monte_carlo
 ```
 that will create a `simulation2.csv` file containing the dataset.
 
