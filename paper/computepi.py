@@ -1,18 +1,17 @@
 import argparse
 import numpy as np
+import yaml
 
 
-parser = argparse.ArgumentParser(
-    description="run_simulation -n number_of_samples")
-parser.add_argument('-n', '--number', required=True, type=int,
-                    help="Number of samples")
+parser = argparse.ArgumentParser("computepi")
+parser.add_argument('file', help="simulation parameters")
 
 
 def main():
     """Calling the Monte-Carlo method."""
     # read the command line arguments
     args = parser.parse_args()
-    samples = args.number
+    samples = read_samples(args.file)
     approx_pi = compute_pi(samples)
     write_results(approx_pi, samples)
 
@@ -34,6 +33,14 @@ def compute_pi(samples: int) -> float:
     approx_pi = (float(inside.size) / samples) * 4
 
     return approx_pi
+
+
+def read_samples(file_parameters):
+    """Read the file with the parameters."""
+    with open(file_parameters, 'r') as handler:
+        parameters = yaml.load(handler, Loader=yaml.FullLoader)
+
+    return parameters["samples"]
 
 
 def write_results(result: float, samples: int):

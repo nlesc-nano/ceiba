@@ -26,7 +26,7 @@ Safe and efficient handling of large and complex data has become a critical part
 In particular, many datasets containing the results of computationally expensive simulations are being assembled
 in different scientific fields ranging from biology to material science. However, many research teams lack the proper
 tools to collaboratively create, store and access datasets that are crucial for their research [@Wilson2017].
-This lack of suitable digital infrastructure can lead data loss, unreproducible results, and inefficient resources
+This lack of suitable digital infrastructure can lead to data loss, unreproducible results, and inefficient resources
 usage that hinders scientific progress. The *Ceiba* web service provides a technical solution for teams of researchers
 to jointly run the simulations needed to create their dataset, organize the data and the associated metadata and
 immediately share the datasets with each other. By doing so, *Ceiba* has the potential to not only improves the data
@@ -45,8 +45,8 @@ Figure \ref{fig:architecture} represents schematically the architecture of the w
 
 The *Ceiba web service* has been designed as a two levels service: one for managing the jobs generating
 the data and another for handling the actual data. This partition, allow to keep a clean boundary between
-the metadata and provenance of a given job, from the concrete results that produces that job. Since these
-two layers are independent, Ceiba users can also manage data without associated jobs, for example, because
+the metadata and provenance of a given job, from the concrete datasets. Since these two layers are independent,
+*Ceiba* users can also manage data without associated jobs, for example, because
 the data has been previously computed and users just want to share it among themselves.
 
 We use docker [@docker] to setup and run both the server and the database in their own isolated and indepedent
@@ -65,7 +65,7 @@ national computing infrascture, cloud, etc.
 Using the client (*ceiba-cli*) the user can interact with the server and perform actions like:
  * store new jobs in the database
  * request some jobs to compute
- * report the jobs' results
+ * report jobs results
  * query some available data
  * perform administrative tasks on the database
 
@@ -75,18 +75,18 @@ GitHub authentication system [@authentication] to authenticate users on behalf o
 need to have a GitHub account and request a personal access token [@token].
 
 Once the user has authenticated with the web service, she can add new jobs by calling the client (`ceibacli add`)
-with a YAML input file specifying the parameters to run the simulation. Similarly, the user can request through
+with a JSON input file specifying the parameters to run the simulation. Similarly, the user can request through
 the command line interface the parameters to compute new data points (`ceibacli compute`). This last command,
-will fetch the parameters to run a specific calculation and will feed those parameters to the executable
+will fetch from the server the parameters to run a specific calculation and will feed those parameters to the executable
 provided by the user, as part of the input for `compute` command. Finally, the client will run the job locally
-or on the ressources specified by the user (cluster/cloud etc.). Notice that when a user request to compute a job,
-that job is not longer available for other users and will remain in a "reserved" state until its corresponding
+or on the resources specified by the user (cluster/cloud etc.). Notice that when a user requests to compute a job,
+that job is not longer available for other users and will remain in a *in progress* state until its corresponding
 results are reported or a given amount of time has passed without receiving the results. This reservation mechanism
 ensures that two users do not compute the same datapoint, saving computational ressources and human time.
 
-Having run the jobs, the user can easily upload (`ceibacli report`) the results and their metadata in
-the central database. Also, at all times the user can retrieve available datapoints from the database 
-(`ceibacli query`). The example section will provide a hands-on ilustration of the aforementioned actions.
+Having run the jobs, the user can easily upload (using `ceibacli report`) the results and their metadata in
+the server. Also, at all times the user can retrieve available datapoints from the database 
+(using `ceibacli query`). The example section will provide a hands-on ilustration of the aforementioned actions.
 
 Optionally, *Ceiba* allows you to store large binary/text objects using the Swift openstack data
 storage service [@openstack]. Large objects are not suitable for storage in a database, but the 
@@ -99,7 +99,6 @@ service.
 
 
 # Examples
-
 
 ## Deploying the server and the database
 Before using *Ceiba* the administrator of the server, Adam, must deploy the server and database.
@@ -125,10 +124,10 @@ Once the server and database are created, Adam must specify the jobs that his co
 run to compute the different data points.
 
 For this example, we will consider a simple case where we want to compute Pi using the Monte-Carlo method.
-To perform the simulations we will use [this Python code](./monte_carlo_example.py). Each job is the number of *samples*
+To perform the simulations we will use [this Python code](./computepi.py). Each job parameter is the number of *samples*
 to estimate Pi. 
 
-Adam must then define the jobs using a JSON, e.g. jobs.json, file that looks like:
+Adam must then define the jobs using a JSON file that looks like:
 ```json
   [
       { "samples": 100 },
@@ -145,31 +144,56 @@ ceibacli add -w http://localhost:8080/graphql -c monte_carlo -j jobs.json
 
 ## Requesting job and uploading the results
 
-Now that the database is created, Julie a collaborator of Adam wants to request 5 jobs to compute. Before requesting the jobs,
-she must first must login in to the server:
+Now that the database is created, Julie, a collaborator of Adam wants to request 5 jobs to compute. But before requesting the jobs,
+she must first login in to the server:
 
 ```bash
-ceibacli login -t ${LOGIN_TOKEN} -w https://ceiba.org:8080/graphql
+ceibacli login -t ${LOGIN_TOKEN} -w "http://localhost:8080/graphql"
 ```
 where `LOGIN_TOKEN` is a [read-only GitHub token to authenticate the user](https://ceiba-cli.readthedocs.io/en/latest/authentication.html#authentication).
-Once authentication is complete Julie can request jobs and run the jobs with the following command:
+Once the authentication step is complete, Julie can request jobs and run them with the following command:
 
 ```bash
 ceibacli compute -i compute_input.yml
 ```
 
-where 
+where ``compute_input.yml`` is a YAML file, containing the input to perform the computation. This input file looks like:
+```yml
+web: "http://localhost:8080/graphql"
 
-This return here available job files `xxx` that still needs to be computed. These jobs will now be markes as 'In progress' in the database so that other collaborators can't compute them as well. Julie can run locally those jobs to obtaing the results of the simulations that are then stored in file `xxxx`. Julie can then upload these new datapoints to the central database by executing 
+collection_name: "examples"
+
+command: computepi.py
+
+max_jobs: 5
+```
+
+This command fetch 5 available jobs from the server that still needs to be computed.
+These jobs will now be markes as *in progress* in the server so that other collaborators cannot compute them as well.
+By default, Julie's job are run locally but she can also provide a ``schedule``
+[section in the input file](https://ceiba-cli.readthedocs.io/en/latest/compute.html),
+if she wants to run he jobs using a job scheduler like slurm [@Jette2002].
+
+After Julie invokes the ``compute`` command the jobs will be inmediately run (or schedule). *Ceiba-cli* takes each job parameters
+and write them down into YAML (or JSON) format, then it calls the command that Jullie has provided (``computepi.py``)
+with the file containing the parameters like:
+```bash
+cd /tmp/workdir_ceiba/job_13434589 && computepi.py input_job_13434589.yml &
+```
+
+Once the jobs have finished, Julie can then upload these new datapoints to the server by executing the following command:
 
 ```bash
-ceibacli report <......>
+ ceibacli report  -w http://localhost:8080/graphql -c monte_carlo
 ```
-The jobs run by Julie will now be marked as `Completed` in the database. Julie or other collaborators can keep on requesting new jobs to compute through the `ceilacli compute` command and report those results via `ceibacli report`. 
+The jobs run by Julie will now be marked as `Completed` in the server. Julie or other collaborators can keep on
+requesting new jobs to compute through the `ceibacli compute` command and report those results via `ceibacli report`.
+If there are no more jobs to run, *ceiba-cli* will report a messages declaring that there are not more jobs available
+for running.
 
 ## Querying the database
 
-At any point all the collaborators can obtain an overview of the current status in the database via :
+At any point all the collaborators can obtain an overview of the current status in the server via:
 
 ```bash
  ceibacli query -w http://localhost:8080/graphql
@@ -183,18 +207,19 @@ Available collections:
 monte_carlo 7
 ```
 
-indicating that there are currently one datasets: *monte_carlo*. It contains 7 data points.
+indicating that there is currently one datasets called *monte_carlo* and it contains 7 data points.
 
-If the users want to retreive all the available data in *monte_carlo* they can use:
+If users want to retreive all the available data in *monte_carlo* they can use:
 ```bash
  ceibacli query -w http://localhost:8080/graphql --collection_name monte_carlo
 ```
-that will create a `simulation2.csv` file containing the dataset.
+that will create a `monte_carlo.csv` file containing the dataset.
 
-For a more comprehensive discussion about how to interact with the web service, see the [Ceiba-CLI documentation](https://ceiba-cli.readthedocs.io/en/latest/authentication.html#authentication).
+For a more comprehensive discussion about how to interact with the web service,
+see the [Ceiba-CLI documentation](https://ceiba-cli.readthedocs.io/en/latest/authentication.html#authentication).
 
 
 # Acknowledgements
-Felipe would like to express his deepest gratitude to Stefan Verhoeven (@sverhoeven) for guiding him on the web developing world.
-We are also grateful to Jen Wehner (@JensWehner) and Pablo Lopez-Tarifa (@lopeztarifa)
-for their support and feedback designing the Ceiba web service.
+Felipe would like to express his deepest gratitude to Stefan Verhoeven (@sverhoeven)
+for guiding him on the web developing world. We are also grateful to Jen Wehner (@JensWehner)
+and Pablo Lopez-Tarifa (@lopeztarifa) for their support and feedback designing the Ceiba web service.
