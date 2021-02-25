@@ -52,7 +52,7 @@
 
     - name: Get docker-compose file
       get_url:
-        url: https://raw.githubusercontent.com/nlesc-nano/ceiba/master/provisioning/docker-compose.yml
+        url: https://raw.githubusercontent.com/nlesc-nano/ceiba/main/provisioning/docker-compose.yml
         dest: /tmp/docker-compose.yml
 
     - name: Start the app
