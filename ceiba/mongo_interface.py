@@ -59,9 +59,9 @@ def store_dataframe_in_mongo(
 
     Parameters
     ----------
-    collection_name
-        Collection name
-    path_df
+    collection
+        Collection handler
+    path_csv
         Path to the csv file containing the data
 
     Returns
@@ -77,7 +77,18 @@ def store_dataframe_in_mongo(
 
 
 def read_users(users_file: Path) -> List[Dict[str, str]]:
-    """Read the users in the file."""
+    """Read the users in the file.
+
+    Parameters
+    ----------
+    users_file
+        File with the users' GitHub names
+
+    Returns
+    -------
+    List of Dictionaries containing the users and their tokens
+
+    """
     with open(users_file, 'r') as handler:
         xs = handler.read()
 
@@ -88,7 +99,16 @@ def read_users(users_file: Path) -> List[Dict[str, str]]:
 
 
 def add_users_to_db(database: Database, users_file: Path) -> None:
-    """Add the allow users to the database."""
+    """Add the allow users to the database.
+
+    Parameters
+    ----------
+    database
+        Database handler
+    users_file
+        File with the usernames
+
+    """
     col = database[USERS_COLLECTION]
     all_users = read_users(users_file)
     for user in all_users:

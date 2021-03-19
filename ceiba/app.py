@@ -85,8 +85,6 @@ def run() -> None:
             engine_modules=[
                 "ceiba.query_resolvers",
                 "ceiba.mutation_resolvers",
-                "ceiba.directives.rate_limiting",
-                "ceiba.directives.auth",
             ],
             executor_http_endpoint="/graphql",
             executor_http_methods=["POST"],
