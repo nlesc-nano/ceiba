@@ -130,10 +130,10 @@ to estimate Pi.
 Adam must then define the jobs using a JSON file that looks like:
 ```json
   [
-      { "samples": 100 },
-      { "samples": 1000 },
-	  { "samples": 5000 },
-	  ........
+    { "samples": 100 },
+    { "samples": 1000 },
+    { "samples": 5000 },
+    ........
   ]
 ```
 
@@ -174,21 +174,18 @@ By default, Julie's job are run locally but she can also provide a ``schedule``
 [section in the input file](https://ceiba-cli.readthedocs.io/en/latest/compute.html),
 if she wants to run he jobs using a job scheduler like slurm [@Jette2002].
 
-After Julie invokes the ``compute`` command the jobs will be inmediately run (or schedule). *Ceiba-cli* takes each job parameters
-and write them down into YAML (or JSON) format, then it calls the command that Jullie has provided (``computepi.py``)
-with the file containing the parameters like:
-```bash
-cd /tmp/workdir_ceiba/job_13434589 && computepi.py input_job_13434589.yml &
-```
+After Julie invokes the ``compute`` command the jobs will be immediately run locally or remotely. In the background, *Ceiba-cli* takes each job parameters
+and write them down into YAML (or JSON) format. *Ceiba* then calls the command that Jullie has provided (here ``computepi.py``). Note that all these operations are 
+orchestrated by *Ceiba* and are invisible to users.
 
-Once the jobs have finished, Julie can then upload these new datapoints to the server by executing the following command:
+Once the jobs have finished, Julie can upload the freshly computed datapoints to the server by executing the following command:
 
 ```bash
  ceibacli report  -w http://localhost:8080/graphql -c monte_carlo
 ```
-The jobs run by Julie will now be marked as `Completed` in the server. Julie or other collaborators can keep on
-requesting new jobs to compute through the `ceibacli compute` command and report those results via `ceibacli report`.
-If there are no more jobs to run, *ceiba-cli* will report a messages declaring that there are not more jobs available
+The jobs executed by Julie will now be marked as `Completed` in the server. Julie and other collaborators can keep on
+requesting new jobs through the `ceibacli compute` command and report those results via `ceibacli report`.
+Once there are no more jobs available, *ceiba-cli* will report a messages declaring that there are not more jobs available
 for running.
 
 ## Querying the database
