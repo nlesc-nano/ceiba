@@ -135,7 +135,7 @@ Once the server and database are created, Adam must specify the jobs that his co
 run to compute the different data points.
 
 For this example, we will consider a simple case where we want to compute Pi using the Monte-Carlo method.
-To perform the simulations we will use [this Python code snippet](https://github.com/nlesc-nano/ceiba/blob/main/paper/computepi.py).
+To perform the simulations we will use [a Python code script called computepi.py](https://github.com/nlesc-nano/ceiba/blob/main/paper/computepi.py).
 Each job parameter is the number of *samples* to estimate Pi. 
 
 Adam must then define the jobs using a JSON file that looks like:
