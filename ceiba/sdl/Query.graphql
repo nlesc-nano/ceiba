@@ -24,7 +24,7 @@ type Job {
   """
   _id: Int
   """
-  compute Properties
+  computed Properties
   """
   property: Property!
   """
@@ -63,7 +63,7 @@ type Property {
   """
   collection_name: String!
   """
-  Metadata associated to the given property.
+  Metadata associated with the given property.
   """
   metadata: String!
   """

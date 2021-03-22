@@ -12,15 +12,13 @@ The following schema defines how the properties are stored:
 
   # Unique identifier
   _id: Integer
+
   # Name to which the property belongs. e.g. Theory level
   collection_name: String
 
-  #Smile representing the molecule
-  smile: String
-
-  # Optimize geometry
-  geometry: Optional[String]
-
+  # Metadata associated with the given property
+  metadata: String
+  
   # Properties values as JSON
   data: Optional[String]
 
@@ -28,7 +26,7 @@ The following schema defines how the properties are stored:
   input: Optional[String]
 
 Notice that the previous schema mirros the
-`GraphQL definition of Property in the server <https://github.com/nlesc-nano/ceiba/blob/master/ceiba/sdl/Query.graphql>`_.
+`GraphQL definition of Property in the server <https://github.com/nlesc-nano/ceiba/blob/main/ceiba/sdl/Query.graphql>`_.
 
 
 Jobs collections
@@ -55,14 +53,14 @@ The following schema defines how jobs are defined:
   schedule_time: Optional[Float]
 
   # Timestamp = datatime.timestamp()
-  completion_time: Optional[Float]
+  report_time: Optional[Float]
 
   # platform where the job was run: platform.platform()
   platform: Optional[String]
    
 
 Notice that the previous schema mirros the
-`GraphQL definition of Job in the server <https://github.com/nlesc-nano/ceiba/blob/master/ceiba/sdl/Query.graphql>`_.
+`GraphQL definition of Job in the server <https://github.com/nlesc-nano/ceiba/blob/main/ceiba/sdl/Query.graphql>`_.
 
 
 .. Note::

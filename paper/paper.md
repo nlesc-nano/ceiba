@@ -4,7 +4,7 @@ tags:
   - Python
   - web service
   - scientific simulations
-  - computational chemistry
+  - high performance computing
 authors:
   - name: Felipe Zapata
     orcid: 0000-0001-8286-677X
@@ -16,7 +16,7 @@ affiliations:
  - name: Netherlands eScience Center
    index: 1
 
-date: February 2021
+date: March 2021
 bibliography: paper.bib
 ---
 
@@ -35,15 +35,18 @@ requires the same data to perform their research.
 
 # Statement of need
 
-Many resarch projects require running a large number of computationally heavy but independent simulations.
-Those can be molecular dynamics simulations of proteins [https://zlab.umassmed.edu/benchmark/], material properties [http://oqmd.org/] fluid dynamics simulations [http://cfd.mace.manchester.ac.uk/ercoftac/], etc. Recent advances in machine-learning has stimulated the creation of these databases and has highlighted the importance of data quality and provenance as described by the FAIR data principle [@fair_data] 
+Many resarch projects require running a large number of computationally heavy but independent simulations. 
+Those can be molecular dynamics simulations of proteins [@Proteins_benchmark],
+material properties [@OQMD], fluid dynamics simulations with different initial conditions [@ERCOFTAC], etc.
+Recent advances in machine-learning has stimulated the creation of these databases and has highlighted the
+importance of data quality and provenance as described by the FAIR data principle [@Wilkinson2016].
 As the number of independent simulations grows, their orchestration and execution require a collaborative effort among a
 team of researchers. Several platforms have already been developped to orchestrate large-scale collaborative efforts leveraging 
-local computing ressources [@seti_at_home], [@folding_at_home]. These platforms are technically very impressive but  
-offers unfortunately limited opportunity for reuse in smaller scale initiatives. 
+local computing ressources [@SETI_at_home], [@Folding_at_home]. These platforms are technically very impressive but
+offers unfortunately limited opportunity for reuse in smaller scale initiatives.
 
 We present here *Ceiba*, a light-weight library that aims at enabling collaborative database creation by small and medium size teams.
-*Ceiba* is implemented in Python using the Tartiflete GraphQL server [@graphql;@tartiflette].
+*Ceiba* is implemented in Python using the Tartiflete GraphQL server [@Graphql;@Tartiflette].
 *Ceiba* orchestrates the interaction between 3 distincts components: the client, the server and the database.
 Figure \ref{fig:architecture} represents schematically the architecture of the web service. 
 
@@ -53,12 +56,12 @@ the metadata and provenance of a given job, from the concrete datasets. Since th
 *Ceiba* users can also manage data without associated jobs, for example, because
 the data has been previously computed and users just want to share it among themselves.
 
-We use docker [@docker] to setup and run both the server and the database in their own isolated and indepedent
-linux containers. The server and database containers are deployed using docker-compose [@dockercompose] and
-communicate with each other using their own internal network [@dockernetwork]. The docker-compose tool makes sure that
+We use docker [@Docker] to setup and run both the server and the database in their own isolated and indepedent
+linux containers. The server and database containers are deployed using docker-compose [@Dockercompose] and
+communicate with each other using their own internal network [@Dockernetwork]. The docker-compose tool makes sure that
 the server is listening to client requests in a given port (e.g. 8080 by default) and the database is stored
 on the host computer where the docker containers are running, so it can be periodically backed up.
-*Ceiba* Uses MongoDB [@mongodb] as backing database. Using a non-SQL database as MongoDB helps to
+*Ceiba* Uses MongoDB [@Mongodb] as backing database. Using a non-SQL database as MongoDB helps to
 manipulate non-structure data, like json files, without having to impose a schema over the simulation data.
 
 Since both the server and the database need some computational resources to run, we anticipate that both
@@ -67,16 +70,17 @@ Once the server is up and running, user can install the client (*ceiba-cli*) on 
 national computing infrastructure, cloud, etc. 
 
 Using the client (*ceiba-cli*) the user can interact with the server and perform actions like:
- * store new jobs in the database
- * request some jobs to compute
- * report jobs results
- * query some available data
- * perform administrative tasks on the database
+
+* store new jobs in the database
+* request some jobs to compute
+* report jobs results
+* query some available data
+* perform administrative tasks on the database
 
 Notice that in order to keep the data safe, it is required that users login with the Ceiba web service.
 Since managing our own authentication system takes considerable time and resources, we use the
-GitHub authentication system [@authentication] to authenticate users on behalf of the Ceiba Web service. Users just
-need to have a GitHub account and request a personal access token [@token].
+GitHub authentication system [@Authentication] to authenticate users on behalf of the Ceiba Web service. Users just
+need to have a GitHub account and request a personal access token [@Token].
 
 Once the user has authenticated with the web service, she can add new jobs by calling the client (`ceibacli add`)
 with a JSON input file specifying the parameters to run the simulation. Similarly, the user can request through
@@ -93,7 +97,7 @@ the server. Also, at all times the user can retrieve available datapoints from t
 (using `ceibacli query`). The example section will provide a hands-on ilustration of the aforementioned actions.
 
 Optionally, *Ceiba* allows you to store large binary/text objects using the Swift openstack data
-storage service [@openstack]. Large objects are not suitable for storage in a database, but the 
+storage service [@Openstack]. Large objects are not suitable for storage in a database, but the 
 Swift service allows to handle these kind of objects efficiently. The drawback of this approach
 is that users need to request (and pay) for the cloud infrastructure necessary to provide this extra
 service.
@@ -104,16 +108,16 @@ service.
 
 # Examples
 
-We present in this section a simple example illustrating the use *Ceiba*. For a more comprehensive discussion about how to interact with the web service,
-see the [Ceiba-CLI documentation](https://ceiba-cli.readthedocs.io/en/latest/authentication.html#authentication).
+We present in this section a simple example illustrating the use of *Ceiba*. For a more comprehensive discussion
+about how to interact with the web service, see the Ceiba-CLI documentation [@Ceiba_CLI].
 
 ## Deploying the server and the database
 Before using *Ceiba* the administrator of the server, Adam, must deploy the server and database.
 While in a real aplication both the server and database will most likely be hosted on a cloud service, we will create for the sake of illustration
 a couple of containers hosted locally.
 
-In order to start the *Ceiba server*, Adam needs to install [docker](https://docs.docker.com/get-docker/)
-and [docker-compose](https://docs.docker.com/compose/install/). then he needs to clone the [ceiba repository](https://github.com/nlesc-nano/ceiba)
+In order to start the *Ceiba server*, Adam needs to install Docker [@Docker]
+and Docker-compose [@Dockercompose]. then he needs to clone the Ceiba repository [@Ceiba]
 and goes to the *provisioning* folder. Inside that folder he needs to define an enviromental variable defining
 the mongodb password like:
 ```bash
@@ -131,8 +135,8 @@ Once the server and database are created, Adam must specify the jobs that his co
 run to compute the different data points.
 
 For this example, we will consider a simple case where we want to compute Pi using the Monte-Carlo method.
-To perform the simulations we will use [this Python code](./computepi.py). Each job parameter is the number of *samples*
-to estimate Pi. 
+To perform the simulations we will use [a Python code script called computepi.py](https://github.com/nlesc-nano/ceiba/blob/main/paper/computepi.py).
+Each job parameter is the number of *samples* to estimate Pi. 
 
 Adam must then define the jobs using a JSON file that looks like:
 ```json
@@ -168,7 +172,7 @@ where ``compute_input.yml`` is a YAML file, containing the input to perform the 
 ```yml
 web: "http://localhost:8080/graphql"
 
-collection_name: "examples"
+collection_name: "monte_carlo"
 
 command: computepi.py
 
@@ -179,10 +183,11 @@ This command fetch 5 available jobs from the server that still needs to be compu
 These jobs will now be markes as *in progress* in the server so that other collaborators cannot compute them as well.
 By default, Julie's job are run locally but she can also provide a ``schedule``
 [section in the input file](https://ceiba-cli.readthedocs.io/en/latest/compute.html),
-if she wants to run he jobs using a job scheduler like slurm [@Jette2002].
+if she wants to run the jobs using a job scheduler like slurm [@Jette2002].
 
-After Julie invokes the ``compute`` command the jobs will be immediately run locally or remotely. In the background, *Ceiba-cli* takes each job parameters
-and write them down into YAML (or JSON) format. *Ceiba* then calls the command that Jullie has provided (here ``computepi.py``). Note that all these operations are 
+After Julie invokes the ``compute`` command the jobs will be immediately run locally or remotely.
+In the background, *Ceiba-cli* takes each job parameters and write them down into YAML (or JSON) format.
+*Ceiba* then calls the command that Jullie has provided (here ``computepi.py``). Note that all these operations are 
 orchestrated by *Ceiba* and are invisible to users.
 
 Once the jobs have finished, Julie can upload the freshly computed datapoints to the server by executing the following command:
@@ -219,10 +224,16 @@ If users want to retreive all the available data in *monte_carlo* they can use:
 ```
 that will create a `monte_carlo.csv` file containing the dataset.
 
-The example presented above is of course trivial and does not necessitate the collaborative efforts of multiple people. In real-life applications each job could for example be a computationally expensive quantum mechanical calculation of the properties of a given molecular structure or the molecular-dynamics based simulation of the docking between two large proteins. We hope that for these cases, where each job can require up to several days of calculation on a super-computer, *Ceiba* can provide a easy solution to orchectrate the creation of the database an insure its consistency.
+The example presented above is of course trivial and does not necessitate the collaborative efforts of multiple people.
+In real-life applications each job could for example be a computationally expensive quantum mechanical calculation
+of the properties of a given molecular structure or the molecular-dynamics based simulation of the docking between two
+large proteins. We hope that for these cases, where each job can require up to several days of calculation on a super-computer,
+*Ceiba* can provide a easy solution to orchectrate the creation of the database an ensure its consistency.
 
 
 # Acknowledgements
-Felipe would like to express his deepest gratitude to Stefan Verhoeven (@sverhoeven)
-for guiding him on the web developing world. We are also grateful to Jen Wehner (@JensWehner)
-and Pablo Lopez-Tarifa (@lopeztarifa) for their support and feedback designing the Ceiba web service.
+Felipe would like to express his deepest gratitude to Stefan Verhoeven
+for guiding him on the web developing world. We are also grateful to Jen Wehner
+and Pablo Lopez-Tarifa for their support and feedback designing the Ceiba web service.
+
+# References

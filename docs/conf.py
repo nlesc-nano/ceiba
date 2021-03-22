@@ -43,8 +43,8 @@ templates_path = ['_templates']
 # source_suffix = ['.rst', '.md']
 source_suffix = '.rst'
 
-# The master toctree document.
-master_doc = 'index'
+# The main toctree document.
+main_doc = 'index'
 
 # General information about the project.
 project = u'ceiba'
@@ -142,7 +142,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'ceiba.tex', u'ceiba Documentation',
+    (main_doc, 'ceiba.tex', u'ceiba Documentation',
      u"Felipe Zapata", 'manual'),
 ]
 
@@ -152,7 +152,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'ceiba', u'ceiba Documentation',
+    (main_doc, 'ceiba', u'ceiba Documentation',
      [author], 1)
 ]
 
@@ -163,7 +163,7 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'ceiba', u'ceiba Documentation',
+    (main_doc, 'ceiba', u'ceiba Documentation',
      author, 'ceiba', "Server to handle the molecular properties",
      'Miscellaneous'),
 ]
