@@ -219,7 +219,7 @@ If users want to retreive all the available data in *monte_carlo* they can use:
 ```
 that will create a `monte_carlo.csv` file containing the dataset.
 
-The example presented above is of course trivial and does not necessitate the collaborative efforts of multiple people. In real-life applications if each job could be : a computationally expensive quantum mechanical calculation of the properties of a given molecular structure, the molecular-dynamics based simulation of the docking between two large proteins etc ... We hope that for these cases, where each job can require up to several days of calculation on a super-computer, *Ceiba* can provide a easy solution to orchectrate the creation of the database an insure its consistency.
+The example presented above is of course trivial and does not necessitate the collaborative efforts of multiple people. In real-life applications each job could for example be a computationally expensive quantum mechanical calculation of the properties of a given molecular structure or the molecular-dynamics based simulation of the docking between two large proteins. We hope that for these cases, where each job can require up to several days of calculation on a super-computer, *Ceiba* can provide a easy solution to orchectrate the creation of the database an insure its consistency.
 
 
 # Acknowledgements
