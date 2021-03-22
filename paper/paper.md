@@ -36,9 +36,13 @@ requires the same data to perform their research.
 # Statement of need
 
 Many resarch projects require running a large number of computationally heavy but independent simulations.
-Those can be molecular dynamics simulations of proteins, fluid dynamics simulations with different initial conditions, etc.
+Those can be molecular dynamics simulations of proteins [https://zlab.umassmed.edu/benchmark/], material properties [http://oqmd.org/] fluid dynamics simulations with different initial conditions [http://cfd.mace.manchester.ac.uk/ercoftac/], etc. Recent advances in machine-learning has stimulated the creation of these databases and has highlighted the importance of data quality and provenance as described by the FAIR data principle [@fair_data] 
 As the number of independent simulations grows, their orchestration and execution require a collaborative effort among a
-team of researchers. Through its dedicated server and command line interface, *Ceiba* facilitates this team effort.
+team of researchers. Several platforms have already been developped to orchestrate large-scale collaborative efforts leveraging 
+local computing ressources [@seti_at_home], [@folding_at_home]. These platforms are technically very impressive but  
+offers unfortunately limited opportunity for reuse in smaller scale initiatives. 
+
+We present here *Ceiba*, a light-weight library that aims at enabling collaborative database creation by small and medium size teams.
 *Ceiba* is implemented in Python using the Tartiflete GraphQL server [@graphql;@tartiflette].
 *Ceiba* orchestrates the interaction between 3 distincts components: the client, the server and the database.
 Figure \ref{fig:architecture} represents schematically the architecture of the web service. 
@@ -60,7 +64,7 @@ manipulate non-structure data, like json files, without having to impose a schem
 Since both the server and the database need some computational resources to run, we anticipate that both
 the server and database can be deployed at a local/national or cloud computing infrastructure. 
 Once the server is up and running, user can install the client (*ceiba-cli*) on their local computer,
-national computing infrascture, cloud, etc. 
+national computing infrastructure, cloud, etc. 
 
 Using the client (*ceiba-cli*) the user can interact with the server and perform actions like:
  * store new jobs in the database
@@ -99,6 +103,9 @@ service.
 
 
 # Examples
+
+We present in this section a simple example illustrating the use *Ceiba*. For a more comprehensive discussion about how to interact with the web service,
+see the [Ceiba-CLI documentation](https://ceiba-cli.readthedocs.io/en/latest/authentication.html#authentication).
 
 ## Deploying the server and the database
 Before using *Ceiba* the administrator of the server, Adam, must deploy the server and database.
@@ -212,8 +219,7 @@ If users want to retreive all the available data in *monte_carlo* they can use:
 ```
 that will create a `monte_carlo.csv` file containing the dataset.
 
-For a more comprehensive discussion about how to interact with the web service,
-see the [Ceiba-CLI documentation](https://ceiba-cli.readthedocs.io/en/latest/authentication.html#authentication).
+The example presented above is of course trivial and does not necessitate the collaborative efforts of multiple people. In real-life applications if each job could be : a computationally expensive quantum mechanical calculation of the properties of a given molecular structure, the molecular-dynamics based simulation of the docking between two large proteins etc ... We hope that for these cases, where each job can require up to several days of calculation on a super-computer, *Ceiba* can provide a easy solution to orchectrate the creation of the database an insure its consistency.
 
 
 # Acknowledgements
