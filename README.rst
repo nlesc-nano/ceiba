@@ -2,7 +2,7 @@
    :target: https://github.com/nlesc-nano/ceiba/actions
 .. image:: https://readthedocs.org/projects/ceiba/badge/?version=latest
    :target: https://ceiba.readthedocs.io/en/latest/?badge=latest
-.. image:: https://codecov.io/gh/nlesc-nano/ceiba/branch/master/graph/badge.svg?token=MTD70XNYEA
+.. image:: https://codecov.io/gh/nlesc-nano/ceiba/branch/main/graph/badge.svg?token=MTD70XNYEA
    :target: https://codecov.io/gh/nlesc-nano/ceiba
 .. image:: https://zenodo.org/badge/297567281.svg
    :target: https://zenodo.org/badge/latestdoi/297567281
