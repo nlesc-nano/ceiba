@@ -35,8 +35,7 @@ requires the same data to perform their research.
 
 # Statement of need
 
-Many resarch projects require running a large number of computationally heavy but independent simulations.
-<<<<<<< HEAD
+Many resarch projects require running a large number of computationally heavy but independent simulations. 
 Those can be molecular dynamics simulations of proteins [@Proteins_benchmark],
 material properties [@OQMD], fluid dynamics simulations with different initial conditions [@ERCOFTAC], etc.
 Recent advances in machine-learning has stimulated the creation of these databases and has highlighted the
