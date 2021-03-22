@@ -36,7 +36,7 @@ requires the same data to perform their research.
 # Statement of need
 
 Many resarch projects require running a large number of computationally heavy but independent simulations.
-Those can be molecular dynamics simulations of proteins [https://zlab.umassmed.edu/benchmark/], material properties [http://oqmd.org/] fluid dynamics simulations with different initial conditions [http://cfd.mace.manchester.ac.uk/ercoftac/], etc. Recent advances in machine-learning has stimulated the creation of these databases and has highlighted the importance of data quality and provenance as described by the FAIR data principle [@fair_data] 
+Those can be molecular dynamics simulations of proteins [https://zlab.umassmed.edu/benchmark/], material properties [http://oqmd.org/] fluid dynamics simulations [http://cfd.mace.manchester.ac.uk/ercoftac/], etc. Recent advances in machine-learning has stimulated the creation of these databases and has highlighted the importance of data quality and provenance as described by the FAIR data principle [@fair_data] 
 As the number of independent simulations grows, their orchestration and execution require a collaborative effort among a
 team of researchers. Several platforms have already been developped to orchestrate large-scale collaborative efforts leveraging 
 local computing ressources [@seti_at_home], [@folding_at_home]. These platforms are technically very impressive but  
