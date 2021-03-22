@@ -70,11 +70,12 @@ Once the server is up and running, user can install the client (*ceiba-cli*) on 
 national computing infrastructure, cloud, etc. 
 
 Using the client (*ceiba-cli*) the user can interact with the server and perform actions like:
- * store new jobs in the database
- * request some jobs to compute
- * report jobs results
- * query some available data
- * perform administrative tasks on the database
+
+* store new jobs in the database
+* request some jobs to compute
+* report jobs results
+* query some available data
+* perform administrative tasks on the database
 
 Notice that in order to keep the data safe, it is required that users login with the Ceiba web service.
 Since managing our own authentication system takes considerable time and resources, we use the
@@ -107,7 +108,7 @@ service.
 
 # Examples
 
-We present in this section a simple example illustrating the use *Ceiba*. For a more comprehensive discussion
+We present in this section a simple example illustrating the use of *Ceiba*. For a more comprehensive discussion
 about how to interact with the web service, see the Ceiba-CLI documentation [@Ceiba_CLI].
 
 ## Deploying the server and the database
@@ -171,7 +172,7 @@ where ``compute_input.yml`` is a YAML file, containing the input to perform the 
 ```yml
 web: "http://localhost:8080/graphql"
 
-collection_name: "examples"
+collection_name: "monte_carlo"
 
 command: computepi.py
 
@@ -224,7 +225,10 @@ If users want to retreive all the available data in *monte_carlo* they can use:
 that will create a `monte_carlo.csv` file containing the dataset.
 
 The example presented above is of course trivial and does not necessitate the collaborative efforts of multiple people.
-In real-life applications each job could for example be a computationally expensive quantum mechanical calculation of the properties of a given molecular structure or the molecular-dynamics based simulation of the docking between two large proteins. We hope that for these cases, where each job can require up to several days of calculation on a super-computer, *Ceiba* can provide a easy solution to orchectrate the creation of the database an insure its consistency.
+In real-life applications each job could for example be a computationally expensive quantum mechanical calculation
+of the properties of a given molecular structure or the molecular-dynamics based simulation of the docking between two
+large proteins. We hope that for these cases, where each job can require up to several days of calculation on a super-computer,
+*Ceiba* can provide a easy solution to orchectrate the creation of the database an ensure its consistency.
 
 
 # Acknowledgements
