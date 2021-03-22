@@ -15,8 +15,8 @@ by multidisciplinary teams across different geographical locations. Distributing
 simulations among the available resources, avoiding duplication and keeping the data safe are challenges
 that scientists face every day.
 
-Ceiba and its command line interface `Ceiba-cli <https://github.com/nlesc-nano/ceiba-cli>`_.
-Ceiba solves the problem of computing, storing and securely sharing
+Ceiba and its command line interface `Ceiba-cli <https://github.com/nlesc-nano/ceiba-cli>`_
+solve the problem of computing, storing and securely sharing
 computationally expensive simulation results. Researchers can save significant time and resources by easily
 computing new data and reusing existing simulation data to answer their questions.
 
