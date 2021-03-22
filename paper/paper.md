@@ -231,3 +231,5 @@ In real-life applications each job could for example be a computationally expens
 Felipe would like to express his deepest gratitude to Stefan Verhoeven
 for guiding him on the web developing world. We are also grateful to Jen Wehner
 and Pablo Lopez-Tarifa for their support and feedback designing the Ceiba web service.
+
+# References

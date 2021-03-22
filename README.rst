@@ -25,6 +25,9 @@ See `documentation <https://ceiba.readthedocs.io/en/latest/>`_ and `blog post <h
 
 Installation
 ************
+The [provisioning folder](https://github.com/nlesc-nano/ceiba/tree/main/provisioning) contains the instructions
+to deploy the web service using docker. Alternatively, you can deploy the web service locally using
+the following instructions:
 
 #. 🐳 Install `Docker <https://www.docker.com/>`_
 
