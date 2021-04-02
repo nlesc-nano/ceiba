@@ -11,7 +11,7 @@ authors:
     affiliation: 1
   - name: Nicolas Renaud
     orcid: 0000-0001-9589-2694
-	affiliation: 1
+    affiliation: 1
 affiliations:
  - name: Netherlands eScience Center
    index: 1
