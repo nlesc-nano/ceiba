@@ -4,9 +4,13 @@ Change Log
 
 1.0.0 [22/03/2021]
 ******************
-New
----
+Added
+-----
 * First stable versions
+
+Changed
+-------
+* Add Test for Python 3.9 and drop 3.7
 
 
 0.3.0 [22/02/2021]
@@ -18,8 +22,8 @@ CHANGED
 0.2.0 [10/02/2021]
 ******************
 
-New
----
+Added
+-----
 * Add query resolver to retrieve the available collections
 * Add mutation to authenticate user (#2)
 * Add token to identify user (#6)
