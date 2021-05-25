@@ -10,6 +10,10 @@ This repo contains a library to create a web service to interact with a database
 containing a set of numerical properties. All the interactions with the database are
 defined by a `GraphQL API <https://graphql.org/>`_ and the service is developed using `tartiflette <https://tartiflette.io/>`_
 
+Adding user to the web service
+##############################
+In the root folder of the *ceiba* repo there is a plain text file called `users.txt`. You can add users to the
+web service by adding the Github's usernames in that file.
 
 Interactions with the database
 ##############################
