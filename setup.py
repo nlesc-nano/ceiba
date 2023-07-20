@@ -41,7 +41,7 @@ setup(
         'console_scripts': ['ceiba=ceiba.app:run']},
     data_files=[('citation/ceiba', ['CITATION.cff'])],
     install_requires=[
-        'aiohttp==3.7.4', 'more-itertools', 'tartiflette', 'tartiflette-aiohttp',
+        'aiohttp==3.8.5', 'more-itertools', 'tartiflette', 'tartiflette-aiohttp',
         'pandas', 'pymongo', 'requests'],
     extras_require={
         'test': ['coverage', 'mypy', 'pycodestyle', 'pytest>=3.9',
